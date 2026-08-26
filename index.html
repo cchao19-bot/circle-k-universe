@@ -295,7 +295,7 @@
     }
 
     .rhythm-lane {
-      height: 180px;
+      height: 220px;
       background: radial-gradient(circle at 50% 0%, #152238 0%, #090e1a 100%);
       border-radius: 12px;
       position: relative;
@@ -305,8 +305,8 @@
 
     .note-tile {
       position: absolute;
-      width: 40px;
-      height: 24px;
+      width: 44px;
+      height: 26px;
       border-radius: 6px;
       background: linear-gradient(135deg, #ffcb05, #e62310);
       box-shadow: 0 0 12px rgba(255, 203, 5, 0.8);
@@ -316,6 +316,7 @@
       font-size: 11px;
       font-weight: bold;
       color: #000;
+      transition: transform 0.1s;
     }
 
     .wish-card {
@@ -655,31 +656,32 @@
         <div id="tab-piano" class="tab-panel hidden space-y-6">
           <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-slate-900/80 p-6 rounded-2xl border border-slate-800">
             <div>
-              <span class="text-xs font-bold text-amber-400 tracking-widest block uppercase font-orbitron">Interactive Web Piano Synthesizer</span>
-              <h2 class="text-2xl font-bold text-white mt-1">琴谱小游戏 & 键盘弹奏</h2>
-              <p class="text-xs text-slate-400 mt-1">使用鼠标/触屏点击键盘，或直接使用键盘按键 [A,S,D,F,G,H,J,K] 弹奏。</p>
+              <span class="text-xs font-bold text-amber-400 tracking-widest block uppercase font-orbitron">Interactive Web Piano & 30s Rhythm Challenge</span>
+              <h2 class="text-2xl font-bold text-white mt-1">🎹 真曲谱钢琴小游戏 & 30秒节奏挑战</h2>
+              <p class="text-xs text-slate-400 mt-1">支持键盘快捷键 [A,W,S,E,D,F,T,G,Y,H,U,J,K] 或鼠标/触屏弹奏。挑战 30 秒下落曲谱并冲刺排行榜！</p>
             </div>
 
             <div class="flex flex-wrap items-center gap-3">
               <select id="song-select" class="bg-slate-800 border border-slate-700 text-white text-xs rounded-xl px-3 py-2 outline-none focus:border-yellow-400">
-                <option value="birthday">曲谱：生日快乐歌 (Happy Birthday)</option>
-                <option value="pokemon">曲谱：宝可梦主题曲 (Pokémon Theme)</option>
-                <option value="gundam">曲谱：高达 翔べ！ガンダム (Fly! Gundam)</option>
-                <option value="star">曲谱：小星星 (Twinkle Star)</option>
+                <option value="birthday">真实曲谱：生日快乐歌 (Happy Birthday)</option>
+                <option value="pokemon">真实曲谱：宝可梦主题曲 (Pokémon Theme)</option>
+                <option value="gundam">真实曲谱：高达 翔べ！ガンダム</option>
+                <option value="star">真实曲谱：小星星 (Twinkle Star)</option>
               </select>
 
-              <button id="btn-start-rhythm" class="px-4 py-2 rounded-xl bg-gradient-to-r from-red-600 to-amber-600 text-white font-bold text-xs hover:brightness-110 transition shadow-lg">
-                ▶ 开始下落节奏挑战
+              <button id="btn-start-rhythm" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-red-600 to-amber-600 text-white font-bold text-xs hover:brightness-110 transition shadow-lg flex items-center gap-2">
+                <span>▶ 开始 30 秒节奏挑战</span>
               </button>
             </div>
           </div>
 
           <div class="piano-container space-y-4">
-            <div class="flex items-center justify-between bg-slate-950 px-4 py-3 rounded-xl border border-slate-800 text-xs">
-              <div class="flex items-center gap-4">
-                <span class="text-slate-400">当前曲目: <b id="hud-song-title" class="text-yellow-400">生日快乐歌</b></span>
+            <div class="flex flex-wrap items-center justify-between bg-slate-950 px-4 py-3 rounded-xl border border-slate-800 text-xs gap-3">
+              <div class="flex items-center gap-4 flex-wrap">
+                <span class="text-slate-400">曲目: <b id="hud-song-title" class="text-yellow-400">生日快乐歌</b></span>
                 <span class="text-slate-400">得分: <b id="hud-score" class="text-green-400 text-sm font-orbitron">0</b></span>
-                <span class="text-slate-400">Combo: <b id="hud-combo" class="text-amber-400 text-sm font-orbitron">0</b></span>
+                <span class="text-slate-400">连击: <b id="hud-combo" class="text-amber-400 text-sm font-orbitron">0</b></span>
+                <span class="text-slate-400">倒计时: <b id="hud-timer" class="text-rose-400 text-sm font-orbitron">30s</b></span>
               </div>
               <div class="flex items-center gap-2">
                 <span id="hud-rating" class="text-xs font-bold text-blue-400">自由弹奏模式</span>
@@ -687,32 +689,48 @@
             </div>
 
             <div class="bg-slate-950/90 border border-slate-800 rounded-xl p-4 text-center">
-              <span class="text-[11px] text-slate-400 block mb-1">简谱提示 (Note Guide)</span>
-              <div id="sheet-display" class="font-mono text-lg font-bold text-amber-300 tracking-widest break-words">
-                1 1 2 1 4 3 - | 1 1 2 1 5 4 -
+              <span class="text-[11px] text-slate-400 block mb-1">真曲谱 / 标准音符对照 (Real Sheet Music Notes)</span>
+              <div id="sheet-display" class="font-mono text-sm md:text-base font-bold text-amber-300 tracking-wider break-words">
+                C4 C4 D4 C4 F4 E4 | C4 C4 D4 C4 G4 F4
               </div>
             </div>
 
+            <!-- 下落轨道 -->
             <div id="rhythm-lane" class="rhythm-lane">
-              <div class="absolute bottom-0 inset-x-0 h-8 bg-yellow-400/10 border-t border-yellow-400/40 pointer-events-none flex items-center justify-center text-[10px] text-yellow-300 font-bold">
-                判定击打线 (HIT LINE)
+              <div class="absolute bottom-0 inset-x-0 h-10 bg-yellow-400/15 border-t-2 border-yellow-400/60 pointer-events-none flex items-center justify-between px-6 text-xs text-yellow-300 font-bold">
+                <span>⚡ 判定区 (HIT LINE)</span>
+                <span>请按下落音符提示击打键盘/琴键</span>
               </div>
             </div>
 
+            <!-- 钢琴键盘 -->
             <div id="piano-keyboard" class="piano-keyboard">
               <div class="key-white" data-note="C4" data-key="a"><span>C4</span><small class="text-[10px] text-slate-400">A</small></div>
-              <div class="key-black" data-note="C#4" data-key="w"><span>C#</span></div>
+              <div class="key-black" data-note="C#4" data-key="w"><span>C#</span><small class="text-[9px] text-slate-500">W</small></div>
               <div class="key-white" data-note="D4" data-key="s"><span>D4</span><small class="text-[10px] text-slate-400">S</small></div>
-              <div class="key-black" data-note="D#4" data-key="e"><span>D#</span></div>
+              <div class="key-black" data-note="D#4" data-key="e"><span>D#</span><small class="text-[9px] text-slate-500">E</small></div>
               <div class="key-white" data-note="E4" data-key="d"><span>E4</span><small class="text-[10px] text-slate-400">D</small></div>
               <div class="key-white" data-note="F4" data-key="f"><span>F4</span><small class="text-[10px] text-slate-400">F</small></div>
-              <div class="key-black" data-note="F#4" data-key="t"><span>F#</span></div>
+              <div class="key-black" data-note="F#4" data-key="t"><span>F#</span><small class="text-[9px] text-slate-500">T</small></div>
               <div class="key-white" data-note="G4" data-key="g"><span>G4</span><small class="text-[10px] text-slate-400">G</small></div>
-              <div class="key-black" data-note="G#4" data-key="y"><span>G#</span></div>
+              <div class="key-black" data-note="G#4" data-key="y"><span>G#</span><small class="text-[9px] text-slate-500">Y</small></div>
               <div class="key-white" data-note="A4" data-key="h"><span>A4</span><small class="text-[10px] text-slate-400">H</small></div>
-              <div class="key-black" data-note="A#4" data-key="u"><span>A#</span></div>
+              <div class="key-black" data-note="A#4" data-key="u"><span>A#</span><small class="text-[9px] text-slate-500">U</small></div>
               <div class="key-white" data-note="B4" data-key="j"><span>B4</span><small class="text-[10px] text-slate-400">J</small></div>
               <div class="key-white" data-note="C5" data-key="k"><span>C5</span><small class="text-[10px] text-slate-400">K</small></div>
+            </div>
+          </div>
+
+          <!-- 排行榜与挑战记录卡片 -->
+          <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+              <h3 class="text-base font-bold text-white flex items-center gap-2">
+                <span>🏆 琴谱小游戏 · 巅峰排行榜 (Leaderboard)</span>
+              </h3>
+              <span class="text-xs text-amber-400 font-mono">Top High Scores</span>
+            </div>
+            <div id="leaderboard-list" class="space-y-2 text-xs">
+              <!-- 动态填充排行榜 -->
             </div>
           </div>
         </div>
@@ -730,10 +748,8 @@
             </button>
           </div>
 
-          <!-- 增加: 分类与排序栏控制 -->
           <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-slate-950/60 p-4 rounded-xl border border-slate-800/80 text-xs">
             <div class="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0" id="col-category-filters">
-              <!-- JS动态渲染分类筛选按钮 -->
             </div>
             <div class="flex items-center gap-2 shrink-0">
               <span class="text-slate-400">排序:</span>
@@ -781,10 +797,8 @@
             </form>
           </div>
 
-          <!-- 许愿墙分类筛选 & 排序栏 -->
           <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-slate-950/60 p-4 rounded-xl border border-slate-800/80 text-xs">
             <div class="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0" id="wish-category-filters">
-              <!-- JS 动态渲染许愿墙分类 -->
             </div>
             <div class="flex items-center gap-2 shrink-0">
               <span class="text-slate-400">排序:</span>
@@ -824,10 +838,8 @@
             </div>
           </div>
 
-          <!-- 记忆馆分类筛选与排序栏 -->
           <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-slate-950/60 p-4 rounded-xl border border-slate-800/80 text-xs">
             <div class="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0" id="mem-folder-filters">
-              <!-- JS 动态渲染记忆馆文件夹按钮 -->
             </div>
             <div class="flex items-center gap-2 shrink-0">
               <span class="text-slate-400">排序:</span>
@@ -852,7 +864,6 @@
     </section>
   </main>
 
-  <!-- 归档收藏 Modal -->
   <dialog id="modal-collection" class="bg-slate-900 text-white rounded-2xl p-6 border border-slate-700 max-w-md w-full shadow-2xl backdrop:bg-black/70">
     <form id="form-collection" method="dialog" class="space-y-4">
       <input type="hidden" id="col-edit-id" value="">
@@ -894,7 +905,6 @@
     </form>
   </dialog>
 
-  <!-- 全局通用编辑 / Rename / 移动分类通用 Modal -->
   <dialog id="modal-generic-edit" class="bg-slate-900 text-white rounded-2xl p-6 border border-slate-700 max-w-md w-full shadow-2xl backdrop:bg-black/70">
     <form id="form-generic-edit" method="dialog" class="space-y-4">
       <input type="hidden" id="edit-item-type" value="">
@@ -916,7 +926,6 @@
         <div id="edit-folder-group">
           <label class="block text-slate-300 mb-1">转移至分类 / 文件夹</label>
           <select id="edit-field-folder" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white">
-            <!-- 动态填充选项 -->
           </select>
         </div>
       </div>
@@ -941,13 +950,11 @@
       const $ = (s, r = document) => r.querySelector(s);
       const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 
-      // 1. Supabase 初始化配置
       const SUPABASE_URL = "https://iihcmhgeqewacvldebuk.supabase.co";
       const SUPABASE_ANON_KEY ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlpaGNtaGdlcWV3YWN2bGRlYnVrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc3Njk0ODksImV4cCI6MjEwMzM0NTQ4OX0.z48kB0_bYbMPHmzk0bcb5AG-Aaytze-ZbqH7YNe5eOw"; 
       const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
       const BUCKET_NAME = "media";
 
-      // Supabase 背景音乐 direct link
       const bgmFileName = "bgm.mp3"; 
       const supabaseBgmUrl = `${SUPABASE_URL}/storage/v1/object/public/${BUCKET_NAME}/${bgmFileName}`;
 
@@ -955,7 +962,6 @@
       bgmAudio.loop = true;
       let bgmAmbient = false;
 
-      // 播放音乐统一触发器
       const startBgmPlayback = () => {
         if (!bgmAmbient) {
           bgmAudio.play().then(() => {
@@ -1060,7 +1066,6 @@
         });
       }
 
-      // 打开信封：触发音频上下文
       btnOpenEnvelope.addEventListener("click", () => {
         if (!isUnlocked) {
           showToast("🔑 请先输入专属通行暗号解封信封哦！");
@@ -1073,12 +1078,10 @@
         setTimeout(() => {
           $("#stage-envelope").classList.add("hidden");
           $("#stage-scroll").classList.remove("hidden");
-          // 进入卷轴阶段尝试播放背景音乐
           startBgmPlayback();
         }, 700);
       });
 
-      // 打开卷轴进入主空间：自动播放背景音乐
       $("#btn-enter-world").addEventListener("click", () => {
         $("#stage-scroll").classList.add("hidden");
         $("#stage-world").classList.remove("hidden");
@@ -1128,7 +1131,6 @@
         }
       });
 
-      // --- Supabase 文件上传与存储 Helper 函数 ---
       const uploadToSupabase = async (file, pathPrefix = "") => {
         const fileExt = file.name.split('.').pop();
         const fileName = `${pathPrefix}${Date.now()}_${Math.random().toString(36).substring(2, 7)}.${fileExt}`;
@@ -1155,7 +1157,6 @@
         };
       };
 
-      // MediaRecorder 配音上传到 Supabase
       let mediaRecorder = null;
       let audioChunks = [];
       let isRecording = false;
@@ -1266,6 +1267,7 @@
         });
       };
 
+      // ==================== 优化后的琴谱与 30 秒下落节奏挑战系统 ====================
       const songs = {
         birthday: {
           title: '生日快乐歌 (Happy Birthday)',
@@ -1279,8 +1281,8 @@
         },
         gundam: {
           title: '高达 翔べ！ガンダム (Fly! Gundam)',
-          sheet: 'C4 E4 G4 C5 | G4 E4 C4 | F4 A4 C5 | A4 F4 D4',
-          notes: ['C4', 'E4', 'G4', 'C5', 'G4', 'E4', 'C4', 'F4', 'A4', 'C5', 'A4', 'F4', 'D4']
+          sheet: 'C4 E4 G4 C5 | G4 E4 C4 | F4 A4 C5 | A4 F4 D4 G4 C5',
+          notes: ['C4', 'E4', 'G4', 'C5', 'G4', 'E4', 'C4', 'F4', 'A4', 'C5', 'A4', 'F4', 'D4', 'G4', 'C5']
         },
         star: {
           title: '小星星 (Twinkle Star)',
@@ -1293,6 +1295,8 @@
       let score = 0;
       let combo = 0;
       let isRhythmActive = false;
+      let rhythmTimerInterval = null;
+      let challengeTimeLeft = 30;
 
       const updateSongDisplay = () => {
         const song = songs[currentSongKey];
@@ -1307,6 +1311,53 @@
       });
       updateSongDisplay();
 
+      // 排行榜渲染
+      const renderLeaderboard = () => {
+        const lbBox = $("#leaderboard-list");
+        if (!lbBox) return;
+        lbBox.replaceChildren();
+
+        const board = storage.get("circleK_piano_leaderboard", [
+          { song: "生日快乐歌 (Happy Birthday)", score: 280, date: "2026-08-18" },
+          { song: "宝可梦主题曲 (Pokémon Theme)", score: 240, date: "2026-08-18" },
+          { song: "高达 翔べ！ガンダム", score: 210, date: "2026-08-18" }
+        ]);
+
+        board.sort((a,b) => b.score - a.score);
+
+        board.forEach((item, idx) => {
+          const row = document.createElement("div");
+          row.className = "flex items-center justify-between p-3 rounded-xl bg-slate-950/80 border border-slate-800";
+          const medal = idx === 0 ? "🥇" : idx === 1 ? "🥈" : idx === 2 ? "🥉" : `✦`;
+          row.innerHTML = `
+            <div class="flex items-center gap-3">
+              <span class="font-bold text-amber-400 font-orbitron w-6">${medal} #${idx+1}</span>
+              <span class="text-white font-medium">${item.song}</span>
+            </div>
+            <div class="flex items-center gap-4">
+              <span class="text-slate-400 text-[11px]">${item.date}</span>
+              <span class="text-green-400 font-bold font-orbitron text-sm">${item.score} pts</span>
+            </div>
+          `;
+          lbBox.appendChild(row);
+        });
+      };
+      renderLeaderboard();
+
+      const saveLeaderboardScore = (songTitle, finalScore) => {
+        let board = storage.get("circleK_piano_leaderboard", []);
+        board.push({
+          song: songTitle,
+          score: finalScore,
+          date: new Date().toISOString().slice(0,10)
+        });
+        // 仅保留最高前5条
+        board.sort((a,b) => b.score - a.score);
+        if (board.length > 5) board = board.slice(0, 5);
+        storage.set("circleK_piano_leaderboard", board);
+        renderLeaderboard();
+      };
+
       const triggerKey = (noteName) => {
         playNote(noteName);
         const keyEl = $(`[data-note="${noteName}"]`);
@@ -1316,7 +1367,7 @@
         }
 
         if (isRhythmActive) {
-          score += 10;
+          score += 20;
           combo += 1;
           $("#hud-score").textContent = score;
           $("#hud-combo").textContent = combo;
@@ -1346,38 +1397,71 @@
       });
 
       $("#btn-start-rhythm").addEventListener("click", () => {
+        if (isRhythmActive) return;
         isRhythmActive = true;
         score = 0;
         combo = 0;
+        challengeTimeLeft = 30;
         $("#hud-score").textContent = "0";
         $("#hud-combo").textContent = "0";
-        $("#hud-rating").textContent = "下落节奏挑战中 ✦";
-        showToast("准备！跟着下落方块击打对应的琴键！");
+        $("#hud-timer").textContent = `${challengeTimeLeft}s`;
+        $("#hud-rating").textContent = "30秒挑战进行中 🔥";
+        showToast("🎹 30秒琴谱节奏挑战开始！看你能拿多少分！");
 
         const lane = $("#rhythm-lane");
-        lane.replaceChildren();
+        const activeTiles = [];
+
+        // 倒计时计时器
+        clearInterval(rhythmTimerInterval);
+        rhythmTimerInterval = setInterval(() => {
+          challengeTimeLeft -= 1;
+          $("#hud-timer").textContent = `${challengeTimeLeft}s`;
+          if (challengeTimeLeft <= 0) {
+            clearInterval(rhythmTimerInterval);
+            isRhythmActive = false;
+            // 清理所有下落音符
+            activeTiles.forEach(t => t.remove());
+            $("#hud-rating").textContent = `挑战结束！最终得分: ${score}`;
+            showToast(`🏆 30秒挑战结束！恭喜获得 ${score} 分！已自动记入排行榜 ✦`);
+            saveLeaderboardScore(songs[currentSongKey].title, score);
+          }
+        }, 1000);
 
         const notes = songs[currentSongKey].notes;
-        notes.forEach((note, idx) => {
-          setTimeout(() => {
-            const tile = document.createElement("div");
-            tile.className = "note-tile";
-            tile.textContent = note;
-            tile.style.left = `${(idx % 8) * 11 + 5}%`;
-            tile.style.top = "-30px";
-            lane.appendChild(tile);
+        // 循环生成下落音符，持续 30 秒
+        const spawnInterval = setInterval(() => {
+          if (!isRhythmActive) {
+            clearInterval(spawnInterval);
+            return;
+          }
+          const randomNote = notes[Math.floor(Math.random() * notes.length)];
+          const tile = document.createElement("div");
+          tile.className = "note-tile";
+          tile.textContent = randomNote;
+          
+          // 随机横向位置 (10% ~ 85%)
+          const randomLeft = Math.floor(Math.random() * 75) + 10;
+          tile.style.left = `${randomLeft}%`;
+          tile.style.top = "-30px";
+          lane.appendChild(tile);
+          activeTiles.push(tile);
 
-            let pos = -30;
-            const anim = setInterval(() => {
-              pos += 3;
-              tile.style.top = `${pos}px`;
-              if (pos > 160) {
-                clearInterval(anim);
-                tile.remove();
-              }
-            }, 20);
-          }, idx * 600);
-        });
+          let pos = -30;
+          const anim = setInterval(() => {
+            if (!isRhythmActive) {
+              clearInterval(anim);
+              return;
+            }
+            pos += 4; // 下落速度
+            tile.style.top = `${pos}px`;
+            if (pos > 180) {
+              clearInterval(anim);
+              tile.remove();
+              const idx = activeTiles.indexOf(tile);
+              if (idx > -1) activeTiles.splice(idx, 1);
+            }
+          }, 25);
+        }, 800);
       });
 
       // ==================== 1. 高达与宝可梦 收藏 (Collections) ====================
@@ -1454,7 +1538,6 @@
             <p class="text-xs text-slate-400 leading-relaxed">${item.note || "喜爱本身，就是收藏的理由。"}</p>
           `;
 
-          // 删除
           card.querySelector(".btn-del-col").addEventListener("click", () => {
             collections = collections.filter(x => x.id !== item.id);
             storage.set("circleK.collections", collections);
@@ -1462,7 +1545,6 @@
             showToast("已移除该项收藏");
           });
 
-          // 修改/编辑
           card.querySelector(".btn-edit-col").addEventListener("click", () => {
             $("#col-modal-title").textContent = "修改收藏资料";
             $("#col-edit-id").value = item.id;
@@ -1495,7 +1577,6 @@
         const editId = $("#col-edit-id").value;
 
         if (editId) {
-          // 更新现有项
           const item = collections.find(x => x.id == editId);
           if (item) {
             item.category = $("#col-category").value;
@@ -1504,7 +1585,6 @@
             showToast("成功更新收藏资料 ✏️");
           }
         } else {
-          // 新增
           collections.push({
             id: Date.now(),
             category: $("#col-category").value,
@@ -1587,7 +1667,6 @@
             <span class="absolute bottom-2 right-3 text-[10px] text-slate-600 font-mono">✦ KRESNIK WISH</span>
           `;
 
-          // 删除
           card.querySelector(".btn-del-wish").addEventListener("click", () => {
             wishes = wishes.filter(x => x.id !== item.id);
             storage.set("circleK.wishes", wishes);
@@ -1595,7 +1674,6 @@
             showToast("已取下愿望小纸条");
           });
 
-          // 重命名/编辑
           card.querySelector(".btn-edit-wish").addEventListener("click", () => {
             openGenericModal('wish', item);
           });
@@ -1713,7 +1791,6 @@
             `;
           }
 
-          // 删除
           card.querySelector(".btn-del-mem").addEventListener("click", async () => {
             await deleteFromSupabase(item.path);
             let current = storage.get("circleK_supabase_memories", []);
@@ -1725,7 +1802,6 @@
             showToast("已从 Supabase 存储库中移除");
           });
 
-          // Rename 与 移动文件夹
           card.querySelector(".btn-edit-mem").addEventListener("click", () => {
             openGenericModal('memory', item);
           });
@@ -1857,7 +1933,6 @@
         genericModal.close();
       });
 
-      // 右上角背景音乐控制按钮
       $("#btn-audio-toggle").addEventListener("click", () => {
         bgmAmbient = !bgmAmbient;
         if (bgmAmbient) {
