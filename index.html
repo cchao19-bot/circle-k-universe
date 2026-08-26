@@ -1161,12 +1161,49 @@
       let audioChunks = [];
       let isRecording = false;
 
+      const getSupportedAudioType = () => {
+        if (typeof MediaRecorder === "undefined") return "";
+        const preferredTypes = [
+          "audio/mp4;codecs=mp4a.40.2",
+          "audio/mp4",
+          "audio/webm;codecs=opus",
+          "audio/webm"
+        ];
+        return preferredTypes.find(type => MediaRecorder.isTypeSupported(type)) || "";
+      };
+
+      const resetRecordButton = () => {
+        isRecording = false;
+        $("#rec-status-text").textContent = "🔴 开始录制配音";
+        $("#rec-dot").classList.remove("rec-pulse");
+        btnRecord.classList.add("from-red-600", "to-rose-600");
+        btnRecord.classList.remove("from-slate-700", "to-slate-800");
+      };
+
       const btnRecord = $("#btn-record-voice");
       btnRecord.addEventListener("click", async () => {
         if (!isRecording) {
           try {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            mediaRecorder = new MediaRecorder(stream);
+            if (!window.isSecureContext || !navigator.mediaDevices?.getUserMedia) {
+              showToast("iPhone 需要用 Safari 打开 HTTPS 网页后才能录音，不能直接从“文件”中打开。");
+              return;
+            }
+            if (typeof MediaRecorder === "undefined") {
+              showToast("当前 iPhone 系统版本不支持网页录音，请更新 iOS 后再试。");
+              return;
+            }
+
+            const stream = await navigator.mediaDevices.getUserMedia({
+              audio: {
+                echoCancellation: true,
+                noiseSuppression: true,
+                channelCount: 1
+              }
+            });
+            const mimeType = getSupportedAudioType();
+            mediaRecorder = mimeType
+              ? new MediaRecorder(stream, { mimeType })
+              : new MediaRecorder(stream);
             audioChunks = [];
 
             mediaRecorder.ondataavailable = (e) => {
@@ -1174,8 +1211,16 @@
             };
 
             mediaRecorder.onstop = async () => {
-              const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-              const file = new File([audioBlob], `voice_${Date.now()}.webm`, { type: 'audio/webm' });
+              const actualType = mediaRecorder.mimeType || mimeType || audioChunks[0]?.type || "audio/mp4";
+              const audioBlob = new Blob(audioChunks, { type: actualType });
+              if (!audioBlob.size) {
+                showToast("没有录到声音，请重新允许麦克风权限后再试。");
+                resetRecordButton();
+                return;
+              }
+              const isMp4 = actualType.includes("mp4");
+              const extension = isMp4 ? "m4a" : "webm";
+              const file = new File([audioBlob], `voice_${Date.now()}.${extension}`, { type: actualType });
               const currentScript = $("#select-script").options[$("#select-script").selectedIndex].text;
               
               const res = await uploadToSupabase(file, "voice/");
@@ -1194,9 +1239,17 @@
                 renderVoiceTakes();
                 showToast("配音录制完毕，已同步至 Supabase！🎙");
               }
+              resetRecordButton();
             };
 
-            mediaRecorder.start();
+            mediaRecorder.onerror = (event) => {
+              console.error("录音失败:", event.error || event);
+              stream.getTracks().forEach(track => track.stop());
+              resetRecordButton();
+              showToast("录音中断了，请关闭其他正在使用麦克风的 App 后重试。");
+            };
+
+            mediaRecorder.start(1000);
             isRecording = true;
             $("#rec-status-text").textContent = "⏹ 停止录音并保存";
             $("#rec-dot").classList.add("rec-pulse");
@@ -1205,18 +1258,21 @@
             showToast("正在录音中... 请面对麦克风朗读台词 🎙");
           } catch (err) {
             console.error(err);
-            showToast("无法调取麦克风，请检查浏览器权限。");
+            resetRecordButton();
+            if (err?.name === "NotAllowedError") {
+              showToast("麦克风权限未开启：请到 iPhone 设置 → Safari → 麦克风，选择“询问”或“允许”。");
+            } else if (err?.name === "NotFoundError") {
+              showToast("没有检测到可用麦克风，请检查蓝牙耳机或系统麦克风设置。");
+            } else {
+              showToast("无法开始录音，请确认使用 Safari 打开 HTTPS 网页并允许麦克风。");
+            }
           }
         } else {
           if (mediaRecorder && mediaRecorder.state !== "inactive") {
             mediaRecorder.stop();
             mediaRecorder.stream.getTracks().forEach(track => track.stop());
           }
-          isRecording = false;
-          $("#rec-status-text").textContent = "🔴 开始录制配音";
-          $("#rec-dot").classList.remove("rec-pulse");
-          btnRecord.classList.add("from-red-600", "to-rose-600");
-          btnRecord.classList.remove("from-slate-700", "to-slate-800");
+          resetRecordButton();
         }
       });
 
