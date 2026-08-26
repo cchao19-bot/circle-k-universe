@@ -9,11 +9,8 @@
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Sans+SC:wght@400;500;700;900&family=Orbitron:wght@600;800" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Sans+SC:wght@400;500;700;900&family=Orbitron:wght@600;800&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Supabase JS SDK v2 -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
     :root {
@@ -191,6 +188,7 @@
       border-color: rgba(255, 255, 255, 0.3);
     }
 
+    /* Pokémon Pikachu & Pokéball SVG Mascots */
     .pokeball-badge {
       width: 42px;
       height: 42px;
@@ -211,6 +209,12 @@
       border-radius: 50%;
     }
 
+    /* Gundam Crest Badge Visual Elements */
+    .gundam-crest {
+      position: relative;
+      width: 50px;
+      height: 40px;
+    }
     .gundam-v-fin {
       width: 0; height: 0;
       border-left: 25px solid transparent;
@@ -290,6 +294,7 @@
       color: #fff;
     }
 
+    /* Falling rhythm lane */
     .rhythm-lane {
       height: 180px;
       background: radial-gradient(circle at 50% 0%, #152238 0%, #090e1a 100%);
@@ -314,6 +319,7 @@
       color: #000;
     }
 
+    /* Wish Post-it notes */
     .wish-card {
       min-height: 140px;
       padding: 20px;
@@ -327,6 +333,7 @@
     }
     .wish-card:hover { transform: scale(1.03) rotate(0deg) !important; z-index: 10; }
 
+    /* Citizen Profile Card Sci-Fi Hologram effect */
     .citizen-card {
       background: linear-gradient(135deg, rgba(18, 27, 45, 0.95), rgba(10, 15, 29, 0.98));
       border: 1px solid rgba(255, 215, 0, 0.3);
@@ -343,13 +350,17 @@
       pointer-events: none;
     }
 
-    .rec-pulse { animation: recPulse 1.5s infinite; }
+    /* Pulse animation for recording microphone */
+    .rec-pulse {
+      animation: recPulse 1.5s infinite;
+    }
     @keyframes recPulse {
       0% { box-shadow: 0 0 0 0 rgba(230, 35, 16, 0.7); }
       70% { box-shadow: 0 0 0 12px rgba(230, 35, 16, 0); }
       100% { box-shadow: 0 0 0 0 rgba(230, 35, 16, 0); }
     }
 
+    /* Custom Scrollbar */
     ::-webkit-scrollbar { width: 8px; height: 8px; }
     ::-webkit-scrollbar-track { background: #0a0f1d; }
     ::-webkit-scrollbar-thumb { background: #2a3a5a; border-radius: 4px; }
@@ -367,7 +378,6 @@
   </div>
 
   <main class="relative z-10">
-    <!-- Passcode & Envelope Stage -->
     <section id="stage-envelope" class="stage flex flex-col items-center justify-center p-6 text-center">
       <div class="max-w-md mx-auto space-y-4">
         <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-900/40 border border-blue-500/30 text-xs font-semibold text-blue-300 tracking-wider">
@@ -384,7 +394,7 @@
         <div id="passcode-box" class="bg-slate-900/90 border border-amber-500/40 rounded-2xl p-4 max-w-xs mx-auto shadow-xl space-y-3 my-2">
           <label class="block text-xs text-amber-300 font-medium">🔑 请输入专属通行暗号：</label>
           <div class="flex gap-2">
-            <input id="input-passcode" type="password" placeholder="提示：生日 (如 0818)" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-center text-sm text-yellow-300 focus:outline-none focus:border-amber-400">
+            <input id="input-passcode" type="password" placeholder="提示：暗号为生日 (如 0818)" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-center text-sm text-yellow-300 focus:outline-none focus:border-amber-400">
             <button id="btn-check-passcode" type="button" class="px-4 py-2 bg-gradient-to-r from-amber-500 to-red-500 text-slate-950 font-bold text-xs rounded-xl hover:brightness-110 shrink-0">
               解锁
             </button>
@@ -411,7 +421,6 @@
       </div>
     </section>
 
-    <!-- Scroll Letter Stage -->
     <section id="stage-scroll" class="stage hidden flex flex-col items-center justify-center p-4 md:p-8">
       <div class="scroll-wrap animate-fade-in">
         <div class="scroll-rod"></div>
@@ -427,8 +436,8 @@
           <div class="w-16 h-0.5 bg-amber-700/30 mx-auto"></div>
 
           <div class="space-y-4 text-sm md:text-base leading-relaxed text-amber-900 text-left md:text-center max-w-xl mx-auto">
-            <p>前两份礼物，是我从纽约寄到你身边的小心意；这第三份，我想送你一个<b>不会凋谢、实时云端同步的次元基地</b>。</p>
-            <p>这里有你的<b>高达机库</b>、<b>宝可梦图鉴</b>，有你可以弹奏与收藏的<b>琴谱小游戏</b>与<b>配音试音棚</b>，也有留给你记录声音、照片与小愿望的云端角落。</p>
+            <p>前两份礼物，是我从纽约寄到你身边的小心意；这第三份，我想送你一个<b>不会凋谢、会慢慢长大的次元基地</b>。</p>
+            <p>这里有你的<b>高达机库</b>、<b>宝可梦图鉴</b>，有你可以弹奏与收藏的<b>琴谱小游戏</b>与<b>配音试音棚</b>，也有留给你记录声音、照片与小愿望的角落。</p>
             <p>它不需要你立刻填满，也不用回答任何问题。按你自己的节奏，让这个小宇宙一点点长成你喜欢的样子。</p>
           </div>
 
@@ -446,12 +455,12 @@
       </div>
     </section>
 
-    <!-- World Stage -->
     <section id="stage-world" class="stage hidden">
       <!-- Header Bar -->
       <header class="sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 px-4 py-3">
         <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
           <div class="flex items-center gap-3">
+            <!-- Pokéball + Gundam Hybrid Avatar Icon -->
             <div class="relative w-10 h-10 rounded-full bg-gradient-to-tr from-yellow-400 to-red-600 p-0.5 flex items-center justify-center shadow-lg">
               <div class="w-full h-full bg-slate-900 rounded-full flex items-center justify-center text-yellow-400 font-extrabold font-orbitron text-lg">
                 K
@@ -467,17 +476,11 @@
             </div>
           </div>
 
+          <!-- Music Synthesizer & BGM Toggle -->
           <div class="flex items-center gap-2">
-            <!-- Supabase Cloud Sync Status Badge -->
-            <button id="btn-open-supabase-modal" class="px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-xs text-slate-200 hover:bg-slate-700 transition flex items-center gap-1.5">
-              <span id="cloud-status-dot" class="w-2 h-2 rounded-full bg-yellow-500 animate-pulse"></span>
-              <span id="cloud-status-text" class="font-semibold">云端同步</span>
-            </button>
-
-            <!-- Audio Toggle -->
             <button id="btn-audio-toggle" class="px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-xs text-slate-200 hover:bg-slate-700 transition flex items-center gap-2">
               <span id="audio-icon" class="text-yellow-400">♪</span>
-              <span id="audio-status" class="hidden sm:inline">背景音: 开启</span>
+              <span id="audio-status">空间背景音: 开启</span>
             </button>
           </div>
         </div>
@@ -491,16 +494,17 @@
           <button class="nav-btn" data-tab="tab-piano">🎹 琴谱小游戏</button>
           <button class="nav-btn" data-tab="tab-collections">🤖 高达与宝可梦收藏</button>
           <button class="nav-btn" data-tab="tab-wishes">✦ 星球许愿墙</button>
-          <button class="nav-btn" data-tab="tab-memories">▣ 记忆馆 (云端照片与声轨)</button>
+          <button class="nav-btn" data-tab="tab-memories">▣ 记忆馆 (照片与声轨)</button>
         </div>
       </nav>
 
       <!-- Main Shell Content -->
       <div class="max-w-7xl mx-auto px-4 py-8">
         
-        <!-- Tab 1: Home -->
         <div id="tab-home" class="tab-panel space-y-8">
+          <!-- Hero Banner -->
           <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-slate-900 via-blue-950 to-indigo-950 border border-blue-500/20 p-6 md:p-10 shadow-2xl">
+            <!-- Decorative Gundam Lines -->
             <div class="absolute right-0 top-0 bottom-0 w-1/2 opacity-15 pointer-events-none flex items-center justify-end pr-6">
               <div class="gundam-v-fin scale-150 transform rotate-12"></div>
             </div>
@@ -516,7 +520,7 @@
               </h2>
               
               <p class="text-slate-300 text-sm md:text-base leading-relaxed">
-                这里已接入 <b>Supabase 云端数据库与存储</b>。你在网页上上传的高达写真、试音音频与许愿卡，都会实时同步至云端，永不丢失。
+                这里没有烦琐的卡片与任务。你可以随时在<b>配音试音棚</b>对白练习、弹奏一段钢琴曲、归档你喜欢的 RX-78 高达或皮卡丘，或者挂上一纸小愿望。
               </p>
 
               <div class="pt-2 flex flex-wrap gap-3">
@@ -533,7 +537,7 @@
             </div>
           </div>
 
-          <!-- Citizen Passport Card -->
+          <!-- ✦ 宇宙居民档案 (COSMIC CITIZEN PASSPORT) -->
           <div class="citizen-card rounded-3xl p-6 md:p-8 space-y-6">
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
               <div class="flex items-center gap-3">
@@ -544,7 +548,7 @@
                 </div>
               </div>
               <span class="px-3 py-1 rounded-full bg-blue-900/60 border border-blue-400/40 text-blue-300 text-xs font-bold tracking-wider uppercase">
-                云端同步中 · CLOUD SYNC
+                认证成功 · VERIFIED
               </span>
             </div>
 
@@ -570,18 +574,63 @@
               </div>
             </div>
           </div>
+
+          <!-- Feature Cards Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Card 1: Voiceover Studio -->
+            <div class="rounded-2xl bg-slate-900/80 border border-purple-500/20 p-6 space-y-3 hover:border-purple-500/50 transition shadow-lg group">
+              <div class="w-12 h-12 rounded-xl bg-purple-600/20 border border-purple-500/30 flex items-center justify-center text-purple-400 text-2xl group-hover:scale-110 transition">
+                🎙
+              </div>
+              <h3 class="text-xl font-bold text-white">配音试音棚 & 经典台词</h3>
+              <p class="text-sm text-slate-400 leading-relaxed">
+                内置经典动漫/高达台词提词器与麦克风录音机，随时尝试并保存你的配音试音片段。
+              </p>
+              <button data-switch="tab-voice" class="text-xs font-bold text-purple-400 hover:text-purple-300 flex items-center gap-1 pt-2">
+                <span>进入试音棚</span> ➔
+              </button>
+            </div>
+
+            <!-- Card 2: Gundam Hangar -->
+            <div class="rounded-2xl bg-slate-900/80 border border-blue-500/20 p-6 space-y-3 hover:border-blue-500/50 transition shadow-lg group">
+              <div class="w-12 h-12 rounded-xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-400 text-2xl group-hover:scale-110 transition">
+                🤖
+              </div>
+              <h3 class="text-xl font-bold text-white">高达机库 & 设定集</h3>
+              <p class="text-sm text-slate-400 leading-relaxed">
+                记录强袭自由、RX-78-2、沙扎比等最爱的机体模型与经典名台词。
+              </p>
+              <button data-switch="tab-collections" class="text-xs font-bold text-blue-400 hover:text-blue-300 flex items-center gap-1 pt-2">
+                <span>前往机库</span> ➔
+              </button>
+            </div>
+
+            <!-- Card 3: Pokémon Pokédex -->
+            <div class="rounded-2xl bg-slate-900/80 border border-yellow-500/20 p-6 space-y-3 hover:border-yellow-500/50 transition shadow-lg group">
+              <div class="w-12 h-12 rounded-xl bg-yellow-500/20 border border-yellow-500/30 flex items-center justify-center text-yellow-400 text-2xl group-hover:scale-110 transition">
+                ⚡
+              </div>
+              <h3 class="text-xl font-bold text-white">宝可梦私人图鉴</h3>
+              <p class="text-sm text-slate-400 leading-relaxed">
+                收藏皮卡丘、喷火龙、耿鬼与你旅途中最想收服的宝可梦伙伴。
+              </p>
+              <button data-switch="tab-collections" class="text-xs font-bold text-yellow-400 hover:text-yellow-300 flex items-center gap-1 pt-2">
+                <span>打开图鉴</span> ➔
+              </button>
+            </div>
+          </div>
         </div>
 
-        <!-- Tab 2: Voice Studio -->
         <div id="tab-voice" class="tab-panel hidden space-y-6">
           <div class="bg-slate-900/80 p-6 rounded-2xl border border-slate-800 space-y-4">
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div>
                 <span class="text-xs font-bold text-purple-400 tracking-widest block uppercase font-orbitron">Voiceover & Dubbing Studio</span>
                 <h2 class="text-2xl font-bold text-white mt-1">🎙 Kresnik 配音试音棚</h2>
-                <p class="text-xs text-slate-400 mt-1">挑选喜欢的经典动漫台词，开启麦克风录音，录音直接上传至 Supabase 云端。</p>
+                <p class="text-xs text-slate-400 mt-1">挑选喜欢的经典动漫台词，开启麦克风录下你的专属配音片段。</p>
               </div>
 
+              <!-- Live Microphone Voice Recorder Button -->
               <div class="flex items-center gap-3">
                 <button id="btn-record-voice" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 text-white font-bold text-xs hover:brightness-110 transition shadow-lg flex items-center gap-2">
                   <span id="rec-dot" class="w-2.5 h-2.5 rounded-full bg-white"></span>
@@ -590,7 +639,7 @@
               </div>
             </div>
 
-            <!-- Prompter Script Card -->
+            <!-- Script Teleprompter / Selector Card -->
             <div class="bg-slate-950 border border-slate-800 rounded-2xl p-6 space-y-4">
               <div class="flex items-center justify-between border-b border-slate-800 pb-3">
                 <span class="text-xs font-bold text-amber-400">📜 经典配音台词卡 (Prompter Script)</span>
@@ -615,11 +664,9 @@
 
           <!-- Saved Voiceovers List -->
           <div class="space-y-4">
-            <h3 class="text-lg font-bold text-white flex items-center justify-between">
-              <span class="flex items-center gap-2">
-                <span>🎙 我的配音作品集</span>
-                <span id="voice-sync-badge" class="text-xs font-normal text-blue-400 bg-blue-900/30 px-2 py-0.5 rounded border border-blue-500/30">☁ 云端实时同步</span>
-              </span>
+            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+              <span>🎙 我的配音作品集</span>
+              <span class="text-xs font-normal text-slate-400">(已存入本地 IndexedDB)</span>
             </h3>
             <div id="voice-takes-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <!-- Dynamic Voice Takes Render Here -->
@@ -627,15 +674,15 @@
           </div>
         </div>
 
-        <!-- Tab 3: Piano Synthesizer -->
         <div id="tab-piano" class="tab-panel hidden space-y-6">
           <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-slate-900/80 p-6 rounded-2xl border border-slate-800">
             <div>
               <span class="text-xs font-bold text-amber-400 tracking-widest block uppercase font-orbitron">Interactive Web Piano Synthesizer</span>
               <h2 class="text-2xl font-bold text-white mt-1">琴谱小游戏 & 键盘弹奏</h2>
-              <p class="text-xs text-slate-400 mt-1">使用鼠标/触屏点击键盘，或使用电脑键盘按键 [A,S,D,F,G,H,J,K] 弹奏。</p>
+              <p class="text-xs text-slate-400 mt-1">使用鼠标/触屏点击键盘，或直接使用键盘按键 [A,S,D,F,G,H,J,K] 弹奏。</p>
             </div>
 
+            <!-- Game Mode Controls & Song Selector -->
             <div class="flex flex-wrap items-center gap-3">
               <select id="song-select" class="bg-slate-800 border border-slate-700 text-white text-xs rounded-xl px-3 py-2 outline-none focus:border-yellow-400">
                 <option value="birthday">曲谱：生日快乐歌 (Happy Birthday)</option>
@@ -650,7 +697,9 @@
             </div>
           </div>
 
+          <!-- Piano Game Arcade Container -->
           <div class="piano-container space-y-4">
+            <!-- Score & HUD -->
             <div class="flex items-center justify-between bg-slate-950 px-4 py-3 rounded-xl border border-slate-800 text-xs">
               <div class="flex items-center gap-4">
                 <span class="text-slate-400">当前曲目: <b id="hud-song-title" class="text-yellow-400">生日快乐歌</b></span>
@@ -662,19 +711,22 @@
               </div>
             </div>
 
+            <!-- Visual Music Sheet Guide Box -->
             <div class="bg-slate-950/90 border border-slate-800 rounded-xl p-4 text-center">
               <span class="text-[11px] text-slate-400 block mb-1">简谱提示 (Note Guide)</span>
               <div id="sheet-display" class="font-mono text-lg font-bold text-amber-300 tracking-widest break-words">
-                C4 C4 D4 C4 F4 E4 | C4 C4 D4 C4 G4 F4
+                1 1 2 1 4 3 - | 1 1 2 1 5 4 -
               </div>
             </div>
 
+            <!-- Rhythm Falling Lane -->
             <div id="rhythm-lane" class="rhythm-lane">
               <div class="absolute bottom-0 inset-x-0 h-8 bg-yellow-400/10 border-t border-yellow-400/40 pointer-events-none flex items-center justify-center text-[10px] text-yellow-300 font-bold">
                 判定击打线 (HIT LINE)
               </div>
             </div>
 
+            <!-- Interactive Piano Keys (C4 to C5 + Octave) -->
             <div id="piano-keyboard" class="piano-keyboard">
               <div class="key-white" data-note="C4" data-key="a"><span>C4</span><small class="text-[10px] text-slate-400">A</small></div>
               <div class="key-black" data-note="C#4" data-key="w"><span>C#</span></div>
@@ -693,13 +745,12 @@
           </div>
         </div>
 
-        <!-- Tab 4: Gundam & Pokemon Vault -->
         <div id="tab-collections" class="tab-panel hidden space-y-6">
           <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-slate-900/80 p-6 rounded-2xl border border-slate-800">
             <div>
               <span class="text-xs font-bold text-blue-400 tracking-widest block uppercase font-orbitron">Gundam & Pokémon Vault</span>
               <h2 class="text-2xl font-bold text-white mt-1">高达机库 & 宝可梦私人收藏</h2>
-              <p class="text-xs text-slate-400 mt-1">保存所有让你热血沸腾的机体设定、宝可梦伙伴与配音曲谱（云端自动保存）。</p>
+              <p class="text-xs text-slate-400 mt-1">保存所有让你热血沸腾的机体设定、宝可梦伙伴与配音曲谱。</p>
             </div>
 
             <button id="btn-open-collection-modal" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-xs hover:brightness-110 transition shadow-lg flex items-center gap-2">
@@ -707,18 +758,18 @@
             </button>
           </div>
 
+          <!-- Collection Grid -->
           <div id="collection-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <!-- Dynamic elements will render here -->
           </div>
         </div>
 
-        <!-- Tab 5: Wish Wall -->
         <div id="tab-wishes" class="tab-panel hidden space-y-6">
           <div class="bg-slate-900/80 p-6 rounded-2xl border border-slate-800 space-y-4">
             <div>
               <span class="text-xs font-bold text-yellow-400 tracking-widest block uppercase font-orbitron">Wish Upon A Star</span>
               <h2 class="text-2xl font-bold text-white mt-1">星球许愿墙</h2>
-              <p class="text-xs text-slate-400 mt-1">写下一个想去的地方、想盖的模型或小小心愿。云端数据库将实时同步给双方。</p>
+              <p class="text-xs text-slate-400 mt-1">写下一个想去的地方、想盖的模型或小小心愿。</p>
             </div>
 
             <form id="form-wish" class="flex flex-col sm:flex-row gap-3">
@@ -738,32 +789,32 @@
             </form>
           </div>
 
+          <!-- Wish Cards Wall -->
           <div id="wish-wall-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
             <!-- Dynamic wishes render here -->
           </div>
         </div>
 
-        <!-- Tab 6: Memories Archive -->
         <div id="tab-memories" class="tab-panel hidden space-y-6">
           <div class="bg-slate-900/80 p-6 rounded-2xl border border-slate-800 space-y-4">
             <div>
-              <span class="text-xs font-bold text-purple-400 tracking-widest block uppercase font-orbitron">Supabase Cloud Memory Archive</span>
+              <span class="text-xs font-bold text-purple-400 tracking-widest block uppercase font-orbitron">IndexedDB Memory Archive</span>
               <h2 class="text-2xl font-bold text-white mt-1">照片与音频记忆馆</h2>
-              <p class="text-xs text-slate-400 mt-1">照片与配音将直接上传至 Supabase Storage 云存储桶，生成持久公开链接并同步至数据库。</p>
+              <p class="text-xs text-slate-400 mt-1">照片与配音存放在本地浏览器数据库（IndexedDB）中，安全且无需占用云端服务器。</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <label class="border-2 border-dashed border-slate-700 hover:border-purple-500/50 rounded-2xl p-6 text-center cursor-pointer bg-slate-950/50 transition">
                 <span class="text-3xl block mb-2">📷</span>
-                <span class="text-sm font-bold text-white block">上传照片 / 高达模型摄影</span>
-                <span class="text-xs text-slate-400 block mt-1">自动保存至云端存储桶</span>
+                <span class="text-sm font-bold text-white block">收藏照片 / 高达模型摄影</span>
+                <span class="text-xs text-slate-400 block mt-1">支持 JPG, PNG, WEBP</span>
                 <input id="file-photo" type="file" accept="image/*" class="hidden">
               </label>
 
               <label class="border-2 border-dashed border-slate-700 hover:border-blue-500/50 rounded-2xl p-6 text-center cursor-pointer bg-slate-950/50 transition">
                 <span class="text-3xl block mb-2">🎙</span>
-                <span class="text-sm font-bold text-white block">上传配音片段 / 声轨文件</span>
-                <span class="text-xs text-slate-400 block mt-1">支持 MP3, WAV, WEBM</span>
+                <span class="text-sm font-bold text-white block">收藏配音片段 / 声轨文件</span>
+                <span class="text-xs text-slate-400 block mt-1">支持 MP3, WAV, AAC</span>
                 <input id="file-audio" type="file" accept="audio/*" class="hidden">
               </label>
             </div>
@@ -784,7 +835,6 @@
     </section>
   </main>
 
-  <!-- Add Collection Modal -->
   <dialog id="modal-collection" class="bg-slate-900 text-white rounded-2xl p-6 border border-slate-700 max-w-md w-full shadow-2xl backdrop:bg-black/70">
     <form id="form-collection" method="dialog" class="space-y-4">
       <div class="flex items-center justify-between border-b border-slate-800 pb-3">
@@ -819,49 +869,10 @@
 
       <div class="pt-2 flex justify-end gap-2">
         <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-xs hover:brightness-110 transition shadow-lg">
-          保存到云端收藏夹
+          保存到收藏夹
         </button>
       </div>
     </form>
-  </dialog>
-
-  <!-- Supabase Settings Modal -->
-  <dialog id="modal-supabase" class="bg-slate-900 text-white rounded-2xl p-6 border border-slate-700 max-w-md w-full shadow-2xl backdrop:bg-black/70">
-    <div class="space-y-4">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-        <h3 class="text-lg font-bold text-white flex items-center gap-2">
-          <span>⚙ Supabase 云端同步配置</span>
-        </h3>
-        <button type="button" id="btn-close-supabase-modal" class="text-slate-400 hover:text-white font-bold text-lg">✕</button>
-      </div>
-
-      <div class="space-y-3 text-xs">
-        <p class="text-slate-300 leading-relaxed">
-          填入你的 Supabase 项目凭证后，网站将自动连接 PostgreSQL 数据库与 Storage 存储桶，实现多端实时同步。
-        </p>
-
-        <div>
-          <label class="block text-yellow-300 font-bold mb-1">SUPABASE URL</label>
-          <input id="input-supabase-url" type="text" placeholder="https://your-project.supabase.co" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white font-mono placeholder-slate-600">
-        </div>
-
-        <div>
-          <label class="block text-yellow-300 font-bold mb-1">SUPABASE ANON KEY</label>
-          <input id="input-supabase-key" type="password" placeholder="eyJhbGciOiJIUzI1NiIsIn..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white font-mono placeholder-slate-600">
-        </div>
-
-        <div class="p-3 bg-slate-950 rounded-xl border border-slate-800 text-[11px] text-slate-400 space-y-1">
-          <p>✦ 所需数据库表：<code class="text-amber-300">wishes</code>, <code class="text-amber-300">media_memories</code>, <code class="text-amber-300">collections</code></p>
-          <p>✦ 所需存储桶：<code class="text-amber-300">memories</code> (Public)</p>
-        </div>
-      </div>
-
-      <div class="pt-2 flex gap-2">
-        <button id="btn-save-supabase" type="button" class="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold text-xs hover:brightness-110 transition shadow-lg">
-          保存并连接云端
-        </button>
-      </div>
-    </div>
   </dialog>
 
   <!-- Toast Notification -->
@@ -889,7 +900,7 @@
         }, 2600);
       };
 
-      // LocalStorage Utility
+      // LocalStorage Wrapper
       const storage = {
         get(key, fallback = []) {
           try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; }
@@ -899,92 +910,6 @@
         }
       };
 
-      // ==========================================
-      // ☁ SUPABASE CLIENT & CLOUD SYNC ENGINE
-      // ==========================================
-      
-      // Default Supabase Credentials (可以在此处直接写死配置，或在网页弹窗中输入)
-      let DEFAULT_SUPABASE_URL = localStorage.getItem("circleK_supabase_url") || 'https://your-project.supabase.co';
-      let DEFAULT_SUPABASE_KEY = localStorage.getItem("circleK_supabase_key") || 'your-anon-key';
-
-      let supabase = null;
-
-      const initSupabase = () => {
-        const isConfigured = DEFAULT_SUPABASE_URL && !DEFAULT_SUPABASE_URL.includes('your-project') && DEFAULT_SUPABASE_KEY && !DEFAULT_SUPABASE_KEY.includes('your-anon-key');
-        
-        const dot = $("#cloud-status-dot");
-        const statusText = $("#cloud-status-text");
-
-        if (isConfigured && window.supabase) {
-          try {
-            supabase = window.supabase.createClient(DEFAULT_SUPABASE_URL, DEFAULT_SUPABASE_KEY);
-            dot.className = "w-2 h-2 rounded-full bg-emerald-400 animate-pulse";
-            statusText.textContent = "云端已连通";
-            statusText.className = "font-semibold text-emerald-300";
-            setupRealtimeSubscriptions();
-            return true;
-          } catch (e) {
-            console.error("Supabase 初始化失败:", e);
-          }
-        }
-
-        dot.className = "w-2 h-2 rounded-full bg-amber-400";
-        statusText.textContent = "本地离线模式";
-        statusText.className = "font-semibold text-amber-300";
-        return false;
-      };
-
-      // Realtime Subscriptions for Auto-Refresh Across Devices
-      const setupRealtimeSubscriptions = () => {
-        if (!supabase) return;
-
-        supabase.channel('public:wishes')
-          .on('postgres_changes', { event: '*', schema: 'public', table: 'wishes' }, () => {
-            renderWishes();
-          }).subscribe();
-
-        supabase.channel('public:collections')
-          .on('postgres_changes', { event: '*', schema: 'public', table: 'collections' }, () => {
-            renderCollections();
-          }).subscribe();
-
-        supabase.channel('public:media_memories')
-          .on('postgres_changes', { event: '*', schema: 'public', table: 'media_memories' }, () => {
-            renderMemories();
-            renderVoiceTakes();
-          }).subscribe();
-      };
-
-      // Modal Controls for Supabase Settings
-      const modalSupabase = $("#modal-supabase");
-      $("#btn-open-supabase-modal").addEventListener("click", () => {
-        $("#input-supabase-url").value = DEFAULT_SUPABASE_URL.includes('your-project') ? '' : DEFAULT_SUPABASE_URL;
-        $("#input-supabase-key").value = DEFAULT_SUPABASE_KEY.includes('your-anon-key') ? '' : DEFAULT_SUPABASE_KEY;
-        modalSupabase.showModal();
-      });
-      $("#btn-close-supabase-modal").addEventListener("click", () => modalSupabase.close());
-
-      $("#btn-save-supabase").addEventListener("click", () => {
-        const url = $("#input-supabase-url").value.trim();
-        const key = $("#input-supabase-key").value.trim();
-        if (!url || !key) {
-          showToast("请填写完整的 Supabase URL 与 Key");
-          return;
-        }
-        localStorage.setItem("circleK_supabase_url", url);
-        localStorage.setItem("circleK_supabase_key", key);
-        DEFAULT_SUPABASE_URL = url;
-        DEFAULT_SUPABASE_KEY = key;
-        initSupabase();
-        modalSupabase.close();
-        showToast("☁ Supabase 云端连接成功！");
-        renderWishes();
-        renderCollections();
-        renderMemories();
-        renderVoiceTakes();
-      });
-
-      // Audio Context Synthesizer
       let audioCtx = null;
       const getAudioContext = () => {
         if (!audioCtx) {
@@ -996,12 +921,14 @@
         return audioCtx;
       };
 
+      // Frequency map for Piano C4 to C5
       const noteFreqs = {
         'C4': 261.63, 'C#4': 277.18, 'D4': 293.66, 'D#4': 311.13,
         'E4': 329.63, 'F4': 349.23, 'F#4': 369.99, 'G4': 392.00,
         'G#4': 415.30, 'A4': 440.00, 'A#4': 466.16, 'B4': 493.88, 'C5': 523.25
       };
 
+      // Play Synthesizer Note
       const playNote = (noteName) => {
         const freq = noteFreqs[noteName];
         if (!freq) return;
@@ -1013,6 +940,7 @@
           osc.type = 'triangle';
           osc.frequency.setValueAtTime(freq, ctx.currentTime);
 
+          // ADSR Envelope
           gain.gain.setValueAtTime(0, ctx.currentTime);
           gain.gain.linearRampToValueAtTime(0.4, ctx.currentTime + 0.04);
           gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.2);
@@ -1025,7 +953,6 @@
         } catch (e) { console.error(e); }
       };
 
-      // Passcode Lock Logic
       const VALID_PASSCODES = ["2026", "0818", "0318", "0326", "818", "kresnik", "circle-k"];
       const btnCheckPasscode = $("#btn-check-passcode");
       const inputPasscode = $("#input-passcode");
@@ -1078,7 +1005,7 @@
         $("#stage-world").classList.remove("hidden");
       });
 
-      // Navigation Tabs
+      // Navigation Tabs Logic
       const switchTab = (tabId) => {
         $$(".tab-panel").forEach(panel => panel.classList.add("hidden"));
         $(`#${tabId}`).classList.remove("hidden");
@@ -1094,7 +1021,6 @@
         btn.addEventListener("click", () => switchTab(btn.dataset.switch));
       });
 
-      // Scripts for Dubbing Studio
       const scripts = {
         gundam1: {
           zh: '"RX-78-2，阿姆罗，高达，出击！"',
@@ -1123,9 +1049,7 @@
         }
       });
 
-      // ==========================================
-      // 🎙 VOICE RECORDING & MEDIA CLOUD STORAGE
-      // ==========================================
+      // Voice Recording via MediaRecorder API
       let mediaRecorder = null;
       let audioChunks = [];
       let isRecording = false;
@@ -1145,17 +1069,20 @@
             mediaRecorder.onstop = async () => {
               const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
               const currentScript = $("#select-script").options[$("#select-script").selectedIndex].text;
-              const title = `试音: ${currentScript.slice(0, 15)}...`;
-
-              showToast("正在上传录音至云端存储桶...");
-              await saveMediaFile(audioBlob, `voice_${Date.now()}.webm`, 'voice', title);
-              renderVoiceTakes();
+              await dbPut({
+                id: Date.now(),
+                kind: "voiceover",
+                name: `试音: ${currentScript.slice(0, 15)}...`,
+                blob: audioBlob
+              });
               renderMemories();
+              renderVoiceTakes();
+              showToast("配音录制完毕，已存入作品集！🎙");
             };
 
             mediaRecorder.start();
             isRecording = true;
-            $("#rec-status-text").textContent = "⏹ 停止录音并上传云端";
+            $("#rec-status-text").textContent = "⏹ 停止录音并保存";
             $("#rec-dot").classList.add("rec-pulse");
             btnRecord.classList.remove("from-red-600", "to-rose-600");
             btnRecord.classList.add("from-slate-700", "to-slate-800");
@@ -1177,202 +1104,49 @@
         }
       });
 
-      // Function to Upload Media File to Supabase Storage or Fallback
-      const saveMediaFile = async (fileOrBlob, fileName, kind, title) => {
-        if (supabase) {
-          try {
-            const filePath = `${kind}s/${Date.now()}_${fileName}`;
-            
-            // 1. Upload to Supabase Storage Bucket ('memories')
-            const { data: storageData, error: storageError } = await supabase
-              .storage
-              .from('memories')
-              .upload(filePath, fileOrBlob);
-
-            if (storageError) throw storageError;
-
-            // 2. Get Public Access URL
-            const { data: publicUrlData } = supabase
-              .storage
-              .from('memories')
-              .getPublicUrl(filePath);
-
-            const publicUrl = publicUrlData.publicUrl;
-
-            // 3. Insert record into PostgreSQL Database Table ('media_memories')
-            const { error: dbError } = await supabase
-              .from('media_memories')
-              .insert([{ title: title || fileName, kind: kind, url: publicUrl }]);
-
-            if (dbError) throw dbError;
-
-            showToast("☁ 成功存入云端数据库！");
-            return;
-          } catch (err) {
-            console.error("Supabase 上传失败:", err);
-            showToast("云端保存失败，已转存为本地缓存");
-          }
-        }
-
-        // Fallback: LocalStorage Data URL / Object
-        const localMemories = storage.get("circleK.local_memories", []);
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          localMemories.unshift({
-            id: Date.now(),
-            title: title || fileName,
-            kind: kind,
-            url: e.target.result
-          });
-          storage.set("circleK.local_memories", localMemories);
-          renderMemories();
-          renderVoiceTakes();
-          showToast("已存入本地缓存");
-        };
-        reader.readAsDataURL(fileOrBlob);
-      };
-
-      // Fetch All Media (Photos & Voice) from Supabase or Fallback
-      const fetchMediaMemories = async () => {
-        if (supabase) {
-          try {
-            const { data, error } = await supabase
-              .from('media_memories')
-              .select('*')
-              .order('created_at', { ascending: false });
-
-            if (!error && data) return data;
-          } catch (e) {
-            console.error(e);
-          }
-        }
-        return storage.get("circleK.local_memories", []);
-      };
-
-      // Delete Media Record
-      const deleteMediaMemory = async (id) => {
-        if (supabase) {
-          try {
-            await supabase.from('media_memories').delete().eq('id', id);
-          } catch (e) { console.error(e); }
-        }
-        let local = storage.get("circleK.local_memories", []);
-        local = local.filter(x => x.id !== id);
-        storage.set("circleK.local_memories", local);
-      };
-
-      // Render Voice Studio Takes
       const renderVoiceTakes = async () => {
         const grid = $("#voice-takes-grid");
         if (!grid) return;
         grid.replaceChildren();
 
-        const list = await fetchMediaMemories();
-        const voiceList = list.filter(x => x.kind === "voice" || x.kind === "voiceover");
+        try {
+          const list = await dbGetAll();
+          const voiceList = list.filter(x => x.kind === "voiceover" || x.kind === "audio");
 
-        if (!voiceList.length) {
-          grid.innerHTML = `<div class="col-span-full p-6 text-center text-slate-500 border border-dashed border-slate-800 rounded-2xl text-xs">试音棚作品集目前为空。点击上方录音按钮录制你的第一段配音吧 ✦</div>`;
-          return;
-        }
-
-        voiceList.forEach(item => {
-          const card = document.createElement("div");
-          card.className = "bg-slate-900/90 border border-slate-800 rounded-2xl p-4 space-y-2 shadow-lg";
-
-          card.innerHTML = `
-            <div class="flex items-center justify-between text-xs">
-              <span class="font-bold text-purple-300 flex items-center gap-1.5">
-                <span class="w-2 h-2 rounded-full bg-purple-400"></span>
-                ${item.title || '试音录音'}
-              </span>
-              <button class="btn-del-take text-slate-500 hover:text-red-400 font-bold" data-id="${item.id}">✕</button>
-            </div>
-            <audio src="${item.url}" controls class="w-full h-8 mt-1"></audio>
-          `;
-
-          card.querySelector(".btn-del-take").addEventListener("click", async () => {
-            await deleteMediaMemory(item.id);
-            renderVoiceTakes();
-            renderMemories();
-            showToast("已删除该配音片段");
-          });
-
-          grid.appendChild(card);
-        });
-      };
-
-      // Render Memory Gallery (Photos & Voice)
-      const renderMemories = async () => {
-        const gallery = $("#memory-gallery");
-        if (!gallery) return;
-        gallery.replaceChildren();
-
-        const list = await fetchMediaMemories();
-
-        if (!list.length) {
-          gallery.innerHTML = `<div class="col-span-full p-8 text-center text-slate-500 border border-dashed border-slate-800 rounded-2xl">记忆馆暂无文件。上传一张高达照片或配音片段吧 ✦</div>`;
-          return;
-        }
-
-        list.forEach(item => {
-          const card = document.createElement("div");
-          card.className = "bg-slate-900/90 border border-slate-800 rounded-2xl p-4 relative space-y-3 shadow-lg";
-
-          if (item.kind === "photo") {
-            card.innerHTML = `
-              <img src="${item.url}" alt="${item.title}" class="w-full h-48 object-cover rounded-xl border border-slate-800">
-              <div class="flex items-center justify-between text-xs text-slate-400">
-                <span class="truncate max-w-[180px]">${item.title || '照片记忆'}</span>
-                <button class="btn-del-mem text-red-400 hover:text-red-300 font-bold" data-id="${item.id}">删除</button>
-              </div>
-            `;
-          } else {
-            card.innerHTML = `
-              <div class="p-4 bg-slate-950 rounded-xl flex flex-col gap-2 border border-slate-800">
-                <span class="text-xs font-bold text-purple-400">🎙 音频/配音记忆片段</span>
-                <audio src="${item.url}" controls class="w-full mt-2"></audio>
-              </div>
-              <div class="flex items-center justify-between text-xs text-slate-400">
-                <span class="truncate max-w-[180px]">${item.title || '语音文件'}</span>
-                <button class="btn-del-mem text-red-400 hover:text-red-300 font-bold" data-id="${item.id}">删除</button>
-              </div>
-            `;
+          if (!voiceList.length) {
+            grid.innerHTML = `<div class="col-span-full p-6 text-center text-slate-500 border border-dashed border-slate-800 rounded-2xl text-xs">试音棚作品集目前为空。点击上方录音按钮录制你的第一段配音吧 ✦</div>`;
+            return;
           }
 
-          card.querySelector(".btn-del-mem").addEventListener("click", async () => {
-            await deleteMediaMemory(item.id);
-            renderMemories();
-            renderVoiceTakes();
-            showToast("已从记忆馆移除");
-          });
+          voiceList.forEach(item => {
+            const card = document.createElement("div");
+            card.className = "bg-slate-900/90 border border-slate-800 rounded-2xl p-4 space-y-2";
+            const url = URL.createObjectURL(item.blob);
 
-          gallery.appendChild(card);
-        });
+            card.innerHTML = `
+              <div class="flex items-center justify-between text-xs">
+                <span class="font-bold text-purple-300 flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-purple-400"></span>
+                  ${item.name}
+                </span>
+                <button class="btn-del-take text-slate-500 hover:text-red-400 font-bold" data-id="${item.id}">✕</button>
+              </div>
+              <audio src="${url}" controls class="w-full h-8 mt-1"></audio>
+            `;
+
+            card.querySelector(".btn-del-take").addEventListener("click", async () => {
+              await dbDelete(item.id);
+              URL.revokeObjectURL(url);
+              renderVoiceTakes();
+              renderMemories();
+              showToast("已删除配音片段");
+            });
+
+            grid.appendChild(card);
+          });
+        } catch (e) { console.error(e); }
       };
 
-      // File Input Event Handlers
-      $("#file-photo").addEventListener("change", async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-        showToast("正在上传照片至云端存储...");
-        await saveMediaFile(file, file.name, 'photo', file.name);
-        renderMemories();
-        e.target.value = "";
-      });
-
-      $("#file-audio").addEventListener("change", async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-        showToast("正在上传音频至云端存储...");
-        await saveMediaFile(file, file.name, 'voice', file.name);
-        renderMemories();
-        renderVoiceTakes();
-        e.target.value = "";
-      });
-
-      // ==========================================
-      // 🎹 PIANO SYNTHESIZER & RHYTHM GAME
-      // ==========================================
       const songs = {
         birthday: {
           title: '生日快乐歌 (Happy Birthday)',
@@ -1414,6 +1188,7 @@
       });
       updateSongDisplay();
 
+      // Trigger Piano Key visually & soundwise
       const triggerKey = (noteName) => {
         playNote(noteName);
         const keyEl = $(`[data-note="${noteName}"]`);
@@ -1430,13 +1205,16 @@
         }
       };
 
+      // Click / Touch listener for keyboard keys
       $$("[data-note]").forEach(key => {
         key.addEventListener("pointerdown", (e) => {
           e.preventDefault();
-          triggerKey(key.dataset.note);
+          const note = key.dataset.note;
+          triggerKey(note);
         });
       });
 
+      // Keyboard bindings (A S D F G H J K W E T Y U)
       const keyMap = {
         'a': 'C4', 'w': 'C#4', 's': 'D4', 'e': 'D#4', 'd': 'E4',
         'f': 'F4', 't': 'F#4', 'g': 'G4', 'y': 'G#4', 'h': 'A4',
@@ -1451,6 +1229,7 @@
         }
       });
 
+      // Falling Note Game Generator
       $("#btn-start-rhythm").addEventListener("click", () => {
         isRhythmActive = true;
         score = 0;
@@ -1486,31 +1265,23 @@
         });
       });
 
-      // ==========================================
-      // 🤖 GUNDAM & POKÉMON COLLECTIONS (CLOUD/LOCAL)
-      // ==========================================
-      const renderCollections = async () => {
+      let collections = storage.get("circleK.collections", [
+        { id: 1, category: "高达机库", title: "RX-78-2 元祖高达", note: "凡是男人的浪漫，都始于这台白色恶魔！" },
+        { id: 2, category: "宝可梦图鉴", title: "皮卡丘 (Pikachu)", note: "十万伏特！永远最可靠的第一位搭档！" },
+        { id: 3, category: "配音星球", title: "动漫名台词配音试音", note: "用声音赋予角色灵魂与温暖。" },
+        { id: 4, category: "琴谱书架", title: "Merry Christmas Mr. Lawrence", note: "坂本龙一经典曲目，琴键下的温柔与力量。" }
+      ]);
+
+      const renderCollections = () => {
         const grid = $("#collection-grid");
         grid.replaceChildren();
 
-        let list = [];
-        if (supabase) {
-          try {
-            const { data } = await supabase.from('collections').select('*').order('id', { ascending: false });
-            if (data) list = data;
-          } catch (e) { console.error(e); }
-        }
-        
-        if (!list.length) {
-          list = storage.get("circleK.collections", [
-            { id: 1, category: "高达机库", title: "RX-78-2 元祖高达", note: "凡是男人的浪漫，都始于这台白色恶魔！" },
-            { id: 2, category: "宝可梦图鉴", title: "皮卡丘 (Pikachu)", note: "十万伏特！永远最可靠的第一位搭档！" },
-            { id: 3, category: "配音星球", title: "动漫名台词配音试音", note: "用声音赋予角色灵魂与温暖。" },
-            { id: 4, category: "琴谱书架", title: "Merry Christmas Mr. Lawrence", note: "坂本龙一经典曲目，琴键下的温柔与力量。" }
-          ]);
+        if (!collections.length) {
+          grid.innerHTML = `<div class="col-span-full p-8 text-center text-slate-500 border border-dashed border-slate-800 rounded-2xl">机库目前为空。归档你的第一台高达或宝可梦伙伴吧 ✦</div>`;
+          return;
         }
 
-        list.forEach(item => {
+        collections.forEach(item => {
           const card = document.createElement("div");
           card.className = "bg-slate-900/90 border border-slate-800 rounded-2xl p-5 relative space-y-3 hover:border-slate-700 transition shadow-lg";
 
@@ -1530,13 +1301,9 @@
             <p class="text-xs text-slate-400 leading-relaxed">${item.note || "喜爱本身，就是收藏的理由。"}</p>
           `;
 
-          card.querySelector(".btn-del-col").addEventListener("click", async () => {
-            if (supabase) {
-              await supabase.from('collections').delete().eq('id', item.id);
-            }
-            let local = storage.get("circleK.collections", []);
-            local = local.filter(x => x.id !== item.id);
-            storage.set("circleK.collections", local);
+          card.querySelector(".btn-del-col").addEventListener("click", () => {
+            collections = collections.filter(x => x.id !== item.id);
+            storage.set("circleK.collections", collections);
             renderCollections();
             showToast("已移除该项收藏");
           });
@@ -1549,53 +1316,34 @@
       $("#btn-open-collection-modal").addEventListener("click", () => modalCol.showModal());
       $("#btn-close-modal").addEventListener("click", () => modalCol.close());
 
-      $("#form-collection").addEventListener("submit", async (e) => {
+      $("#form-collection").addEventListener("submit", (e) => {
         e.preventDefault();
-        const newItem = {
+        collections.push({
+          id: Date.now(),
           category: $("#col-category").value,
           title: $("#col-title").value.trim(),
           note: $("#col-note").value.trim()
-        };
-
-        if (supabase) {
-          await supabase.from('collections').insert([newItem]);
-        } else {
-          const local = storage.get("circleK.collections", []);
-          local.unshift({ id: Date.now(), ...newItem });
-          storage.set("circleK.collections", local);
-        }
-
+        });
+        storage.set("circleK.collections", collections);
         renderCollections();
         modalCol.close();
         e.target.reset();
         showToast("成功添加到收藏基地 🤖");
       });
+      renderCollections();
 
-      // ==========================================
-      // ✦ WISH WALL (CLOUD/LOCAL)
-      // ==========================================
-      const renderWishes = async () => {
+      let wishes = storage.get("circleK.wishes", [
+        { id: 1, text: "愿指尖琴声常伴，生活里永远有惊喜 ✦", color: "bg-amber-200" },
+        { id: 2, text: "今年一定要亲手拼完一台 PG 版高达！", color: "bg-sky-200" }
+      ]);
+
+      const renderWishes = () => {
         const grid = $("#wish-wall-grid");
         grid.replaceChildren();
 
-        let list = [];
-        if (supabase) {
-          try {
-            const { data } = await supabase.from('wishes').select('*').order('id', { ascending: false });
-            if (data) list = data;
-          } catch (e) { console.error(e); }
-        }
-
-        if (!list.length) {
-          list = storage.get("circleK.wishes", [
-            { id: 1, text: "愿指尖琴声常伴，生活里永远有惊喜 ✦", color: "bg-amber-200" },
-            { id: 2, text: "今年一定要亲手拼完一台 PG 版高达！", color: "bg-sky-200" }
-          ]);
-        }
-
-        list.forEach((item, idx) => {
+        wishes.forEach((item, idx) => {
           const card = document.createElement("div");
-          card.className = `wish-card ${item.color || 'bg-amber-200'}`;
+          card.className = `wish-card ${item.color}`;
           card.style.transform = `rotate(${idx % 2 === 0 ? 1.5 : -1.5}deg)`;
 
           card.innerHTML = `
@@ -1604,54 +1352,150 @@
             <span class="absolute bottom-2 right-3 text-[10px] text-slate-600 font-mono">✦ KRESNIK WISH</span>
           `;
 
-          card.querySelector(".btn-del-wish").addEventListener("click", async () => {
-            if (supabase) {
-              await supabase.from('wishes').delete().eq('id', item.id);
-            }
-            let local = storage.get("circleK.wishes", []);
-            local = local.filter(x => x.id !== item.id);
-            storage.set("circleK.wishes", local);
+          card.querySelector(".btn-del-wish").addEventListener("click", () => {
+            wishes = wishes.filter(x => x.id !== item.id);
+            storage.set("circleK.wishes", wishes);
             renderWishes();
-            showToast("已下架该许愿卡");
+            showToast("已取下愿望小纸条");
           });
 
           grid.appendChild(card);
         });
       };
 
-      $("#form-wish").addEventListener("submit", async (e) => {
+      $("#form-wish").addEventListener("submit", (e) => {
         e.preventDefault();
-        const text = $("#input-wish-text").value.trim();
-        const color = $("#select-wish-color").value;
-        if (!text) return;
-
-        if (supabase) {
-          await supabase.from('wishes').insert([{ text, color }]);
-        } else {
-          const local = storage.get("circleK.wishes", []);
-          local.unshift({ id: Date.now(), text, color });
-          storage.set("circleK.wishes", local);
-        }
-
-        $("#input-wish-text").value = "";
+        wishes.push({
+          id: Date.now(),
+          text: $("#input-wish-text").value.trim(),
+          color: $("#select-wish-color").value
+        });
+        storage.set("circleK.wishes", wishes);
         renderWishes();
-        showToast("已将许愿卡贴上星球墙 ✦");
+        $("#input-wish-text").value = "";
+        showToast("愿望已挂到次元星空 ✦");
+      });
+      renderWishes();
+
+      const DB_NAME = "circle_k_memories_db";
+      const openDB = () => new Promise((resolve, reject) => {
+        const req = indexedDB.open(DB_NAME, 1);
+        req.onupgradeneeded = () => {
+          const db = req.result;
+          if (!db.objectStoreNames.contains("memories")) {
+            db.createObjectStore("memories", { keyPath: "id" });
+          }
+        };
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
       });
 
-      // Background Audio Toggle
+      const dbPut = async (val) => {
+        const db = await openDB();
+        return new Promise((resolve, reject) => {
+          const tx = db.transaction("memories", "readwrite");
+          tx.objectStore("memories").put(val);
+          tx.oncomplete = resolve;
+          tx.onerror = () => reject(tx.error);
+        });
+      };
+
+      const dbGetAll = async () => {
+        const db = await openDB();
+        return new Promise((resolve, reject) => {
+          const req = db.transaction("memories").objectStore("memories").getAll();
+          req.onsuccess = () => resolve(req.result);
+          req.onerror = () => reject(req.error);
+        });
+      };
+
+      const dbDelete = async (id) => {
+        const db = await openDB();
+        return new Promise((resolve, reject) => {
+          const tx = db.transaction("memories", "readwrite");
+          tx.objectStore("memories").delete(id);
+          tx.oncomplete = resolve;
+          tx.onerror = () => reject(tx.error);
+        });
+      };
+
+      const renderMemories = async () => {
+        const gallery = $("#memory-gallery");
+        gallery.replaceChildren();
+
+        try {
+          const list = await dbGetAll();
+          if (!list.length) {
+            gallery.innerHTML = `<div class="col-span-full p-8 text-center text-slate-500 border border-dashed border-slate-800 rounded-2xl">记忆馆暂无文件。收藏一张高达照片或声音片段吧 ✦</div>`;
+            return;
+          }
+
+          list.forEach(item => {
+            const card = document.createElement("div");
+            card.className = "bg-slate-900/90 border border-slate-800 rounded-2xl p-4 relative space-y-3";
+
+            const url = URL.createObjectURL(item.blob);
+            if (item.kind === "photo") {
+              card.innerHTML = `
+                <img src="${url}" alt="${item.name}" class="w-full h-48 object-cover rounded-xl border border-slate-800">
+                <div class="flex items-center justify-between text-xs text-slate-400">
+                  <span class="truncate max-w-[180px]">${item.name}</span>
+                  <button class="btn-del-mem text-red-400 hover:text-red-300 font-bold" data-id="${item.id}">删除</button>
+                </div>
+              `;
+            } else {
+              card.innerHTML = `
+                <div class="p-4 bg-slate-950 rounded-xl flex flex-col gap-2 border border-slate-800">
+                  <span class="text-xs font-bold text-purple-400">🎙 音频/配音记忆片段</span>
+                  <audio src="${url}" controls class="w-full mt-2"></audio>
+                </div>
+                <div class="flex items-center justify-between text-xs text-slate-400">
+                  <span class="truncate max-w-[180px]">${item.name}</span>
+                  <button class="btn-del-mem text-red-400 hover:text-red-300 font-bold" data-id="${item.id}">删除</button>
+                </div>
+              `;
+            }
+
+            card.querySelector(".btn-del-mem").addEventListener("click", async () => {
+              await dbDelete(item.id);
+              URL.revokeObjectURL(url);
+              renderMemories();
+              renderVoiceTakes();
+              showToast("已从记忆馆移除");
+            });
+
+            gallery.appendChild(card);
+          });
+        } catch (e) { console.error(e); }
+      };
+
+      $("#file-photo").addEventListener("change", async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        await dbPut({ id: Date.now(), kind: "photo", name: file.name, blob: file });
+        renderMemories();
+        showToast("照片记忆已安全收藏 📷");
+      });
+
+      $("#file-audio").addEventListener("change", async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        await dbPut({ id: Date.now(), kind: "audio", name: file.name, blob: file });
+        renderMemories();
+        renderVoiceTakes();
+        showToast("音频片段已安全归档 🎙");
+      });
+
+      renderMemories();
+      renderVoiceTakes();
+
+      // Audio BGM Synthesizer ambient toggle
       let bgmAmbient = false;
       $("#btn-audio-toggle").addEventListener("click", () => {
         bgmAmbient = !bgmAmbient;
-        $("#audio-status").textContent = `背景音: ${bgmAmbient ? "开启" : "关闭"}`;
+        $("#audio-status").textContent = `空间背景音: ${bgmAmbient ? "开启" : "关闭"}`;
         showToast(bgmAmbient ? "已开启空间背景音效 ♫" : "已暂停音效");
       });
-
-      // Initialize App & Supabase Cloud Engine
-      initSupabase();
-      renderWishes();
-      renderCollections();
-      renderMemories();
-      renderVoiceTakes();
 
     })();
   </script>
