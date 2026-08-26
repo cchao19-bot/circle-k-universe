@@ -1,0 +1,1659 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#121b2d">
+  <meta name="description" content="送给 Circle K (KRESNIK 棣棣) 的第三份生日礼物：包含高达机库、宝可梦图鉴、互动琴谱小游戏与配音试音棚的次元小宇宙。">
+  <title>Circle K (棣棣) 的次元小宇宙 ✦ 高达 & 宝可梦 & 配音基地</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Sans+SC:wght@400;500;700;900&family=Orbitron:wght@600;800" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Supabase JS SDK v2 -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    :root {
+      --bg-dark: #0a0f1d;
+      --navy: #121b2d;
+      --navy-light: #1e2c45;
+      --gundam-blue: #0055b8;
+      --gundam-red: #e62310;
+      --gundam-gold: #ffbe00;
+      --poke-yellow: #ffcb05;
+      --poke-blue: #2a75bb;
+      --poke-red: #ee1515;
+      --cream: #fff9e9;
+      --paper: #f7e8c4;
+      --text-main: #e2e8f0;
+      --text-muted: #94a3b8;
+      --shadow-lg: 0 20px 40px rgba(0,0,0,0.5);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--text-main);
+      background-color: var(--bg-dark);
+      font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .font-mashan { font-family: 'Ma Shan Zheng', cursive; }
+    .font-orbitron { font-family: 'Orbitron', sans-serif; }
+
+    .sky-bg {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      background: radial-gradient(circle at 75% 15%, rgba(0, 85, 184, 0.25) 0%, transparent 45%),
+                  radial-gradient(circle at 20% 80%, rgba(255, 203, 5, 0.15) 0%, transparent 40%),
+                  linear-gradient(to bottom, #070a14 0%, #0d1527 50%, #111a2e 100%);
+    }
+
+    .star {
+      position: absolute;
+      background: #ffffff;
+      border-radius: 50%;
+      animation: twinkle 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes twinkle { 
+      0% { opacity: 0.2; transform: scale(0.8); }
+      100% { opacity: 0.9; transform: scale(1.3); box-shadow: 0 0 10px #fff; }
+    }
+
+    .stage {
+      min-height: 100vh;
+      width: 100%;
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .envelope-btn {
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      padding: 10px;
+    }
+
+    .envelope {
+      position: relative;
+      width: 280px;
+      height: 185px;
+      margin: 20px auto 20px;
+      filter: drop-shadow(0 16px 24px rgba(0,0,0,0.5));
+      transition: transform .35s ease;
+    }
+
+    .envelope-btn:hover .envelope { transform: translateY(-8px) scale(1.02); }
+
+    .envelope-back { position: absolute; inset: 0; border-radius: 8px; background: #c59b48; }
+    .envelope-front {
+      position: absolute; inset: 0; border-radius: 8px;
+      background: linear-gradient(145deg, #e3be6d, #b58934);
+      clip-path: polygon(0 25%, 50% 72%, 100% 25%, 100% 100%, 0 100%);
+      z-index: 3;
+    }
+    .envelope-flap {
+      position: absolute; inset: 0; border-radius: 8px;
+      background: #edd59a;
+      clip-path: polygon(0 0, 100% 0, 50% 60%);
+      transform-origin: top;
+      transition: transform .65s ease;
+      z-index: 4;
+    }
+
+    .letter-card {
+      position: absolute;
+      z-index: 2;
+      width: 88%;
+      height: 130px;
+      left: 6%;
+      top: 20px;
+      padding-top: 28px;
+      background: #fff9e9;
+      color: #74512d;
+      border-radius: 6px;
+      transition: transform .65s ease;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .wax-seal {
+      position: absolute;
+      z-index: 6;
+      left: 50%;
+      top: 80px;
+      display: grid;
+      place-items: center;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      transform: translateX(-50%);
+      background: radial-gradient(circle at 35% 30%, #e62310, #880e04 80%);
+      font-family: 'Orbitron', serif;
+      font-weight: 800;
+      font-size: 22px;
+      color: #ffde8a;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4), inset 0 0 4px rgba(255,255,255,0.4);
+      border: 2px solid #b51c0d;
+    }
+
+    .envelope-btn.is-open .envelope-flap { transform: rotateX(180deg); z-index: 1; }
+    .envelope-btn.is-open .letter-card { transform: translateY(-90px); }
+
+    .scroll-wrap {
+      width: min(720px, 94vw);
+      filter: drop-shadow(0 20px 40px rgba(0,0,0,0.6));
+    }
+
+    .scroll-rod {
+      display: block;
+      height: 34px;
+      margin: 0 -22px;
+      border-radius: 20px;
+      background: linear-gradient(#4a2511, #9e693b 45%, #3d1c0b);
+      border: 2px solid #281206;
+      position: relative;
+      z-index: 2;
+    }
+
+    .scroll-paper {
+      padding: clamp(30px, 6vw, 60px);
+      background: linear-gradient(90deg, rgba(105,63,28,.14), transparent 8% 92%, rgba(105,63,28,.14)),
+                  repeating-linear-gradient(0deg, rgba(120,80,30,.03) 0 2px, transparent 2px 6px), #f7e8c4;
+      color: #3d2414;
+      border-inline: 2px solid #c49a56;
+      border-radius: 4px;
+    }
+
+    .nav-btn {
+      padding: 10px 18px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #94a3b8;
+      background: rgba(30, 44, 69, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: all 0.25s ease;
+      white-space: nowrap;
+    }
+    .nav-btn:hover { background: rgba(0, 85, 184, 0.3); color: #fff; }
+    .nav-btn.active {
+      background: linear-gradient(135deg, var(--gundam-blue), #1d4ed8);
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(0, 85, 184, 0.4);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .pokeball-badge {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: linear-gradient(to bottom, #ee1515 48%, #222 48% 52%, #ffffff 52%);
+      border: 3px solid #222;
+      position: relative;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+    .pokeball-badge::after {
+      content: "";
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 14px; height: 14px;
+      background: white;
+      border: 3px solid #222;
+      border-radius: 50%;
+    }
+
+    .gundam-v-fin {
+      width: 0; height: 0;
+      border-left: 25px solid transparent;
+      border-right: 25px solid transparent;
+      border-bottom: 35px solid var(--gundam-gold);
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+    }
+
+    .piano-container {
+      background: #0d1322;
+      border: 2px solid #2a3a5a;
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+    }
+
+    .piano-keyboard {
+      display: flex;
+      justify-content: center;
+      position: relative;
+      height: 180px;
+      user-select: none;
+      touch-action: manipulation;
+      background: #111;
+      padding: 10px 10px 0;
+      border-radius: 12px;
+    }
+
+    .key-white {
+      flex: 1;
+      max-width: 54px;
+      height: 160px;
+      background: linear-gradient(to bottom, #fdfdfd 0%, #e2e2e2 100%);
+      border: 1px solid #bbb;
+      border-radius: 0 0 6px 6px;
+      cursor: pointer;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      padding-bottom: 10px;
+      color: #333;
+      font-weight: 700;
+      font-size: 13px;
+      box-shadow: inset 0 -5px 10px rgba(0,0,0,0.1), 0 4px 6px rgba(0,0,0,0.3);
+      transition: background 0.1s, transform 0.05s;
+    }
+
+    .key-white.active, .key-white:active {
+      background: linear-gradient(to bottom, #e0e0e0 0%, #ffd97c 100%);
+      transform: translateY(3px);
+      box-shadow: inset 0 -2px 5px rgba(0,0,0,0.2);
+    }
+
+    .key-black {
+      width: 32px;
+      height: 100px;
+      background: linear-gradient(to bottom, #333 0%, #000 100%);
+      border-radius: 0 0 4px 4px;
+      cursor: pointer;
+      z-index: 2;
+      margin-left: -16px;
+      margin-right: -16px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 8px;
+      color: #999;
+      font-size: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+      transition: background 0.1s;
+    }
+
+    .key-black.active, .key-black:active {
+      background: linear-gradient(to bottom, #222 0%, var(--gundam-blue) 100%);
+      color: #fff;
+    }
+
+    .rhythm-lane {
+      height: 180px;
+      background: radial-gradient(circle at 50% 0%, #152238 0%, #090e1a 100%);
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid #223454;
+    }
+
+    .note-tile {
+      position: absolute;
+      width: 40px;
+      height: 24px;
+      border-radius: 6px;
+      background: linear-gradient(135deg, #ffcb05, #e62310);
+      box-shadow: 0 0 12px rgba(255, 203, 5, 0.8);
+      border: 1px solid #fff;
+      display: grid;
+      place-items: center;
+      font-size: 11px;
+      font-weight: bold;
+      color: #000;
+    }
+
+    .wish-card {
+      min-height: 140px;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+      position: relative;
+      font-size: 14px;
+      line-height: 1.6;
+      color: #222;
+      transition: transform 0.2s ease;
+    }
+    .wish-card:hover { transform: scale(1.03) rotate(0deg) !important; z-index: 10; }
+
+    .citizen-card {
+      background: linear-gradient(135deg, rgba(18, 27, 45, 0.95), rgba(10, 15, 29, 0.98));
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      box-shadow: 0 0 30px rgba(0, 85, 184, 0.25), inset 0 0 20px rgba(255, 203, 5, 0.05);
+      position: relative;
+      overflow: hidden;
+    }
+    .citizen-card::before {
+      content: "";
+      position: absolute;
+      top: -50%; left: -50%; width: 200%; height: 200%;
+      background: linear-gradient(45deg, transparent 45%, rgba(255,255,255,0.03) 50%, transparent 55%);
+      transform: rotate(30deg);
+      pointer-events: none;
+    }
+
+    .rec-pulse { animation: recPulse 1.5s infinite; }
+    @keyframes recPulse {
+      0% { box-shadow: 0 0 0 0 rgba(230, 35, 16, 0.7); }
+      70% { box-shadow: 0 0 0 12px rgba(230, 35, 16, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(230, 35, 16, 0); }
+    }
+
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #0a0f1d; }
+    ::-webkit-scrollbar-thumb { background: #2a3a5a; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #0055b8; }
+  </style>
+</head>
+
+<body>
+  <div class="sky-bg">
+    <div class="star" style="top:12%; left:8%; width:3px; height:3px; animation-delay:0s;"></div>
+    <div class="star" style="top:25%; left:82%; width:4px; height:4px; animation-delay:1s;"></div>
+    <div class="star" style="top:48%; left:15%; width:2px; height:2px; animation-delay:0.5s;"></div>
+    <div class="star" style="top:70%; left:75%; width:3px; height:3px; animation-delay:1.5s;"></div>
+    <div class="star" style="top:85%; left:35%; width:4px; height:4px; animation-delay:2s;"></div>
+  </div>
+
+  <main class="relative z-10">
+    <!-- Passcode & Envelope Stage -->
+    <section id="stage-envelope" class="stage flex flex-col items-center justify-center p-6 text-center">
+      <div class="max-w-md mx-auto space-y-4">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-900/40 border border-blue-500/30 text-xs font-semibold text-blue-300 tracking-wider">
+          <span class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse"></span>
+          NEW YORK ➔ WUHAN · 12H TIME DIFFERENCE
+        </div>
+        
+        <h1 class="text-4xl md:text-5xl font-extrabold text-white tracking-tight">
+          To <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-400 to-red-500 font-mashan">Circle K 棣棣</span>
+        </h1>
+        <p class="text-slate-300 text-sm md:text-base">有一封来自星空的生日信，正在等你拆开。</p>
+
+        <!-- Passcode Lock Input Box -->
+        <div id="passcode-box" class="bg-slate-900/90 border border-amber-500/40 rounded-2xl p-4 max-w-xs mx-auto shadow-xl space-y-3 my-2">
+          <label class="block text-xs text-amber-300 font-medium">🔑 请输入专属通行暗号：</label>
+          <div class="flex gap-2">
+            <input id="input-passcode" type="password" placeholder="提示：生日 (如 0818)" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-center text-sm text-yellow-300 focus:outline-none focus:border-amber-400">
+            <button id="btn-check-passcode" type="button" class="px-4 py-2 bg-gradient-to-r from-amber-500 to-red-500 text-slate-950 font-bold text-xs rounded-xl hover:brightness-110 shrink-0">
+              解锁
+            </button>
+          </div>
+          <p id="passcode-hint" class="text-[11px] text-slate-400">输入正确的生日或专属暗号即可解封信件</p>
+        </div>
+
+        <button id="btn-open-envelope" class="envelope-btn focus:outline-none group" type="button" aria-label="拆开信封">
+          <div class="envelope">
+            <div class="envelope-back"></div>
+            <div class="letter-card">
+              <span class="text-xs font-bold text-amber-700 tracking-widest block">HAPPY BIRTHDAY</span>
+              <span class="text-lg font-bold text-amber-900 block mt-1 font-mashan">第三份生日礼物</span>
+              <span class="text-[10px] text-amber-600 block mt-1">给 KRESNIK 棣棣 · 2026</span>
+            </div>
+            <div class="envelope-front"></div>
+            <div class="envelope-flap"></div>
+            <div class="wax-seal">K</div>
+          </div>
+          <span class="inline-block mt-4 text-xs font-medium text-amber-300/90 tracking-widest animate-pulse">
+            ✦ 轻触火漆印章 · 拆开这封信 ✦
+          </span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Scroll Letter Stage -->
+    <section id="stage-scroll" class="stage hidden flex flex-col items-center justify-center p-4 md:p-8">
+      <div class="scroll-wrap animate-fade-in">
+        <div class="scroll-rod"></div>
+        <article class="scroll-paper text-center space-y-5 shadow-2xl">
+          <div class="flex items-center justify-center gap-2 text-amber-800 text-xs font-bold tracking-widest">
+            <span>✦</span> THE 3RD BIRTHDAY GIFT <span>✦</span>
+          </div>
+          
+          <h2 class="text-3xl md:text-4xl font-extrabold text-amber-950 font-mashan">
+            这是送给你的第三份生日礼物
+          </h2>
+
+          <div class="w-16 h-0.5 bg-amber-700/30 mx-auto"></div>
+
+          <div class="space-y-4 text-sm md:text-base leading-relaxed text-amber-900 text-left md:text-center max-w-xl mx-auto">
+            <p>前两份礼物，是我从纽约寄到你身边的小心意；这第三份，我想送你一个<b>不会凋谢、实时云端同步的次元基地</b>。</p>
+            <p>这里有你的<b>高达机库</b>、<b>宝可梦图鉴</b>，有你可以弹奏与收藏的<b>琴谱小游戏</b>与<b>配音试音棚</b>，也有留给你记录声音、照片与小愿望的云端角落。</p>
+            <p>它不需要你立刻填满，也不用回答任何问题。按你自己的节奏，让这个小宇宙一点点长成你喜欢的样子。</p>
+          </div>
+
+          <div class="pt-4 border-t border-amber-900/10 flex flex-col items-center">
+            <p class="font-mashan text-xl text-amber-950">生日快乐，棣棣 ✦ 愿你指尖常有琴声，眼里常有星光！</p>
+            <span class="text-xs text-amber-800/80 italic mt-1">— 来自纽约的秘密基地 (Lucas)</span>
+
+            <button id="btn-enter-world" class="mt-6 px-8 py-3 rounded-full bg-gradient-to-r from-blue-700 via-indigo-800 to-blue-900 text-white font-bold text-sm shadow-xl hover:shadow-2xl hover:scale-105 transition-all flex items-center gap-2 border border-blue-400/30">
+              <span>进入 Circle K 的次元小宇宙</span>
+              <span class="text-yellow-400">➔</span>
+            </button>
+          </div>
+        </article>
+        <div class="scroll-rod"></div>
+      </div>
+    </section>
+
+    <!-- World Stage -->
+    <section id="stage-world" class="stage hidden">
+      <!-- Header Bar -->
+      <header class="sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 px-4 py-3">
+        <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <div class="relative w-10 h-10 rounded-full bg-gradient-to-tr from-yellow-400 to-red-600 p-0.5 flex items-center justify-center shadow-lg">
+              <div class="w-full h-full bg-slate-900 rounded-full flex items-center justify-center text-yellow-400 font-extrabold font-orbitron text-lg">
+                K
+              </div>
+              <span class="absolute -bottom-1 -right-1 w-4 h-4 bg-blue-500 rounded-full border-2 border-slate-900"></span>
+            </div>
+            <div>
+              <h1 class="text-base font-bold text-white flex items-center gap-2">
+                <span>Circle K 的次元小宇宙</span>
+                <span class="px-2 py-0.5 text-[10px] font-extrabold rounded bg-red-600/80 text-white font-orbitron">LV.18</span>
+              </h1>
+              <p class="text-xs text-slate-400">KRESNIK 王棣 · 武汉 ✦ 纽约</p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <!-- Supabase Cloud Sync Status Badge -->
+            <button id="btn-open-supabase-modal" class="px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-xs text-slate-200 hover:bg-slate-700 transition flex items-center gap-1.5">
+              <span id="cloud-status-dot" class="w-2 h-2 rounded-full bg-yellow-500 animate-pulse"></span>
+              <span id="cloud-status-text" class="font-semibold">云端同步</span>
+            </button>
+
+            <!-- Audio Toggle -->
+            <button id="btn-audio-toggle" class="px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-xs text-slate-200 hover:bg-slate-700 transition flex items-center gap-2">
+              <span id="audio-icon" class="text-yellow-400">♪</span>
+              <span id="audio-status" class="hidden sm:inline">背景音: 开启</span>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Navigation Bar -->
+      <nav class="sticky top-[61px] z-30 bg-slate-950/80 backdrop-blur-md border-b border-slate-800/60 py-2.5 px-4 overflow-x-auto">
+        <div class="max-w-7xl mx-auto flex items-center justify-start md:justify-center gap-2">
+          <button class="nav-btn active" data-tab="tab-home">☁ 宇宙首页</button>
+          <button class="nav-btn" data-tab="tab-voice">🎙 配音试音棚</button>
+          <button class="nav-btn" data-tab="tab-piano">🎹 琴谱小游戏</button>
+          <button class="nav-btn" data-tab="tab-collections">🤖 高达与宝可梦收藏</button>
+          <button class="nav-btn" data-tab="tab-wishes">✦ 星球许愿墙</button>
+          <button class="nav-btn" data-tab="tab-memories">▣ 记忆馆 (云端照片与声轨)</button>
+        </div>
+      </nav>
+
+      <!-- Main Shell Content -->
+      <div class="max-w-7xl mx-auto px-4 py-8">
+        
+        <!-- Tab 1: Home -->
+        <div id="tab-home" class="tab-panel space-y-8">
+          <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-slate-900 via-blue-950 to-indigo-950 border border-blue-500/20 p-6 md:p-10 shadow-2xl">
+            <div class="absolute right-0 top-0 bottom-0 w-1/2 opacity-15 pointer-events-none flex items-center justify-end pr-6">
+              <div class="gundam-v-fin scale-150 transform rotate-12"></div>
+            </div>
+
+            <div class="relative z-10 max-w-2xl space-y-4">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-yellow-400/10 border border-yellow-400/30 text-yellow-300 text-xs font-semibold">
+                <span class="pokeball-badge scale-50 -ml-2"></span>
+                宝可梦大师 & 高达王牌驾驶员 KRESNIK
+              </div>
+              
+              <h2 class="text-3xl md:text-5xl font-extrabold text-white leading-tight font-mashan">
+                欢迎来到你的专属基地，棣棣！
+              </h2>
+              
+              <p class="text-slate-300 text-sm md:text-base leading-relaxed">
+                这里已接入 <b>Supabase 云端数据库与存储</b>。你在网页上上传的高达写真、试音音频与许愿卡，都会实时同步至云端，永不丢失。
+              </p>
+
+              <div class="pt-2 flex flex-wrap gap-3">
+                <button data-switch="tab-voice" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold text-sm hover:brightness-110 transition shadow-lg flex items-center gap-2">
+                  <span>🎙 打开配音试音棚</span>
+                </button>
+                <button data-switch="tab-piano" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 font-bold text-sm hover:brightness-110 transition shadow-lg flex items-center gap-2">
+                  <span>🎹 打开琴谱小游戏</span>
+                </button>
+                <button data-switch="tab-collections" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-sm transition border border-slate-700 flex items-center gap-2">
+                  <span>🤖 高达 & 宝可梦机库</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Citizen Passport Card -->
+          <div class="citizen-card rounded-3xl p-6 md:p-8 space-y-6">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+              <div class="flex items-center gap-3">
+                <span class="text-2xl">✦</span>
+                <div>
+                  <h3 class="text-xl font-bold text-white font-orbitron tracking-wide">宇宙居民档案 · CITIZEN PROFILE</h3>
+                  <span class="text-xs text-yellow-400 font-mono">PASSPORT ID: KRESNIK-818</span>
+                </div>
+              </div>
+              <span class="px-3 py-1 rounded-full bg-blue-900/60 border border-blue-400/40 text-blue-300 text-xs font-bold tracking-wider uppercase">
+                云端同步中 · CLOUD SYNC
+              </span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
+              <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-1">
+                <span class="text-xs text-slate-400 block">代号 / NAME</span>
+                <span class="text-base font-bold text-yellow-300 font-mashan">Kresnik 王棣</span>
+              </div>
+
+              <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-1">
+                <span class="text-xs text-slate-400 block">属性 / IDENTITY</span>
+                <span class="text-sm font-bold text-purple-300">音乐人 / 配音演员 / 次元旅人</span>
+              </div>
+
+              <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-1">
+                <span class="text-xs text-slate-400 block">能量来源 / ENERGY SOURCE</span>
+                <span class="text-sm font-bold text-amber-300">琴声、热爱与好吃的 🍰</span>
+              </div>
+
+              <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-1">
+                <span class="text-xs text-slate-400 block">特殊技能 / SPECIAL SKILL</span>
+                <span class="text-sm font-bold text-emerald-300">把普通日子过得有趣 ✨</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Voice Studio -->
+        <div id="tab-voice" class="tab-panel hidden space-y-6">
+          <div class="bg-slate-900/80 p-6 rounded-2xl border border-slate-800 space-y-4">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <span class="text-xs font-bold text-purple-400 tracking-widest block uppercase font-orbitron">Voiceover & Dubbing Studio</span>
+                <h2 class="text-2xl font-bold text-white mt-1">🎙 Kresnik 配音试音棚</h2>
+                <p class="text-xs text-slate-400 mt-1">挑选喜欢的经典动漫台词，开启麦克风录音，录音直接上传至 Supabase 云端。</p>
+              </div>
+
+              <div class="flex items-center gap-3">
+                <button id="btn-record-voice" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 text-white font-bold text-xs hover:brightness-110 transition shadow-lg flex items-center gap-2">
+                  <span id="rec-dot" class="w-2.5 h-2.5 rounded-full bg-white"></span>
+                  <span id="rec-status-text">🔴 开始录制配音</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Prompter Script Card -->
+            <div class="bg-slate-950 border border-slate-800 rounded-2xl p-6 space-y-4">
+              <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <span class="text-xs font-bold text-amber-400">📜 经典配音台词卡 (Prompter Script)</span>
+                <select id="select-script" class="bg-slate-900 border border-slate-700 text-white text-xs rounded-lg px-3 py-1.5 outline-none">
+                  <option value="gundam1">高达名台词：RX-78-2 出击！</option>
+                  <option value="pokemon1">宝可梦台词：皮卡丘，就决定是你了！</option>
+                  <option value="healing">治愈系电台：致今晚星空下的每一个梦</option>
+                  <option value="hero">热血动漫台词：即便前方毫无光明，我也将撕裂黑暗！</option>
+                </select>
+              </div>
+
+              <div id="script-box" class="p-6 rounded-xl bg-slate-900/90 border border-purple-500/30 text-center space-y-2">
+                <p id="script-text-zh" class="text-lg md:text-xl font-bold text-white leading-relaxed">
+                  "RX-78-2，阿姆罗，高达，出击！"
+                </p>
+                <p id="script-text-note" class="text-xs text-purple-300 italic">
+                  【配音情绪指南】：声音沉稳有力，带有机甲出击时的热血与专注。
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Saved Voiceovers List -->
+          <div class="space-y-4">
+            <h3 class="text-lg font-bold text-white flex items-center justify-between">
+              <span class="flex items-center gap-2">
+                <span>🎙 我的配音作品集</span>
+                <span id="voice-sync-badge" class="text-xs font-normal text-blue-400 bg-blue-900/30 px-2 py-0.5 rounded border border-blue-500/30">☁ 云端实时同步</span>
+              </span>
+            </h3>
+            <div id="voice-takes-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- Dynamic Voice Takes Render Here -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 3: Piano Synthesizer -->
+        <div id="tab-piano" class="tab-panel hidden space-y-6">
+          <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-slate-900/80 p-6 rounded-2xl border border-slate-800">
+            <div>
+              <span class="text-xs font-bold text-amber-400 tracking-widest block uppercase font-orbitron">Interactive Web Piano Synthesizer</span>
+              <h2 class="text-2xl font-bold text-white mt-1">琴谱小游戏 & 键盘弹奏</h2>
+              <p class="text-xs text-slate-400 mt-1">使用鼠标/触屏点击键盘，或使用电脑键盘按键 [A,S,D,F,G,H,J,K] 弹奏。</p>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-3">
+              <select id="song-select" class="bg-slate-800 border border-slate-700 text-white text-xs rounded-xl px-3 py-2 outline-none focus:border-yellow-400">
+                <option value="birthday">曲谱：生日快乐歌 (Happy Birthday)</option>
+                <option value="pokemon">曲谱：宝可梦主题曲 (Pokémon Theme)</option>
+                <option value="gundam">曲谱：高达 翔べ！ガンダム (Fly! Gundam)</option>
+                <option value="star">曲谱：小星星 (Twinkle Star)</option>
+              </select>
+
+              <button id="btn-start-rhythm" class="px-4 py-2 rounded-xl bg-gradient-to-r from-red-600 to-amber-600 text-white font-bold text-xs hover:brightness-110 transition shadow-lg">
+                ▶ 开始下落节奏挑战
+              </button>
+            </div>
+          </div>
+
+          <div class="piano-container space-y-4">
+            <div class="flex items-center justify-between bg-slate-950 px-4 py-3 rounded-xl border border-slate-800 text-xs">
+              <div class="flex items-center gap-4">
+                <span class="text-slate-400">当前曲目: <b id="hud-song-title" class="text-yellow-400">生日快乐歌</b></span>
+                <span class="text-slate-400">得分: <b id="hud-score" class="text-green-400 text-sm font-orbitron">0</b></span>
+                <span class="text-slate-400">Combo: <b id="hud-combo" class="text-amber-400 text-sm font-orbitron">0</b></span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span id="hud-rating" class="text-xs font-bold text-blue-400">自由弹奏模式</span>
+              </div>
+            </div>
+
+            <div class="bg-slate-950/90 border border-slate-800 rounded-xl p-4 text-center">
+              <span class="text-[11px] text-slate-400 block mb-1">简谱提示 (Note Guide)</span>
+              <div id="sheet-display" class="font-mono text-lg font-bold text-amber-300 tracking-widest break-words">
+                C4 C4 D4 C4 F4 E4 | C4 C4 D4 C4 G4 F4
+              </div>
+            </div>
+
+            <div id="rhythm-lane" class="rhythm-lane">
+              <div class="absolute bottom-0 inset-x-0 h-8 bg-yellow-400/10 border-t border-yellow-400/40 pointer-events-none flex items-center justify-center text-[10px] text-yellow-300 font-bold">
+                判定击打线 (HIT LINE)
+              </div>
+            </div>
+
+            <div id="piano-keyboard" class="piano-keyboard">
+              <div class="key-white" data-note="C4" data-key="a"><span>C4</span><small class="text-[10px] text-slate-400">A</small></div>
+              <div class="key-black" data-note="C#4" data-key="w"><span>C#</span></div>
+              <div class="key-white" data-note="D4" data-key="s"><span>D4</span><small class="text-[10px] text-slate-400">S</small></div>
+              <div class="key-black" data-note="D#4" data-key="e"><span>D#</span></div>
+              <div class="key-white" data-note="E4" data-key="d"><span>E4</span><small class="text-[10px] text-slate-400">D</small></div>
+              <div class="key-white" data-note="F4" data-key="f"><span>F4</span><small class="text-[10px] text-slate-400">F</small></div>
+              <div class="key-black" data-note="F#4" data-key="t"><span>F#</span></div>
+              <div class="key-white" data-note="G4" data-key="g"><span>G4</span><small class="text-[10px] text-slate-400">G</small></div>
+              <div class="key-black" data-note="G#4" data-key="y"><span>G#</span></div>
+              <div class="key-white" data-note="A4" data-key="h"><span>A4</span><small class="text-[10px] text-slate-400">H</small></div>
+              <div class="key-black" data-note="A#4" data-key="u"><span>A#</span></div>
+              <div class="key-white" data-note="B4" data-key="j"><span>B4</span><small class="text-[10px] text-slate-400">J</small></div>
+              <div class="key-white" data-note="C5" data-key="k"><span>C5</span><small class="text-[10px] text-slate-400">K</small></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 4: Gundam & Pokemon Vault -->
+        <div id="tab-collections" class="tab-panel hidden space-y-6">
+          <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-slate-900/80 p-6 rounded-2xl border border-slate-800">
+            <div>
+              <span class="text-xs font-bold text-blue-400 tracking-widest block uppercase font-orbitron">Gundam & Pokémon Vault</span>
+              <h2 class="text-2xl font-bold text-white mt-1">高达机库 & 宝可梦私人收藏</h2>
+              <p class="text-xs text-slate-400 mt-1">保存所有让你热血沸腾的机体设定、宝可梦伙伴与配音曲谱（云端自动保存）。</p>
+            </div>
+
+            <button id="btn-open-collection-modal" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-xs hover:brightness-110 transition shadow-lg flex items-center gap-2">
+              <span>＋ 归档新收藏</span>
+            </button>
+          </div>
+
+          <div id="collection-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Dynamic elements will render here -->
+          </div>
+        </div>
+
+        <!-- Tab 5: Wish Wall -->
+        <div id="tab-wishes" class="tab-panel hidden space-y-6">
+          <div class="bg-slate-900/80 p-6 rounded-2xl border border-slate-800 space-y-4">
+            <div>
+              <span class="text-xs font-bold text-yellow-400 tracking-widest block uppercase font-orbitron">Wish Upon A Star</span>
+              <h2 class="text-2xl font-bold text-white mt-1">星球许愿墙</h2>
+              <p class="text-xs text-slate-400 mt-1">写下一个想去的地方、想盖的模型或小小心愿。云端数据库将实时同步给双方。</p>
+            </div>
+
+            <form id="form-wish" class="flex flex-col sm:flex-row gap-3">
+              <input id="input-wish-text" type="text" maxlength="120" required placeholder="例如：今年一定要组装好一台 RG 强袭自由高达！" class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-yellow-400">
+              
+              <select id="select-wish-color" class="bg-slate-950 border border-slate-800 text-white text-xs rounded-xl px-3 py-3 outline-none">
+                <option value="bg-amber-200">日光黄</option>
+                <option value="bg-emerald-200">薄荷绿</option>
+                <option value="bg-sky-200">晴空蓝</option>
+                <option value="bg-rose-200">晚霞粉</option>
+                <option value="bg-purple-200">薰衣紫</option>
+              </select>
+
+              <button type="submit" class="px-6 py-3 rounded-xl bg-gradient-to-r from-yellow-500 to-amber-600 text-slate-950 font-bold text-xs hover:brightness-110 transition shadow-lg">
+                贴上许愿墙 ✦
+              </button>
+            </form>
+          </div>
+
+          <div id="wish-wall-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+            <!-- Dynamic wishes render here -->
+          </div>
+        </div>
+
+        <!-- Tab 6: Memories Archive -->
+        <div id="tab-memories" class="tab-panel hidden space-y-6">
+          <div class="bg-slate-900/80 p-6 rounded-2xl border border-slate-800 space-y-4">
+            <div>
+              <span class="text-xs font-bold text-purple-400 tracking-widest block uppercase font-orbitron">Supabase Cloud Memory Archive</span>
+              <h2 class="text-2xl font-bold text-white mt-1">照片与音频记忆馆</h2>
+              <p class="text-xs text-slate-400 mt-1">照片与配音将直接上传至 Supabase Storage 云存储桶，生成持久公开链接并同步至数据库。</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <label class="border-2 border-dashed border-slate-700 hover:border-purple-500/50 rounded-2xl p-6 text-center cursor-pointer bg-slate-950/50 transition">
+                <span class="text-3xl block mb-2">📷</span>
+                <span class="text-sm font-bold text-white block">上传照片 / 高达模型摄影</span>
+                <span class="text-xs text-slate-400 block mt-1">自动保存至云端存储桶</span>
+                <input id="file-photo" type="file" accept="image/*" class="hidden">
+              </label>
+
+              <label class="border-2 border-dashed border-slate-700 hover:border-blue-500/50 rounded-2xl p-6 text-center cursor-pointer bg-slate-950/50 transition">
+                <span class="text-3xl block mb-2">🎙</span>
+                <span class="text-sm font-bold text-white block">上传配音片段 / 声轨文件</span>
+                <span class="text-xs text-slate-400 block mt-1">支持 MP3, WAV, WEBM</span>
+                <input id="file-audio" type="file" accept="audio/*" class="hidden">
+              </label>
+            </div>
+          </div>
+
+          <div id="memory-gallery" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            <!-- Dynamic memory items render here -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Footer -->
+      <footer class="max-w-7xl mx-auto px-4 py-8 text-center text-xs text-slate-500 border-t border-slate-800/60 mt-12 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <span>Made for Circle K (KRESNIK 王棣) · 3rd Birthday Gift · 2026</span>
+        <span>高达 & 宝可梦次元基地 · 纽约 ➔ 武汉</span>
+      </footer>
+    </section>
+  </main>
+
+  <!-- Add Collection Modal -->
+  <dialog id="modal-collection" class="bg-slate-900 text-white rounded-2xl p-6 border border-slate-700 max-w-md w-full shadow-2xl backdrop:bg-black/70">
+    <form id="form-collection" method="dialog" class="space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+          <span>归档一件新收藏</span>
+        </h3>
+        <button type="button" id="btn-close-modal" class="text-slate-400 hover:text-white font-bold text-lg">✕</button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block text-slate-300 mb-1">收藏分类</label>
+          <select id="col-category" required class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white">
+            <option value="高达机库">🤖 高达机库 (Gundam Hangar)</option>
+            <option value="宝可梦图鉴">⚡ 宝可梦图鉴 (Pokédex)</option>
+            <option value="琴谱书架">🎹 琴谱书架 (Music Sheet)</option>
+            <option value="配音星球">🎙 配音星球 (Voiceover)</option>
+            <option value="好吃研究所">🍰 好吃研究所 (Gourmet)</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-slate-300 mb-1">宝物 / 机体 / 宝可梦名称</label>
+          <input id="col-title" type="text" maxlength="40" required placeholder="例如：RX-78-2 元祖高达 / 皮卡丘" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white placeholder-slate-600">
+        </div>
+
+        <div>
+          <label class="block text-slate-300 mb-1">想记下的话 / 喜爱理由</label>
+          <textarea id="col-note" rows="3" maxlength="150" placeholder="写几句简短的感想或台词吧..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white placeholder-slate-600 resize-none"></textarea>
+        </div>
+      </div>
+
+      <div class="pt-2 flex justify-end gap-2">
+        <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-xs hover:brightness-110 transition shadow-lg">
+          保存到云端收藏夹
+        </button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Supabase Settings Modal -->
+  <dialog id="modal-supabase" class="bg-slate-900 text-white rounded-2xl p-6 border border-slate-700 max-w-md w-full shadow-2xl backdrop:bg-black/70">
+    <div class="space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+          <span>⚙ Supabase 云端同步配置</span>
+        </h3>
+        <button type="button" id="btn-close-supabase-modal" class="text-slate-400 hover:text-white font-bold text-lg">✕</button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <p class="text-slate-300 leading-relaxed">
+          填入你的 Supabase 项目凭证后，网站将自动连接 PostgreSQL 数据库与 Storage 存储桶，实现多端实时同步。
+        </p>
+
+        <div>
+          <label class="block text-yellow-300 font-bold mb-1">SUPABASE URL</label>
+          <input id="input-supabase-url" type="text" placeholder="https://your-project.supabase.co" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white font-mono placeholder-slate-600">
+        </div>
+
+        <div>
+          <label class="block text-yellow-300 font-bold mb-1">SUPABASE ANON KEY</label>
+          <input id="input-supabase-key" type="password" placeholder="eyJhbGciOiJIUzI1NiIsIn..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white font-mono placeholder-slate-600">
+        </div>
+
+        <div class="p-3 bg-slate-950 rounded-xl border border-slate-800 text-[11px] text-slate-400 space-y-1">
+          <p>✦ 所需数据库表：<code class="text-amber-300">wishes</code>, <code class="text-amber-300">media_memories</code>, <code class="text-amber-300">collections</code></p>
+          <p>✦ 所需存储桶：<code class="text-amber-300">memories</code> (Public)</p>
+        </div>
+      </div>
+
+      <div class="pt-2 flex gap-2">
+        <button id="btn-save-supabase" type="button" class="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold text-xs hover:brightness-110 transition shadow-lg">
+          保存并连接云端
+        </button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-full bg-slate-900/95 text-white text-xs border border-slate-700 shadow-2xl opacity-0 pointer-events-none transition-all duration-300 flex items-center gap-2">
+    <span class="text-yellow-400">✦</span>
+    <span id="toast-msg">提示信息</span>
+  </div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const $ = (s, r = document) => r.querySelector(s);
+      const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+
+      // Toast Notification System
+      const showToast = (msg) => {
+        const toast = $("#toast");
+        $("#toast-msg").textContent = msg;
+        toast.classList.remove("opacity-0", "pointer-events-none");
+        toast.classList.add("opacity-100");
+        clearTimeout(showToast.timer);
+        showToast.timer = setTimeout(() => {
+          toast.classList.add("opacity-0", "pointer-events-none");
+        }, 2600);
+      };
+
+      // LocalStorage Utility
+      const storage = {
+        get(key, fallback = []) {
+          try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; }
+        },
+        set(key, val) {
+          try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) { console.error(e); }
+        }
+      };
+
+      // ==========================================
+      // ☁ SUPABASE CLIENT & CLOUD SYNC ENGINE
+      // ==========================================
+      
+      // Default Supabase Credentials (可以在此处直接写死配置，或在网页弹窗中输入)
+      let DEFAULT_SUPABASE_URL = localStorage.getItem("circleK_supabase_url") || 'https://your-project.supabase.co';
+      let DEFAULT_SUPABASE_KEY = localStorage.getItem("circleK_supabase_key") || 'your-anon-key';
+
+      let supabase = null;
+
+      const initSupabase = () => {
+        const isConfigured = DEFAULT_SUPABASE_URL && !DEFAULT_SUPABASE_URL.includes('your-project') && DEFAULT_SUPABASE_KEY && !DEFAULT_SUPABASE_KEY.includes('your-anon-key');
+        
+        const dot = $("#cloud-status-dot");
+        const statusText = $("#cloud-status-text");
+
+        if (isConfigured && window.supabase) {
+          try {
+            supabase = window.supabase.createClient(DEFAULT_SUPABASE_URL, DEFAULT_SUPABASE_KEY);
+            dot.className = "w-2 h-2 rounded-full bg-emerald-400 animate-pulse";
+            statusText.textContent = "云端已连通";
+            statusText.className = "font-semibold text-emerald-300";
+            setupRealtimeSubscriptions();
+            return true;
+          } catch (e) {
+            console.error("Supabase 初始化失败:", e);
+          }
+        }
+
+        dot.className = "w-2 h-2 rounded-full bg-amber-400";
+        statusText.textContent = "本地离线模式";
+        statusText.className = "font-semibold text-amber-300";
+        return false;
+      };
+
+      // Realtime Subscriptions for Auto-Refresh Across Devices
+      const setupRealtimeSubscriptions = () => {
+        if (!supabase) return;
+
+        supabase.channel('public:wishes')
+          .on('postgres_changes', { event: '*', schema: 'public', table: 'wishes' }, () => {
+            renderWishes();
+          }).subscribe();
+
+        supabase.channel('public:collections')
+          .on('postgres_changes', { event: '*', schema: 'public', table: 'collections' }, () => {
+            renderCollections();
+          }).subscribe();
+
+        supabase.channel('public:media_memories')
+          .on('postgres_changes', { event: '*', schema: 'public', table: 'media_memories' }, () => {
+            renderMemories();
+            renderVoiceTakes();
+          }).subscribe();
+      };
+
+      // Modal Controls for Supabase Settings
+      const modalSupabase = $("#modal-supabase");
+      $("#btn-open-supabase-modal").addEventListener("click", () => {
+        $("#input-supabase-url").value = DEFAULT_SUPABASE_URL.includes('your-project') ? '' : DEFAULT_SUPABASE_URL;
+        $("#input-supabase-key").value = DEFAULT_SUPABASE_KEY.includes('your-anon-key') ? '' : DEFAULT_SUPABASE_KEY;
+        modalSupabase.showModal();
+      });
+      $("#btn-close-supabase-modal").addEventListener("click", () => modalSupabase.close());
+
+      $("#btn-save-supabase").addEventListener("click", () => {
+        const url = $("#input-supabase-url").value.trim();
+        const key = $("#input-supabase-key").value.trim();
+        if (!url || !key) {
+          showToast("请填写完整的 Supabase URL 与 Key");
+          return;
+        }
+        localStorage.setItem("circleK_supabase_url", url);
+        localStorage.setItem("circleK_supabase_key", key);
+        DEFAULT_SUPABASE_URL = url;
+        DEFAULT_SUPABASE_KEY = key;
+        initSupabase();
+        modalSupabase.close();
+        showToast("☁ Supabase 云端连接成功！");
+        renderWishes();
+        renderCollections();
+        renderMemories();
+        renderVoiceTakes();
+      });
+
+      // Audio Context Synthesizer
+      let audioCtx = null;
+      const getAudioContext = () => {
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+        return audioCtx;
+      };
+
+      const noteFreqs = {
+        'C4': 261.63, 'C#4': 277.18, 'D4': 293.66, 'D#4': 311.13,
+        'E4': 329.63, 'F4': 349.23, 'F#4': 369.99, 'G4': 392.00,
+        'G#4': 415.30, 'A4': 440.00, 'A#4': 466.16, 'B4': 493.88, 'C5': 523.25
+      };
+
+      const playNote = (noteName) => {
+        const freq = noteFreqs[noteName];
+        if (!freq) return;
+        try {
+          const ctx = getAudioContext();
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, ctx.currentTime);
+
+          gain.gain.setValueAtTime(0, ctx.currentTime);
+          gain.gain.linearRampToValueAtTime(0.4, ctx.currentTime + 0.04);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.2);
+
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+
+          osc.start();
+          osc.stop(ctx.currentTime + 1.25);
+        } catch (e) { console.error(e); }
+      };
+
+      // Passcode Lock Logic
+      const VALID_PASSCODES = ["2026", "0818", "0318", "0326", "818", "kresnik", "circle-k"];
+      const btnCheckPasscode = $("#btn-check-passcode");
+      const inputPasscode = $("#input-passcode");
+      const passcodeBox = $("#passcode-box");
+      const btnOpenEnvelope = $("#btn-open-envelope");
+      let isUnlocked = localStorage.getItem("circleK_unlocked") === "true";
+
+      const checkPasscode = () => {
+        const val = inputPasscode.value.trim().toLowerCase();
+        if (VALID_PASSCODES.includes(val)) {
+          isUnlocked = true;
+          localStorage.setItem("circleK_unlocked", "true");
+          showToast("🔑 暗号正确！通行锁定已解除 ✦");
+          if (passcodeBox) passcodeBox.classList.add("hidden");
+        } else {
+          showToast("❌ 暗号不对哦，请输入专属生日（如 0818）");
+          inputPasscode.value = "";
+          inputPasscode.focus();
+        }
+      };
+
+      if (isUnlocked && passcodeBox) {
+        passcodeBox.classList.add("hidden");
+      }
+
+      if (btnCheckPasscode) {
+        btnCheckPasscode.addEventListener("click", checkPasscode);
+        inputPasscode.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") checkPasscode();
+        });
+      }
+
+      btnOpenEnvelope.addEventListener("click", () => {
+        if (!isUnlocked) {
+          showToast("🔑 请先输入专属通行暗号解封信封哦！");
+          if (inputPasscode) inputPasscode.focus();
+          return;
+        }
+        if (btnOpenEnvelope.classList.contains("is-open")) return;
+        getAudioContext();
+        btnOpenEnvelope.classList.add("is-open");
+        setTimeout(() => {
+          $("#stage-envelope").classList.add("hidden");
+          $("#stage-scroll").classList.remove("hidden");
+        }, 700);
+      });
+
+      $("#btn-enter-world").addEventListener("click", () => {
+        $("#stage-scroll").classList.add("hidden");
+        $("#stage-world").classList.remove("hidden");
+      });
+
+      // Navigation Tabs
+      const switchTab = (tabId) => {
+        $$(".tab-panel").forEach(panel => panel.classList.add("hidden"));
+        $(`#${tabId}`).classList.remove("hidden");
+        $$(".nav-btn").forEach(btn => btn.classList.toggle("active", btn.dataset.tab === tabId));
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      };
+
+      $$(".nav-btn").forEach(btn => {
+        btn.addEventListener("click", () => switchTab(btn.dataset.tab));
+      });
+
+      $$("[data-switch]").forEach(btn => {
+        btn.addEventListener("click", () => switchTab(btn.dataset.switch));
+      });
+
+      // Scripts for Dubbing Studio
+      const scripts = {
+        gundam1: {
+          zh: '"RX-78-2，阿姆罗，高达，出击！"',
+          note: "【配音情绪指南】：声音沉稳有力，带有机甲出击时的热血与专注。"
+        },
+        pokemon1: {
+          zh: '"去吧！皮卡丘！就决定是你了，使用十万伏特！"',
+          note: "【配音情绪指南】：高亢、充满热情与与宝可梦伙伴羁绊的爆发力。"
+        },
+        healing: {
+          zh: '"晚安，世界。愿你在今晚的梦里，找到属于自己的那片闪耀星空。"',
+          note: "【配音情绪指南】：极具包容感与磁性的电台治愈音，语速偏慢、轻柔。"
+        },
+        hero: {
+          zh: '"即便前方毫无光明，我也将用我的双手，撕裂黑暗！"',
+          note: "【配音情绪指南】：坚定不移、带有一丝傲骨与不服输张力的动漫主角音。"
+        }
+      };
+
+      $("#select-script").addEventListener("change", (e) => {
+        const item = scripts[e.target.value];
+        if (item) {
+          $("#script-text-zh").textContent = item.zh;
+          $("#script-text-note").textContent = item.note;
+          showToast("已更换配音台词卡 📜");
+        }
+      });
+
+      // ==========================================
+      // 🎙 VOICE RECORDING & MEDIA CLOUD STORAGE
+      // ==========================================
+      let mediaRecorder = null;
+      let audioChunks = [];
+      let isRecording = false;
+
+      const btnRecord = $("#btn-record-voice");
+      btnRecord.addEventListener("click", async () => {
+        if (!isRecording) {
+          try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            mediaRecorder = new MediaRecorder(stream);
+            audioChunks = [];
+
+            mediaRecorder.ondataavailable = (e) => {
+              if (e.data.size > 0) audioChunks.push(e.data);
+            };
+
+            mediaRecorder.onstop = async () => {
+              const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+              const currentScript = $("#select-script").options[$("#select-script").selectedIndex].text;
+              const title = `试音: ${currentScript.slice(0, 15)}...`;
+
+              showToast("正在上传录音至云端存储桶...");
+              await saveMediaFile(audioBlob, `voice_${Date.now()}.webm`, 'voice', title);
+              renderVoiceTakes();
+              renderMemories();
+            };
+
+            mediaRecorder.start();
+            isRecording = true;
+            $("#rec-status-text").textContent = "⏹ 停止录音并上传云端";
+            $("#rec-dot").classList.add("rec-pulse");
+            btnRecord.classList.remove("from-red-600", "to-rose-600");
+            btnRecord.classList.add("from-slate-700", "to-slate-800");
+            showToast("正在录音中... 请面对麦克风朗读台词 🎙");
+          } catch (err) {
+            console.error(err);
+            showToast("无法调取麦克风，请检查浏览器权限。");
+          }
+        } else {
+          if (mediaRecorder && mediaRecorder.state !== "inactive") {
+            mediaRecorder.stop();
+            mediaRecorder.stream.getTracks().forEach(track => track.stop());
+          }
+          isRecording = false;
+          $("#rec-status-text").textContent = "🔴 开始录制配音";
+          $("#rec-dot").classList.remove("rec-pulse");
+          btnRecord.classList.add("from-red-600", "to-rose-600");
+          btnRecord.classList.remove("from-slate-700", "to-slate-800");
+        }
+      });
+
+      // Function to Upload Media File to Supabase Storage or Fallback
+      const saveMediaFile = async (fileOrBlob, fileName, kind, title) => {
+        if (supabase) {
+          try {
+            const filePath = `${kind}s/${Date.now()}_${fileName}`;
+            
+            // 1. Upload to Supabase Storage Bucket ('memories')
+            const { data: storageData, error: storageError } = await supabase
+              .storage
+              .from('memories')
+              .upload(filePath, fileOrBlob);
+
+            if (storageError) throw storageError;
+
+            // 2. Get Public Access URL
+            const { data: publicUrlData } = supabase
+              .storage
+              .from('memories')
+              .getPublicUrl(filePath);
+
+            const publicUrl = publicUrlData.publicUrl;
+
+            // 3. Insert record into PostgreSQL Database Table ('media_memories')
+            const { error: dbError } = await supabase
+              .from('media_memories')
+              .insert([{ title: title || fileName, kind: kind, url: publicUrl }]);
+
+            if (dbError) throw dbError;
+
+            showToast("☁ 成功存入云端数据库！");
+            return;
+          } catch (err) {
+            console.error("Supabase 上传失败:", err);
+            showToast("云端保存失败，已转存为本地缓存");
+          }
+        }
+
+        // Fallback: LocalStorage Data URL / Object
+        const localMemories = storage.get("circleK.local_memories", []);
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          localMemories.unshift({
+            id: Date.now(),
+            title: title || fileName,
+            kind: kind,
+            url: e.target.result
+          });
+          storage.set("circleK.local_memories", localMemories);
+          renderMemories();
+          renderVoiceTakes();
+          showToast("已存入本地缓存");
+        };
+        reader.readAsDataURL(fileOrBlob);
+      };
+
+      // Fetch All Media (Photos & Voice) from Supabase or Fallback
+      const fetchMediaMemories = async () => {
+        if (supabase) {
+          try {
+            const { data, error } = await supabase
+              .from('media_memories')
+              .select('*')
+              .order('created_at', { ascending: false });
+
+            if (!error && data) return data;
+          } catch (e) {
+            console.error(e);
+          }
+        }
+        return storage.get("circleK.local_memories", []);
+      };
+
+      // Delete Media Record
+      const deleteMediaMemory = async (id) => {
+        if (supabase) {
+          try {
+            await supabase.from('media_memories').delete().eq('id', id);
+          } catch (e) { console.error(e); }
+        }
+        let local = storage.get("circleK.local_memories", []);
+        local = local.filter(x => x.id !== id);
+        storage.set("circleK.local_memories", local);
+      };
+
+      // Render Voice Studio Takes
+      const renderVoiceTakes = async () => {
+        const grid = $("#voice-takes-grid");
+        if (!grid) return;
+        grid.replaceChildren();
+
+        const list = await fetchMediaMemories();
+        const voiceList = list.filter(x => x.kind === "voice" || x.kind === "voiceover");
+
+        if (!voiceList.length) {
+          grid.innerHTML = `<div class="col-span-full p-6 text-center text-slate-500 border border-dashed border-slate-800 rounded-2xl text-xs">试音棚作品集目前为空。点击上方录音按钮录制你的第一段配音吧 ✦</div>`;
+          return;
+        }
+
+        voiceList.forEach(item => {
+          const card = document.createElement("div");
+          card.className = "bg-slate-900/90 border border-slate-800 rounded-2xl p-4 space-y-2 shadow-lg";
+
+          card.innerHTML = `
+            <div class="flex items-center justify-between text-xs">
+              <span class="font-bold text-purple-300 flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-purple-400"></span>
+                ${item.title || '试音录音'}
+              </span>
+              <button class="btn-del-take text-slate-500 hover:text-red-400 font-bold" data-id="${item.id}">✕</button>
+            </div>
+            <audio src="${item.url}" controls class="w-full h-8 mt-1"></audio>
+          `;
+
+          card.querySelector(".btn-del-take").addEventListener("click", async () => {
+            await deleteMediaMemory(item.id);
+            renderVoiceTakes();
+            renderMemories();
+            showToast("已删除该配音片段");
+          });
+
+          grid.appendChild(card);
+        });
+      };
+
+      // Render Memory Gallery (Photos & Voice)
+      const renderMemories = async () => {
+        const gallery = $("#memory-gallery");
+        if (!gallery) return;
+        gallery.replaceChildren();
+
+        const list = await fetchMediaMemories();
+
+        if (!list.length) {
+          gallery.innerHTML = `<div class="col-span-full p-8 text-center text-slate-500 border border-dashed border-slate-800 rounded-2xl">记忆馆暂无文件。上传一张高达照片或配音片段吧 ✦</div>`;
+          return;
+        }
+
+        list.forEach(item => {
+          const card = document.createElement("div");
+          card.className = "bg-slate-900/90 border border-slate-800 rounded-2xl p-4 relative space-y-3 shadow-lg";
+
+          if (item.kind === "photo") {
+            card.innerHTML = `
+              <img src="${item.url}" alt="${item.title}" class="w-full h-48 object-cover rounded-xl border border-slate-800">
+              <div class="flex items-center justify-between text-xs text-slate-400">
+                <span class="truncate max-w-[180px]">${item.title || '照片记忆'}</span>
+                <button class="btn-del-mem text-red-400 hover:text-red-300 font-bold" data-id="${item.id}">删除</button>
+              </div>
+            `;
+          } else {
+            card.innerHTML = `
+              <div class="p-4 bg-slate-950 rounded-xl flex flex-col gap-2 border border-slate-800">
+                <span class="text-xs font-bold text-purple-400">🎙 音频/配音记忆片段</span>
+                <audio src="${item.url}" controls class="w-full mt-2"></audio>
+              </div>
+              <div class="flex items-center justify-between text-xs text-slate-400">
+                <span class="truncate max-w-[180px]">${item.title || '语音文件'}</span>
+                <button class="btn-del-mem text-red-400 hover:text-red-300 font-bold" data-id="${item.id}">删除</button>
+              </div>
+            `;
+          }
+
+          card.querySelector(".btn-del-mem").addEventListener("click", async () => {
+            await deleteMediaMemory(item.id);
+            renderMemories();
+            renderVoiceTakes();
+            showToast("已从记忆馆移除");
+          });
+
+          gallery.appendChild(card);
+        });
+      };
+
+      // File Input Event Handlers
+      $("#file-photo").addEventListener("change", async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        showToast("正在上传照片至云端存储...");
+        await saveMediaFile(file, file.name, 'photo', file.name);
+        renderMemories();
+        e.target.value = "";
+      });
+
+      $("#file-audio").addEventListener("change", async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        showToast("正在上传音频至云端存储...");
+        await saveMediaFile(file, file.name, 'voice', file.name);
+        renderMemories();
+        renderVoiceTakes();
+        e.target.value = "";
+      });
+
+      // ==========================================
+      // 🎹 PIANO SYNTHESIZER & RHYTHM GAME
+      // ==========================================
+      const songs = {
+        birthday: {
+          title: '生日快乐歌 (Happy Birthday)',
+          sheet: 'C4 C4 D4 C4 F4 E4 | C4 C4 D4 C4 G4 F4 | C4 C4 C5 A4 F4 E4 D4',
+          notes: ['C4', 'C4', 'D4', 'C4', 'F4', 'E4', 'C4', 'C4', 'D4', 'C4', 'G4', 'F4', 'C4', 'C4', 'C5', 'A4', 'F4', 'E4', 'D4']
+        },
+        pokemon: {
+          title: '宝可梦主题曲 (Pokémon Theme)',
+          sheet: 'E4 G4 A4 A4 B4 C5 | C5 B4 A4 G4 E4 | G4 A4 A4 C5 B4',
+          notes: ['E4', 'G4', 'A4', 'A4', 'B4', 'C5', 'C5', 'B4', 'A4', 'G4', 'E4', 'G4', 'A4', 'A4', 'C5', 'B4']
+        },
+        gundam: {
+          title: '高达 翔べ！ガンダム (Fly! Gundam)',
+          sheet: 'C4 E4 G4 C5 | G4 E4 C4 | F4 A4 C5 | A4 F4 D4',
+          notes: ['C4', 'E4', 'G4', 'C5', 'G4', 'E4', 'C4', 'F4', 'A4', 'C5', 'A4', 'F4', 'D4']
+        },
+        star: {
+          title: '小星星 (Twinkle Star)',
+          sheet: 'C4 C4 G4 G4 A4 A4 G4 | F4 F4 E4 E4 D4 D4 C4',
+          notes: ['C4', 'C4', 'G4', 'G4', 'A4', 'A4', 'G4', 'F4', 'F4', 'E4', 'E4', 'D4', 'D4', 'C4']
+        }
+      };
+
+      let currentSongKey = 'birthday';
+      let score = 0;
+      let combo = 0;
+      let isRhythmActive = false;
+
+      const updateSongDisplay = () => {
+        const song = songs[currentSongKey];
+        $("#hud-song-title").textContent = song.title;
+        $("#sheet-display").textContent = song.sheet;
+      };
+
+      $("#song-select").addEventListener("change", (e) => {
+        currentSongKey = e.target.value;
+        updateSongDisplay();
+        showToast(`已切换曲谱：${songs[currentSongKey].title}`);
+      });
+      updateSongDisplay();
+
+      const triggerKey = (noteName) => {
+        playNote(noteName);
+        const keyEl = $(`[data-note="${noteName}"]`);
+        if (keyEl) {
+          keyEl.classList.add("active");
+          setTimeout(() => keyEl.classList.remove("active"), 150);
+        }
+
+        if (isRhythmActive) {
+          score += 10;
+          combo += 1;
+          $("#hud-score").textContent = score;
+          $("#hud-combo").textContent = combo;
+        }
+      };
+
+      $$("[data-note]").forEach(key => {
+        key.addEventListener("pointerdown", (e) => {
+          e.preventDefault();
+          triggerKey(key.dataset.note);
+        });
+      });
+
+      const keyMap = {
+        'a': 'C4', 'w': 'C#4', 's': 'D4', 'e': 'D#4', 'd': 'E4',
+        'f': 'F4', 't': 'F#4', 'g': 'G4', 'y': 'G#4', 'h': 'A4',
+        'u': 'A#4', 'j': 'B4', 'k': 'C5'
+      };
+
+      window.addEventListener("keydown", (e) => {
+        if ($("#tab-piano").classList.contains("hidden")) return;
+        const note = keyMap[e.key.toLowerCase()];
+        if (note && !e.repeat) {
+          triggerKey(note);
+        }
+      });
+
+      $("#btn-start-rhythm").addEventListener("click", () => {
+        isRhythmActive = true;
+        score = 0;
+        combo = 0;
+        $("#hud-score").textContent = "0";
+        $("#hud-combo").textContent = "0";
+        $("#hud-rating").textContent = "下落节奏挑战中 ✦";
+        showToast("准备！跟着下落方块击打对应的琴键！");
+
+        const lane = $("#rhythm-lane");
+        lane.replaceChildren();
+
+        const notes = songs[currentSongKey].notes;
+        notes.forEach((note, idx) => {
+          setTimeout(() => {
+            const tile = document.createElement("div");
+            tile.className = "note-tile";
+            tile.textContent = note;
+            tile.style.left = `${(idx % 8) * 11 + 5}%`;
+            tile.style.top = "-30px";
+            lane.appendChild(tile);
+
+            let pos = -30;
+            const anim = setInterval(() => {
+              pos += 3;
+              tile.style.top = `${pos}px`;
+              if (pos > 160) {
+                clearInterval(anim);
+                tile.remove();
+              }
+            }, 20);
+          }, idx * 600);
+        });
+      });
+
+      // ==========================================
+      // 🤖 GUNDAM & POKÉMON COLLECTIONS (CLOUD/LOCAL)
+      // ==========================================
+      const renderCollections = async () => {
+        const grid = $("#collection-grid");
+        grid.replaceChildren();
+
+        let list = [];
+        if (supabase) {
+          try {
+            const { data } = await supabase.from('collections').select('*').order('id', { ascending: false });
+            if (data) list = data;
+          } catch (e) { console.error(e); }
+        }
+        
+        if (!list.length) {
+          list = storage.get("circleK.collections", [
+            { id: 1, category: "高达机库", title: "RX-78-2 元祖高达", note: "凡是男人的浪漫，都始于这台白色恶魔！" },
+            { id: 2, category: "宝可梦图鉴", title: "皮卡丘 (Pikachu)", note: "十万伏特！永远最可靠的第一位搭档！" },
+            { id: 3, category: "配音星球", title: "动漫名台词配音试音", note: "用声音赋予角色灵魂与温暖。" },
+            { id: 4, category: "琴谱书架", title: "Merry Christmas Mr. Lawrence", note: "坂本龙一经典曲目，琴键下的温柔与力量。" }
+          ]);
+        }
+
+        list.forEach(item => {
+          const card = document.createElement("div");
+          card.className = "bg-slate-900/90 border border-slate-800 rounded-2xl p-5 relative space-y-3 hover:border-slate-700 transition shadow-lg";
+
+          const isGundam = item.category === "高达机库";
+          const isPoke = item.category === "宝可梦图鉴";
+
+          const badgeClass = isGundam ? "bg-blue-900/40 text-blue-300 border-blue-500/30" :
+                             isPoke ? "bg-yellow-900/40 text-yellow-300 border-yellow-500/30" :
+                             "bg-purple-900/40 text-purple-300 border-purple-500/30";
+
+          card.innerHTML = `
+            <div class="flex items-center justify-between">
+              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${badgeClass}">${item.category}</span>
+              <button class="btn-del-col text-slate-500 hover:text-red-400 font-bold text-sm" data-id="${item.id}">✕</button>
+            </div>
+            <h3 class="text-lg font-bold text-white">${item.title}</h3>
+            <p class="text-xs text-slate-400 leading-relaxed">${item.note || "喜爱本身，就是收藏的理由。"}</p>
+          `;
+
+          card.querySelector(".btn-del-col").addEventListener("click", async () => {
+            if (supabase) {
+              await supabase.from('collections').delete().eq('id', item.id);
+            }
+            let local = storage.get("circleK.collections", []);
+            local = local.filter(x => x.id !== item.id);
+            storage.set("circleK.collections", local);
+            renderCollections();
+            showToast("已移除该项收藏");
+          });
+
+          grid.appendChild(card);
+        });
+      };
+
+      const modalCol = $("#modal-collection");
+      $("#btn-open-collection-modal").addEventListener("click", () => modalCol.showModal());
+      $("#btn-close-modal").addEventListener("click", () => modalCol.close());
+
+      $("#form-collection").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const newItem = {
+          category: $("#col-category").value,
+          title: $("#col-title").value.trim(),
+          note: $("#col-note").value.trim()
+        };
+
+        if (supabase) {
+          await supabase.from('collections').insert([newItem]);
+        } else {
+          const local = storage.get("circleK.collections", []);
+          local.unshift({ id: Date.now(), ...newItem });
+          storage.set("circleK.collections", local);
+        }
+
+        renderCollections();
+        modalCol.close();
+        e.target.reset();
+        showToast("成功添加到收藏基地 🤖");
+      });
+
+      // ==========================================
+      // ✦ WISH WALL (CLOUD/LOCAL)
+      // ==========================================
+      const renderWishes = async () => {
+        const grid = $("#wish-wall-grid");
+        grid.replaceChildren();
+
+        let list = [];
+        if (supabase) {
+          try {
+            const { data } = await supabase.from('wishes').select('*').order('id', { ascending: false });
+            if (data) list = data;
+          } catch (e) { console.error(e); }
+        }
+
+        if (!list.length) {
+          list = storage.get("circleK.wishes", [
+            { id: 1, text: "愿指尖琴声常伴，生活里永远有惊喜 ✦", color: "bg-amber-200" },
+            { id: 2, text: "今年一定要亲手拼完一台 PG 版高达！", color: "bg-sky-200" }
+          ]);
+        }
+
+        list.forEach((item, idx) => {
+          const card = document.createElement("div");
+          card.className = `wish-card ${item.color || 'bg-amber-200'}`;
+          card.style.transform = `rotate(${idx % 2 === 0 ? 1.5 : -1.5}deg)`;
+
+          card.innerHTML = `
+            <button class="btn-del-wish absolute top-2 right-2 text-black/50 hover:text-red-600 font-bold text-xs">✕</button>
+            <p class="font-medium text-slate-900">${item.text}</p>
+            <span class="absolute bottom-2 right-3 text-[10px] text-slate-600 font-mono">✦ KRESNIK WISH</span>
+          `;
+
+          card.querySelector(".btn-del-wish").addEventListener("click", async () => {
+            if (supabase) {
+              await supabase.from('wishes').delete().eq('id', item.id);
+            }
+            let local = storage.get("circleK.wishes", []);
+            local = local.filter(x => x.id !== item.id);
+            storage.set("circleK.wishes", local);
+            renderWishes();
+            showToast("已下架该许愿卡");
+          });
+
+          grid.appendChild(card);
+        });
+      };
+
+      $("#form-wish").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const text = $("#input-wish-text").value.trim();
+        const color = $("#select-wish-color").value;
+        if (!text) return;
+
+        if (supabase) {
+          await supabase.from('wishes').insert([{ text, color }]);
+        } else {
+          const local = storage.get("circleK.wishes", []);
+          local.unshift({ id: Date.now(), text, color });
+          storage.set("circleK.wishes", local);
+        }
+
+        $("#input-wish-text").value = "";
+        renderWishes();
+        showToast("已将许愿卡贴上星球墙 ✦");
+      });
+
+      // Background Audio Toggle
+      let bgmAmbient = false;
+      $("#btn-audio-toggle").addEventListener("click", () => {
+        bgmAmbient = !bgmAmbient;
+        $("#audio-status").textContent = `背景音: ${bgmAmbient ? "开启" : "关闭"}`;
+        showToast(bgmAmbient ? "已开启空间背景音效 ♫" : "已暂停音效");
+      });
+
+      // Initialize App & Supabase Cloud Engine
+      initSupabase();
+      renderWishes();
+      renderCollections();
+      renderMemories();
+      renderVoiceTakes();
+
+    })();
+  </script>
+</body>
+</html>
