@@ -480,7 +480,7 @@
           <div class="flex items-center gap-2">
             <button id="btn-audio-toggle" class="px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-xs text-slate-200 hover:bg-slate-700 transition flex items-center gap-2">
               <span id="audio-icon" class="text-yellow-400">♪</span>
-              <span id="audio-status">空间背景音: 开启</span>
+              <span id="audio-status">空间背景音: 关闭</span>
             </button>
           </div>
         </div>
@@ -612,7 +612,7 @@
               </div>
               <h3 class="text-xl font-bold text-white">宝可梦私人图鉴</h3>
               <p class="text-sm text-slate-400 leading-relaxed">
-                收藏皮卡丘、喷火龙、耿鬼与你旅途中最想收服的宝可梦伙伴。
+                收藏皮卡丘、胖丁、耿鬼与你旅途中最想收服的宝可梦伙伴。
               </p>
               <button data-switch="tab-collections" class="text-xs font-bold text-yellow-400 hover:text-yellow-300 flex items-center gap-1 pt-2">
                 <span>打开图鉴</span> ➔
@@ -887,6 +887,14 @@
 
       const $ = (s, r = document) => r.querySelector(s);
       const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+
+      // Supabase Storage BGM CDN Configuration
+      // 请修改下面的 bgmFileName 为你在 Supabase media bucket 里实际存储的文件名
+      const bgmFileName = "bgm.mp3"; 
+      const supabaseBgmUrl = `https://iihcmhgeqewacvldebuk.supabase.co/storage/v1/object/public/media/${bgmFileName}`;
+
+      const bgmAudio = new Audio(supabaseBgmUrl);
+      bgmAudio.loop = true;
 
       // Toast Notification System
       const showToast = (msg) => {
@@ -1489,12 +1497,25 @@
       renderMemories();
       renderVoiceTakes();
 
-      // Audio BGM Synthesizer ambient toggle
+      // Audio BGM Toggle connected to Supabase Storage direct link
       let bgmAmbient = false;
       $("#btn-audio-toggle").addEventListener("click", () => {
         bgmAmbient = !bgmAmbient;
-        $("#audio-status").textContent = `空间背景音: ${bgmAmbient ? "开启" : "关闭"}`;
-        showToast(bgmAmbient ? "已开启空间背景音效 ♫" : "已暂停音效");
+        if (bgmAmbient) {
+          bgmAudio.play().then(() => {
+            $("#audio-status").textContent = "空间背景音: 开启";
+            showToast("已开启 Supabase 背景音乐 ♫");
+          }).catch(err => {
+            console.error("音频播放失败:", err);
+            bgmAmbient = false;
+            $("#audio-status").textContent = "空间背景音: 关闭";
+            showToast("音乐加载失败，请确认音频文件名与 Public 权限配置");
+          });
+        } else {
+          bgmAudio.pause();
+          $("#audio-status").textContent = "空间背景音: 关闭";
+          showToast("已暂停背景音乐");
+        }
       });
 
     })();
