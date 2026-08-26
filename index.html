@@ -730,6 +730,21 @@
             </button>
           </div>
 
+          <!-- 增加: 分类与排序栏控制 -->
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-slate-950/60 p-4 rounded-xl border border-slate-800/80 text-xs">
+            <div class="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0" id="col-category-filters">
+              <!-- JS动态渲染分类筛选按钮 -->
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+              <span class="text-slate-400">排序:</span>
+              <select id="col-sort-select" class="bg-slate-900 border border-slate-700 text-white rounded-lg px-2.5 py-1.5 outline-none">
+                <option value="newest">最新添加</option>
+                <option value="oldest">最早添加</option>
+                <option value="title">名称 (A-Z)</option>
+              </select>
+            </div>
+          </div>
+
           <div id="collection-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
           </div>
         </div>
@@ -745,6 +760,13 @@
             <form id="form-wish" class="flex flex-col sm:flex-row gap-3">
               <input id="input-wish-text" type="text" maxlength="120" required placeholder="例如：今年一定要组装好一台 RG 强袭自由高达！" class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-yellow-400">
               
+              <select id="select-wish-category" class="bg-slate-950 border border-slate-800 text-white text-xs rounded-xl px-3 py-3 outline-none">
+                <option value="未分类">📁 默认文件夹</option>
+                <option value="高达模型愿望">🤖 高达模型愿望</option>
+                <option value="旅行与美食">🍰 旅行与美食</option>
+                <option value="音乐与配音">🎙 音乐与配音</option>
+              </select>
+
               <select id="select-wish-color" class="bg-slate-950 border border-slate-800 text-white text-xs rounded-xl px-3 py-3 outline-none">
                 <option value="bg-amber-200">日光黄</option>
                 <option value="bg-emerald-200">薄荷绿</option>
@@ -757,6 +779,20 @@
                 贴上许愿墙 ✦
               </button>
             </form>
+          </div>
+
+          <!-- 许愿墙分类筛选 & 排序栏 -->
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-slate-950/60 p-4 rounded-xl border border-slate-800/80 text-xs">
+            <div class="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0" id="wish-category-filters">
+              <!-- JS 动态渲染许愿墙分类 -->
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+              <span class="text-slate-400">排序:</span>
+              <select id="wish-sort-select" class="bg-slate-900 border border-slate-700 text-white rounded-lg px-2.5 py-1.5 outline-none">
+                <option value="newest">最新时间</option>
+                <option value="oldest">最早时间</option>
+              </select>
+            </div>
           </div>
 
           <div id="wish-wall-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
@@ -788,6 +824,21 @@
             </div>
           </div>
 
+          <!-- 记忆馆分类筛选与排序栏 -->
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-slate-950/60 p-4 rounded-xl border border-slate-800/80 text-xs">
+            <div class="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0" id="mem-folder-filters">
+              <!-- JS 动态渲染记忆馆文件夹按钮 -->
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+              <span class="text-slate-400">排序:</span>
+              <select id="mem-sort-select" class="bg-slate-900 border border-slate-700 text-white rounded-lg px-2.5 py-1.5 outline-none">
+                <option value="newest">最新上传</option>
+                <option value="oldest">最早上传</option>
+                <option value="title">文件名 (A-Z)</option>
+              </select>
+            </div>
+          </div>
+
           <div id="memory-gallery" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           </div>
         </div>
@@ -801,18 +852,20 @@
     </section>
   </main>
 
+  <!-- 归档收藏 Modal -->
   <dialog id="modal-collection" class="bg-slate-900 text-white rounded-2xl p-6 border border-slate-700 max-w-md w-full shadow-2xl backdrop:bg-black/70">
     <form id="form-collection" method="dialog" class="space-y-4">
+      <input type="hidden" id="col-edit-id" value="">
       <div class="flex items-center justify-between border-b border-slate-800 pb-3">
         <h3 class="text-lg font-bold text-white flex items-center gap-2">
-          <span>归档一件新收藏</span>
+          <span id="col-modal-title">归档一件新收藏</span>
         </h3>
         <button type="button" id="btn-close-modal" class="text-slate-400 hover:text-white font-bold text-lg">✕</button>
       </div>
 
       <div class="space-y-3 text-xs">
         <div>
-          <label class="block text-slate-300 mb-1">收藏分类</label>
+          <label class="block text-slate-300 mb-1">收藏分类 / 文件夹</label>
           <select id="col-category" required class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white">
             <option value="高达机库">🤖 高达机库 (Gundam Hangar)</option>
             <option value="宝可梦图鉴">⚡ 宝可梦图鉴 (Pokédex)</option>
@@ -841,7 +894,42 @@
     </form>
   </dialog>
 
-  <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-full bg-slate-900/95 text-white text-xs border border-slate-700 shadow-2xl opacity-0 pointer-events-none transition-all duration-300 flex items-center gap-2">
+  <!-- 全局通用编辑 / Rename / 移动分类通用 Modal -->
+  <dialog id="modal-generic-edit" class="bg-slate-900 text-white rounded-2xl p-6 border border-slate-700 max-w-md w-full shadow-2xl backdrop:bg-black/70">
+    <form id="form-generic-edit" method="dialog" class="space-y-4">
+      <input type="hidden" id="edit-item-type" value="">
+      <input type="hidden" id="edit-item-id" value="">
+      
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+          <span>✏️ 重命名与修改选项</span>
+        </h3>
+        <button type="button" id="btn-close-generic-modal" class="text-slate-400 hover:text-white font-bold text-lg">✕</button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block text-slate-300 mb-1">标题 / 名称 (Rename)</label>
+          <input id="edit-field-title" type="text" maxlength="60" required class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white">
+        </div>
+
+        <div id="edit-folder-group">
+          <label class="block text-slate-300 mb-1">转移至分类 / 文件夹</label>
+          <select id="edit-field-folder" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white">
+            <!-- 动态填充选项 -->
+          </select>
+        </div>
+      </div>
+
+      <div class="pt-2 flex justify-end gap-2">
+        <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 font-bold text-xs hover:brightness-110 transition shadow-lg">
+          确认修改并保存
+        </button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-full bg-slate-900/95 text-white text-xs border border-slate-700 shadow-2xl transition-all duration-300 flex items-center gap-2 opacity-0 pointer-events-none">
     <span class="text-yellow-400">✦</span>
     <span id="toast-msg">提示信息</span>
   </div>
@@ -853,9 +941,9 @@
       const $ = (s, r = document) => r.querySelector(s);
       const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 
-      // 1. Supabase 初始化配置 (已填入你的配置)
+      // 1. Supabase 初始化配置
       const SUPABASE_URL = "https://iihcmhgeqewacvldebuk.supabase.co";
-      const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY"; // 请替换为 Supabase Project Settings -> API 中的 anon key
+      const SUPABASE_ANON_KEY ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlpaGNtaGdlcWV3YWN2bGRlYnVrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc3Njk0ODksImV4cCI6MjEwMzM0NTQ4OX0.z48kB0_bYbMPHmzk0bcb5AG-Aaytze-ZbqH7YNe5eOw"; 
       const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
       const BUCKET_NAME = "media";
 
@@ -1095,6 +1183,7 @@
                 list.unshift({
                   id: Date.now(),
                   kind: "voiceover",
+                  folder: "录音试音",
                   name: `试音: ${currentScript.slice(0, 15)}...`,
                   url: res.url,
                   path: res.path
@@ -1291,6 +1380,7 @@
         });
       });
 
+      // ==================== 1. 高达与宝可梦 收藏 (Collections) ====================
       let collections = storage.get("circleK.collections", [
         { id: 1, category: "高达机库", title: "RX-78-2 元祖高达", note: "凡是男人的浪漫，都始于这台白色恶魔！" },
         { id: 2, category: "宝可梦图鉴", title: "皮卡丘 (Pikachu)", note: "十万伏特！永远最可靠的第一位搭档！" },
@@ -1298,18 +1388,52 @@
         { id: 4, category: "琴谱书架", title: "Merry Christmas Mr. Lawrence", note: "坂本龙一经典曲目，琴键下的温柔与力量。" }
       ]);
 
+      let selectedColCategory = "全部";
+      let colSortType = "newest";
+
+      const renderCollectionCategoryFilters = () => {
+        const categories = ["全部", "高达机库", "宝可梦图鉴", "琴谱书架", "配音星球", "好吃研究所"];
+        const filterBox = $("#col-category-filters");
+        filterBox.replaceChildren();
+
+        categories.forEach(cat => {
+          const btn = document.createElement("button");
+          btn.className = `px-3 py-1.5 rounded-lg font-bold transition whitespace-nowrap ${selectedColCategory === cat ? 'bg-blue-600 text-white shadow' : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'}`;
+          btn.textContent = cat === "全部" ? "📁 全部收藏" : cat;
+          btn.addEventListener("click", () => {
+            selectedColCategory = cat;
+            renderCollectionCategoryFilters();
+            renderCollections();
+          });
+          filterBox.appendChild(btn);
+        });
+      };
+
       const renderCollections = () => {
         const grid = $("#collection-grid");
         grid.replaceChildren();
 
-        if (!collections.length) {
-          grid.innerHTML = `<div class="col-span-full p-8 text-center text-slate-500 border border-dashed border-slate-800 rounded-2xl">机库目前为空。归档你的第一台高达或宝可梦伙伴吧 ✦</div>`;
+        let filtered = [...collections];
+        if (selectedColCategory !== "全部") {
+          filtered = filtered.filter(x => x.category === selectedColCategory);
+        }
+
+        if (colSortType === "newest") {
+          filtered.sort((a,b) => b.id - a.id);
+        } else if (colSortType === "oldest") {
+          filtered.sort((a,b) => a.id - b.id);
+        } else if (colSortType === "title") {
+          filtered.sort((a,b) => a.title.localeCompare(b.title, 'zh-CN'));
+        }
+
+        if (!filtered.length) {
+          grid.innerHTML = `<div class="col-span-full p-8 text-center text-slate-500 border border-dashed border-slate-800 rounded-2xl">该分类下暂无收藏。归档你的第一台高达或宝可梦伙伴吧 ✦</div>`;
           return;
         }
 
-        collections.forEach(item => {
+        filtered.forEach(item => {
           const card = document.createElement("div");
-          card.className = "bg-slate-900/90 border border-slate-800 rounded-2xl p-5 relative space-y-3 hover:border-slate-700 transition shadow-lg";
+          card.className = "bg-slate-900/90 border border-slate-800 rounded-2xl p-5 relative space-y-3 hover:border-slate-700 transition shadow-lg group";
 
           const isGundam = item.category === "高达机库";
           const isPoke = item.category === "宝可梦图鉴";
@@ -1321,12 +1445,16 @@
           card.innerHTML = `
             <div class="flex items-center justify-between">
               <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${badgeClass}">${item.category}</span>
-              <button class="btn-del-col text-slate-500 hover:text-red-400 font-bold text-sm" data-id="${item.id}">✕</button>
+              <div class="flex items-center gap-2">
+                <button class="btn-edit-col text-slate-400 hover:text-amber-300 font-bold text-xs" data-id="${item.id}" title="重命名与编辑">✏️ 编辑</button>
+                <button class="btn-del-col text-slate-500 hover:text-red-400 font-bold text-sm" data-id="${item.id}" title="删除">✕</button>
+              </div>
             </div>
             <h3 class="text-lg font-bold text-white">${item.title}</h3>
             <p class="text-xs text-slate-400 leading-relaxed">${item.note || "喜爱本身，就是收藏的理由。"}</p>
           `;
 
+          // 删除
           card.querySelector(".btn-del-col").addEventListener("click", () => {
             collections = collections.filter(x => x.id !== item.id);
             storage.set("circleK.collections", collections);
@@ -1334,50 +1462,132 @@
             showToast("已移除该项收藏");
           });
 
+          // 修改/编辑
+          card.querySelector(".btn-edit-col").addEventListener("click", () => {
+            $("#col-modal-title").textContent = "修改收藏资料";
+            $("#col-edit-id").value = item.id;
+            $("#col-category").value = item.category;
+            $("#col-title").value = item.title;
+            $("#col-note").value = item.note || "";
+            modalCol.showModal();
+          });
+
           grid.appendChild(card);
         });
       };
 
+      $("#col-sort-select").addEventListener("change", (e) => {
+        colSortType = e.target.value;
+        renderCollections();
+      });
+
       const modalCol = $("#modal-collection");
-      $("#btn-open-collection-modal").addEventListener("click", () => modalCol.showModal());
+      $("#btn-open-collection-modal").addEventListener("click", () => {
+        $("#col-modal-title").textContent = "归档一件新收藏";
+        $("#col-edit-id").value = "";
+        $("#form-collection").reset();
+        modalCol.showModal();
+      });
       $("#btn-close-modal").addEventListener("click", () => modalCol.close());
 
       $("#form-collection").addEventListener("submit", (e) => {
         e.preventDefault();
-        collections.push({
-          id: Date.now(),
-          category: $("#col-category").value,
-          title: $("#col-title").value.trim(),
-          note: $("#col-note").value.trim()
-        });
+        const editId = $("#col-edit-id").value;
+
+        if (editId) {
+          // 更新现有项
+          const item = collections.find(x => x.id == editId);
+          if (item) {
+            item.category = $("#col-category").value;
+            item.title = $("#col-title").value.trim();
+            item.note = $("#col-note").value.trim();
+            showToast("成功更新收藏资料 ✏️");
+          }
+        } else {
+          // 新增
+          collections.push({
+            id: Date.now(),
+            category: $("#col-category").value,
+            title: $("#col-title").value.trim(),
+            note: $("#col-note").value.trim()
+          });
+          showToast("成功添加到收藏基地 🤖");
+        }
+
         storage.set("circleK.collections", collections);
         renderCollections();
         modalCol.close();
         e.target.reset();
-        showToast("成功添加到收藏基地 🤖");
       });
+
+      renderCollectionCategoryFilters();
       renderCollections();
 
+      // ==================== 2. 星球许愿墙 (Wishes) ====================
       let wishes = storage.get("circleK.wishes", [
-        { id: 1, text: "愿指尖琴声常伴，生活里永远有惊喜 ✦", color: "bg-amber-200" },
-        { id: 2, text: "今年一定要亲手拼完一台 PG 版高达！", color: "bg-sky-200" }
+        { id: 1, text: "愿指尖琴声常伴，生活里永远有惊喜 ✦", color: "bg-amber-200", category: "未分类" },
+        { id: 2, text: "今年一定要亲手拼完一台 PG 版高达！", color: "bg-sky-200", category: "高达模型愿望" }
       ]);
+
+      let selectedWishCategory = "全部";
+      let wishSortType = "newest";
+
+      const renderWishCategoryFilters = () => {
+        const categories = ["全部", "未分类", "高达模型愿望", "旅行与美食", "音乐与配音"];
+        const filterBox = $("#wish-category-filters");
+        filterBox.replaceChildren();
+
+        categories.forEach(cat => {
+          const btn = document.createElement("button");
+          btn.className = `px-3 py-1.5 rounded-lg font-bold transition whitespace-nowrap ${selectedWishCategory === cat ? 'bg-amber-500 text-slate-950 shadow' : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'}`;
+          btn.textContent = cat === "全部" ? "📁 全部许愿" : cat;
+          btn.addEventListener("click", () => {
+            selectedWishCategory = cat;
+            renderWishCategoryFilters();
+            renderWishes();
+          });
+          filterBox.appendChild(btn);
+        });
+      };
 
       const renderWishes = () => {
         const grid = $("#wish-wall-grid");
         grid.replaceChildren();
 
-        wishes.forEach((item, idx) => {
+        let filtered = [...wishes];
+        if (selectedWishCategory !== "全部") {
+          filtered = filtered.filter(x => (x.category || "未分类") === selectedWishCategory);
+        }
+
+        if (wishSortType === "newest") {
+          filtered.sort((a,b) => b.id - a.id);
+        } else {
+          filtered.sort((a,b) => a.id - b.id);
+        }
+
+        if (!filtered.length) {
+          grid.innerHTML = `<div class="col-span-full p-8 text-center text-slate-500 border border-dashed border-slate-800 rounded-2xl">该分类下暂无许愿纸条。写下一个愿望挂在星空吧 ✦</div>`;
+          return;
+        }
+
+        filtered.forEach((item, idx) => {
           const card = document.createElement("div");
           card.className = `wish-card ${item.color}`;
           card.style.transform = `rotate(${idx % 2 === 0 ? 1.5 : -1.5}deg)`;
 
           card.innerHTML = `
-            <button class="btn-del-wish absolute top-2 right-2 text-black/50 hover:text-red-600 font-bold text-xs">✕</button>
+            <div class="flex items-center justify-between text-xs text-black/60 mb-2 font-bold">
+              <span>📁 ${item.category || "未分类"}</span>
+              <div class="flex items-center gap-1.5">
+                <button class="btn-edit-wish text-black/60 hover:text-amber-800 font-bold" data-id="${item.id}">✏️</button>
+                <button class="btn-del-wish text-black/50 hover:text-red-600 font-bold">✕</button>
+              </div>
+            </div>
             <p class="font-medium text-slate-900">${item.text}</p>
             <span class="absolute bottom-2 right-3 text-[10px] text-slate-600 font-mono">✦ KRESNIK WISH</span>
           `;
 
+          // 删除
           card.querySelector(".btn-del-wish").addEventListener("click", () => {
             wishes = wishes.filter(x => x.id !== item.id);
             storage.set("circleK.wishes", wishes);
@@ -1385,15 +1595,26 @@
             showToast("已取下愿望小纸条");
           });
 
+          // 重命名/编辑
+          card.querySelector(".btn-edit-wish").addEventListener("click", () => {
+            openGenericModal('wish', item);
+          });
+
           grid.appendChild(card);
         });
       };
+
+      $("#wish-sort-select").addEventListener("change", (e) => {
+        wishSortType = e.target.value;
+        renderWishes();
+      });
 
       $("#form-wish").addEventListener("submit", (e) => {
         e.preventDefault();
         wishes.push({
           id: Date.now(),
           text: $("#input-wish-text").value.trim(),
+          category: $("#select-wish-category").value,
           color: $("#select-wish-color").value
         });
         storage.set("circleK.wishes", wishes);
@@ -1401,57 +1622,122 @@
         $("#input-wish-text").value = "";
         showToast("愿望已挂到次元星空 ✦");
       });
+
+      renderWishCategoryFilters();
       renderWishes();
 
-      // 记忆馆：照片与音频直接上传并读取 Supabase
+      // ==================== 3. 记忆馆 (Memories & Folders) ====================
+      let selectedMemFolder = "全部";
+      let memSortType = "newest";
+
+      const renderMemFolderFilters = () => {
+        const list = storage.get("circleK_supabase_memories", []);
+        const foldersSet = new Set(["全部", "高达模型摄影", "声轨与音乐", "录音试音", "未分类"]);
+        list.forEach(item => { if (item.folder) foldersSet.add(item.folder); });
+
+        const filterBox = $("#mem-folder-filters");
+        filterBox.replaceChildren();
+
+        foldersSet.forEach(folder => {
+          const btn = document.createElement("button");
+          btn.className = `px-3 py-1.5 rounded-lg font-bold transition whitespace-nowrap ${selectedMemFolder === folder ? 'bg-purple-600 text-white shadow' : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'}`;
+          btn.textContent = folder === "全部" ? "📁 全部文件" : `📁 ${folder}`;
+          btn.addEventListener("click", () => {
+            selectedMemFolder = folder;
+            renderMemFolderFilters();
+            renderMemories();
+          });
+          filterBox.appendChild(btn);
+        });
+      };
+
       const renderMemories = () => {
         const gallery = $("#memory-gallery");
         gallery.replaceChildren();
 
-        const list = storage.get("circleK_supabase_memories", []);
+        let list = storage.get("circleK_supabase_memories", []);
+        
+        if (selectedMemFolder !== "全部") {
+          list = list.filter(x => (x.folder || "未分类") === selectedMemFolder);
+        }
+
+        if (memSortType === "newest") {
+          list.sort((a,b) => b.id - a.id);
+        } else if (memSortType === "oldest") {
+          list.sort((a,b) => a.id - b.id);
+        } else if (memSortType === "title") {
+          list.sort((a,b) => (a.name || "").localeCompare(b.name || "", 'zh-CN'));
+        }
+
         if (!list.length) {
-          gallery.innerHTML = `<div class="col-span-full p-8 text-center text-slate-500 border border-dashed border-slate-800 rounded-2xl">记忆馆暂无文件。收藏一张高达照片或声音片段吧 ✦</div>`;
+          gallery.innerHTML = `<div class="col-span-full p-8 text-center text-slate-500 border border-dashed border-slate-800 rounded-2xl">记忆馆文件夹暂无文件。上传一张高达照片或声音片段吧 ✦</div>`;
           return;
         }
 
         list.forEach(item => {
           const card = document.createElement("div");
-          card.className = "bg-slate-900/90 border border-slate-800 rounded-2xl p-4 relative space-y-3";
+          card.className = "bg-slate-900/90 border border-slate-800 rounded-2xl p-4 relative space-y-3 group";
+
+          const folderTag = `<span class="px-2 py-0.5 rounded text-[10px] bg-slate-800 text-purple-300 border border-slate-700">📁 ${item.folder || "未分类"}</span>`;
 
           if (item.kind === "photo") {
             card.innerHTML = `
+              <div class="flex items-center justify-between mb-1">
+                ${folderTag}
+                <div class="flex items-center gap-2">
+                  <button class="btn-edit-mem text-slate-400 hover:text-amber-300 font-bold text-xs" data-id="${item.id}">✏️ Rename</button>
+                  <button class="btn-del-mem text-red-400 hover:text-red-300 font-bold text-xs" data-id="${item.id}">删除</button>
+                </div>
+              </div>
               <img src="${item.url}" alt="${item.name}" class="w-full h-48 object-cover rounded-xl border border-slate-800">
-              <div class="flex items-center justify-between text-xs text-slate-400">
-                <span class="truncate max-w-[180px]">${item.name}</span>
-                <button class="btn-del-mem text-red-400 hover:text-red-300 font-bold" data-id="${item.id}">删除</button>
+              <div class="text-xs text-slate-300 font-medium truncate pt-1">
+                ${item.name}
               </div>
             `;
           } else {
             card.innerHTML = `
+              <div class="flex items-center justify-between mb-1">
+                ${folderTag}
+                <div class="flex items-center gap-2">
+                  <button class="btn-edit-mem text-slate-400 hover:text-amber-300 font-bold text-xs" data-id="${item.id}">✏️ Rename</button>
+                  <button class="btn-del-mem text-red-400 hover:text-red-300 font-bold text-xs" data-id="${item.id}">删除</button>
+                </div>
+              </div>
               <div class="p-4 bg-slate-950 rounded-xl flex flex-col gap-2 border border-slate-800">
                 <span class="text-xs font-bold text-purple-400">🎙 音频/配音记忆片段</span>
                 <audio src="${item.url}" controls class="w-full mt-2"></audio>
               </div>
-              <div class="flex items-center justify-between text-xs text-slate-400">
-                <span class="truncate max-w-[180px]">${item.name}</span>
-                <button class="btn-del-mem text-red-400 hover:text-red-300 font-bold" data-id="${item.id}">删除</button>
+              <div class="text-xs text-slate-300 font-medium truncate pt-1">
+                ${item.name}
               </div>
             `;
           }
 
+          // 删除
           card.querySelector(".btn-del-mem").addEventListener("click", async () => {
             await deleteFromSupabase(item.path);
             let current = storage.get("circleK_supabase_memories", []);
             current = current.filter(x => x.id !== item.id);
             storage.set("circleK_supabase_memories", current);
+            renderMemFolderFilters();
             renderMemories();
             renderVoiceTakes();
             showToast("已从 Supabase 存储库中移除");
           });
 
+          // Rename 与 移动文件夹
+          card.querySelector(".btn-edit-mem").addEventListener("click", () => {
+            openGenericModal('memory', item);
+          });
+
           gallery.appendChild(card);
         });
       };
+
+      $("#mem-sort-select").addEventListener("change", (e) => {
+        memSortType = e.target.value;
+        renderMemories();
+      });
 
       $("#file-photo").addEventListener("change", async (e) => {
         const file = e.target.files[0];
@@ -1462,11 +1748,13 @@
           list.unshift({
             id: Date.now(),
             kind: "photo",
+            folder: "高达模型摄影",
             name: file.name,
             url: res.url,
             path: res.path
           });
           storage.set("circleK_supabase_memories", list);
+          renderMemFolderFilters();
           renderMemories();
           showToast("照片已成功保存至 Supabase Storage 📷");
         }
@@ -1481,19 +1769,93 @@
           list.unshift({
             id: Date.now(),
             kind: "audio",
+            folder: "声轨与音乐",
             name: file.name,
             url: res.url,
             path: res.path
           });
           storage.set("circleK_supabase_memories", list);
+          renderMemFolderFilters();
           renderMemories();
           renderVoiceTakes();
           showToast("音频文件已上传至 Supabase 🎙");
         }
       });
 
+      renderMemFolderFilters();
       renderMemories();
       renderVoiceTakes();
+
+      // ==================== 4. 通用编辑/Rename/移动文件夹 Modal ====================
+      const genericModal = $("#modal-generic-edit");
+      
+      const openGenericModal = (type, item) => {
+        $("#edit-item-type").value = type;
+        $("#edit-item-id").value = item.id;
+        
+        const folderSelect = $("#edit-field-folder");
+        folderSelect.replaceChildren();
+
+        if (type === "wish") {
+          $("#edit-field-title").value = item.text;
+          const options = ["未分类", "高达模型愿望", "旅行与美食", "音乐与配音"];
+          options.forEach(opt => {
+            const el = document.createElement("option");
+            el.value = opt;
+            el.textContent = `📁 ${opt}`;
+            if ((item.category || "未分类") === opt) el.selected = true;
+            folderSelect.appendChild(el);
+          });
+        } else if (type === "memory") {
+          $("#edit-field-title").value = item.name;
+          const options = ["未分类", "高达模型摄影", "声轨与音乐", "录音试音", "个人相册"];
+          options.forEach(opt => {
+            const el = document.createElement("option");
+            el.value = opt;
+            el.textContent = `📁 ${opt}`;
+            if ((item.folder || "未分类") === opt) el.selected = true;
+            folderSelect.appendChild(el);
+          });
+        }
+
+        genericModal.showModal();
+      };
+
+      $("#btn-close-generic-modal").addEventListener("click", () => genericModal.close());
+
+      $("#form-generic-edit").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const type = $("#edit-item-type").value;
+        const id = $("#edit-item-id").value;
+        const newTitle = $("#edit-field-title").value.trim();
+        const newFolder = $("#edit-field-folder").value;
+
+        if (type === "wish") {
+          const item = wishes.find(x => x.id == id);
+          if (item) {
+            item.text = newTitle;
+            item.category = newFolder;
+            storage.set("circleK.wishes", wishes);
+            renderWishCategoryFilters();
+            renderWishes();
+            showToast("已重命名并移动许愿卡 ✦");
+          }
+        } else if (type === "memory") {
+          let list = storage.get("circleK_supabase_memories", []);
+          const item = list.find(x => x.id == id);
+          if (item) {
+            item.name = newTitle;
+            item.folder = newFolder;
+            storage.set("circleK_supabase_memories", list);
+            renderMemFolderFilters();
+            renderMemories();
+            renderVoiceTakes();
+            showToast("重命名与文件夹移动成功 📁");
+          }
+        }
+
+        genericModal.close();
+      });
 
       // 右上角背景音乐控制按钮
       $("#btn-audio-toggle").addEventListener("click", () => {
