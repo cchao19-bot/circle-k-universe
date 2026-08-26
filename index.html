@@ -622,14 +622,18 @@
             </div>
 
             <div class="bg-slate-950 border border-slate-800 rounded-2xl p-6 space-y-4">
-              <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
                 <span class="text-xs font-bold text-amber-400">📜 经典配音台词卡 (Prompter Script)</span>
-                <select id="select-script" class="bg-slate-900 border border-slate-700 text-white text-xs rounded-lg px-3 py-1.5 outline-none">
-                  <option value="gundam1">高达名台词：RX-78-2 出击！</option>
-                  <option value="pokemon1">宝可梦台词：皮卡丘，就决定是你了！</option>
-                  <option value="healing">治愈系电台：致今晚星空下的每一个梦</option>
-                  <option value="hero">热血动漫台词：即便前方毫无光明，我也将撕裂黑暗！</option>
-                </select>
+                <div class="flex flex-wrap items-center gap-2">
+                  <select id="script-sort-select" class="bg-slate-900 border border-slate-700 text-slate-300 text-xs rounded-lg px-3 py-1.5 outline-none" aria-label="台词卡排序">
+                    <option value="default">默认排序</option>
+                    <option value="newest">最新创建</option>
+                    <option value="oldest">最早创建</option>
+                    <option value="title">按名称排序</option>
+                  </select>
+                  <select id="select-script" class="bg-slate-900 border border-slate-700 text-white text-xs rounded-lg px-3 py-1.5 outline-none"></select>
+                  <button id="btn-new-script" type="button" class="px-3 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold transition">＋ 新建台词卡</button>
+                </div>
               </div>
 
               <div id="script-box" class="p-6 rounded-xl bg-slate-900/90 border border-purple-500/30 text-center space-y-2">
@@ -644,10 +648,17 @@
           </div>
 
           <div class="space-y-4">
-            <h3 class="text-lg font-bold text-white flex items-center gap-2">
-              <span>🎙 我的配音作品集</span>
-              <span class="text-xs font-normal text-slate-400">(直接同步至 Supabase 云端)</span>
-            </h3>
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                <span>🎙 我的配音作品集</span>
+                <span class="text-xs font-normal text-slate-400">(直接同步至 Supabase 云端)</span>
+              </h3>
+              <select id="voice-sort-select" class="bg-slate-900 border border-slate-700 text-slate-300 text-xs rounded-lg px-3 py-2 outline-none" aria-label="配音文件排序">
+                <option value="newest">最新文件</option>
+                <option value="oldest">最早文件</option>
+                <option value="title">按名称排序</option>
+              </select>
+            </div>
             <div id="voice-takes-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
             </div>
           </div>
@@ -863,6 +874,28 @@
       </footer>
     </section>
   </main>
+
+  <dialog id="modal-script" class="bg-slate-900 text-white rounded-2xl p-6 border border-slate-700 max-w-md w-full shadow-2xl backdrop:bg-black/70">
+    <form id="form-script" class="space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 class="text-lg font-bold text-white">📜 新建配音台词卡</h3>
+        <button id="btn-close-script-modal" type="button" class="text-slate-400 hover:text-white text-xl" aria-label="关闭">×</button>
+      </div>
+      <div>
+        <label for="script-card-title" class="block text-xs font-bold text-slate-300 mb-1.5">台词卡名称</label>
+        <input id="script-card-title" required maxlength="80" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white outline-none focus:border-purple-500" placeholder="例如：深夜电台开场白">
+      </div>
+      <div>
+        <label for="script-card-text" class="block text-xs font-bold text-slate-300 mb-1.5">台词正文</label>
+        <textarea id="script-card-text" required maxlength="1000" rows="5" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white outline-none focus:border-purple-500 resize-y" placeholder="输入想要朗读的台词……"></textarea>
+      </div>
+      <div>
+        <label for="script-card-note" class="block text-xs font-bold text-slate-300 mb-1.5">配音情绪提示</label>
+        <input id="script-card-note" maxlength="200" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white outline-none focus:border-purple-500" placeholder="例如：轻柔、缓慢、有磁性">
+      </div>
+      <button type="submit" class="w-full px-4 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-sm font-bold hover:brightness-110">创建台词卡</button>
+    </form>
+  </dialog>
 
   <dialog id="modal-collection" class="bg-slate-900 text-white rounded-2xl p-6 border border-slate-700 max-w-md w-full shadow-2xl backdrop:bg-black/70">
     <form id="form-collection" method="dialog" class="space-y-4">
@@ -1103,23 +1136,62 @@
         btn.addEventListener("click", () => switchTab(btn.dataset.switch));
       });
 
-      const scripts = {
+      const builtInScripts = {
         gundam1: {
+          title: "高达名台词：RX-78-2 出击！",
           zh: '"RX-78-2，阿姆罗，高达，出击！"',
-          note: "【配音情绪指南】：声音沉稳有力，带有机甲出击时的热血与专注。"
+          note: "【配音情绪指南】：声音沉稳有力，带有机甲出击时的热血与专注。",
+          createdAt: 1
         },
         pokemon1: {
+          title: "宝可梦台词：皮卡丘，就决定是你了！",
           zh: '"去吧！皮卡丘！就决定是你了，使用十万伏特！"',
-          note: "【配音情绪指南】：高亢、充满热情与与宝可梦伙伴羁绊的爆发力。"
+          note: "【配音情绪指南】：高亢、充满热情与与宝可梦伙伴羁绊的爆发力。",
+          createdAt: 2
         },
         healing: {
+          title: "治愈系电台：致今晚星空下的每一个梦",
           zh: '"晚安，世界。愿你在今晚的梦里，找到属于自己的那片闪耀星空。"',
-          note: "【配音情绪指南】：极具包容感与磁性的电台治愈音，语速偏慢、轻柔。"
+          note: "【配音情绪指南】：极具包容感与磁性的电台治愈音，语速偏慢、轻柔。",
+          createdAt: 3
         },
         hero: {
+          title: "热血动漫台词：即便前方毫无光明，我也将撕裂黑暗！",
           zh: '"即便前方毫无光明，我也将用我的双手，撕裂黑暗！"',
-          note: "【配音情绪指南】：坚定不移、带有一丝傲骨与不服输张力的动漫主角音。"
+          note: "【配音情绪指南】：坚定不移、带有一丝傲骨与不服输张力的动漫主角音。",
+          createdAt: 4
         }
+      };
+
+      let customScripts = storage.get("circleK.voiceScripts", []);
+      let scripts = { ...builtInScripts };
+      customScripts.forEach(item => { scripts[item.id] = item; });
+
+      const showSelectedScript = () => {
+        const item = scripts[$("#select-script").value];
+        if (!item) return;
+        $("#script-text-zh").textContent = item.zh;
+        $("#script-text-note").textContent = item.note || "【配音情绪指南】：按你喜欢的方式自由演绎。";
+      };
+
+      const renderScriptOptions = (selectedId = $("#select-script").value || "gundam1") => {
+        const select = $("#select-script");
+        const sortType = $("#script-sort-select").value;
+        let entries = Object.entries(scripts);
+
+        if (sortType === "newest") entries.sort((a, b) => (b[1].createdAt || 0) - (a[1].createdAt || 0));
+        if (sortType === "oldest") entries.sort((a, b) => (a[1].createdAt || 0) - (b[1].createdAt || 0));
+        if (sortType === "title") entries.sort((a, b) => a[1].title.localeCompare(b[1].title, "zh-CN"));
+
+        select.replaceChildren();
+        entries.forEach(([id, item]) => {
+          const option = document.createElement("option");
+          option.value = id;
+          option.textContent = item.title;
+          select.appendChild(option);
+        });
+        select.value = scripts[selectedId] ? selectedId : entries[0]?.[0] || "";
+        showSelectedScript();
       };
 
       $("#select-script").addEventListener("change", (e) => {
@@ -1130,6 +1202,32 @@
           showToast("已更换配音台词卡 📜");
         }
       });
+
+      $("#script-sort-select").addEventListener("change", () => renderScriptOptions());
+
+      const scriptModal = $("#modal-script");
+      $("#btn-new-script").addEventListener("click", () => scriptModal.showModal());
+      $("#btn-close-script-modal").addEventListener("click", () => scriptModal.close());
+      $("#form-script").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const id = `custom_${Date.now()}`;
+        const item = {
+          id,
+          title: $("#script-card-title").value.trim(),
+          zh: $("#script-card-text").value.trim(),
+          note: $("#script-card-note").value.trim() || "【配音情绪指南】：按你喜欢的方式自由演绎。",
+          createdAt: Date.now()
+        };
+        customScripts.push(item);
+        scripts[id] = item;
+        storage.set("circleK.voiceScripts", customScripts);
+        renderScriptOptions(id);
+        e.target.reset();
+        scriptModal.close();
+        showToast("新台词卡已创建并保存 📜");
+      });
+
+      renderScriptOptions();
 
       const uploadToSupabase = async (file, pathPrefix = "") => {
         const fileExt = file.name.split('.').pop();
@@ -1288,6 +1386,10 @@
 
         const list = storage.get("circleK_supabase_memories", []);
         const voiceList = list.filter(x => x.kind === "voiceover" || x.kind === "audio");
+        const voiceSortType = $("#voice-sort-select")?.value || "newest";
+        if (voiceSortType === "newest") voiceList.sort((a, b) => b.id - a.id);
+        if (voiceSortType === "oldest") voiceList.sort((a, b) => a.id - b.id);
+        if (voiceSortType === "title") voiceList.sort((a, b) => (a.name || "").localeCompare(b.name || "", "zh-CN"));
 
         if (!voiceList.length) {
           grid.innerHTML = `<div class="col-span-full p-6 text-center text-slate-500 border border-dashed border-slate-800 rounded-2xl text-xs">试音棚作品集目前为空。点击上方录音按钮录制你的第一段配音吧 ✦</div>`;
@@ -1322,6 +1424,8 @@
           grid.appendChild(card);
         });
       };
+
+      $("#voice-sort-select").addEventListener("change", renderVoiceTakes);
 
       // ==================== 优化后的琴谱与 30 秒下落节奏挑战系统 ====================
       const songs = {
