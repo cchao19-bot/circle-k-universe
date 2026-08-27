@@ -485,7 +485,12 @@
             <p class="font-mashan text-xl text-amber-950">生日快乐，棣棣 ✦ 愿你指尖常有琴声，眼里常有星光！</p>
             <span class="text-xs text-amber-800/80 italic mt-1">— 来自纽约的秘密基地 (Lucas)</span>
 
-            <button id="btn-enter-world" class="mt-6 px-8 py-3 rounded-full bg-gradient-to-r from-blue-700 via-indigo-800 to-blue-900 text-white font-bold text-sm shadow-xl hover:shadow-2xl hover:scale-105 transition-all flex items-center gap-2 border border-blue-400/30">
+            <label class="mt-5 inline-flex items-center gap-3 px-4 py-2 rounded-full bg-amber-100/70 border border-amber-800/15 text-xs font-bold text-amber-950 cursor-pointer select-none">
+              <input id="input-autoplay-bgm" type="checkbox" class="w-4 h-4 accent-blue-700">
+              <span>进入空间时自动播放音乐</span>
+            </label>
+
+            <button id="btn-enter-world" class="mt-3 px-8 py-3 rounded-full bg-gradient-to-r from-blue-700 via-indigo-800 to-blue-900 text-white font-bold text-sm shadow-xl hover:shadow-2xl hover:scale-105 transition-all flex items-center gap-2 border border-blue-400/30">
               <span>进入 Circle K 的次元小宇宙</span>
               <span class="text-yellow-400">➔</span>
             </button>
@@ -514,11 +519,13 @@
             </div>
           </div>
 
-          <div class="flex items-center gap-2">
+          <div class="flex items-center justify-end gap-1.5 flex-wrap">
             <button id="btn-audio-toggle" class="px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-xs text-slate-200 hover:bg-slate-700 transition flex items-center gap-2">
               <span id="audio-icon" class="text-yellow-400">♪</span>
-              <span id="audio-status">空间背景音: 关闭</span>
+              <span id="audio-status">空间音乐：关闭</span>
             </button>
+            <button id="btn-audio-next" type="button" class="px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-xs text-slate-200 hover:bg-slate-700 transition" aria-label="播放下一首">下一首 ⏭</button>
+            <button id="btn-audio-stop" type="button" class="px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-xs text-slate-200 hover:bg-slate-700 transition" aria-label="停止空间音乐">停止 ■</button>
           </div>
         </div>
       </header>
@@ -1039,6 +1046,20 @@
     </div>
   </dialog>
 
+  <dialog id="modal-delete-confirm" class="bg-slate-900 text-white rounded-2xl p-6 border border-red-500/40 max-w-sm w-full shadow-2xl backdrop:bg-black/75">
+    <div class="space-y-5 text-center">
+      <div class="w-12 h-12 mx-auto rounded-full bg-red-500/15 border border-red-500/30 grid place-items-center text-2xl">⚠</div>
+      <div>
+        <h3 class="text-lg font-bold">确认要删除吗？</h3>
+        <p id="delete-confirm-message" class="text-xs text-slate-400 mt-2 leading-relaxed">删除后将无法恢复。</p>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <button id="btn-cancel-delete" type="button" class="py-2.5 rounded-xl bg-slate-800 text-slate-200 text-xs font-bold hover:bg-slate-700">取消</button>
+        <button id="btn-confirm-delete" type="button" class="py-2.5 rounded-xl bg-red-600 text-white text-xs font-bold hover:bg-red-500">确认删除</button>
+      </div>
+    </div>
+  </dialog>
+
   <dialog id="modal-generic-edit" class="bg-slate-900 text-white rounded-2xl p-6 border border-slate-700 max-w-md w-full shadow-2xl backdrop:bg-black/70">
     <form id="form-generic-edit" method="dialog" class="space-y-4">
       <input type="hidden" id="edit-item-type" value="">
@@ -1089,24 +1110,60 @@
       const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
       const BUCKET_NAME = "media";
 
-      const bgmFileName = "bgm.mp3"; 
-      const supabaseBgmUrl = `${SUPABASE_URL}/storage/v1/object/public/${BUCKET_NAME}/${bgmFileName}`;
-
-      const bgmAudio = new Audio(supabaseBgmUrl);
-      bgmAudio.loop = true;
+      const bgmPlaylist = [
+        { file: "bgm.mp3", title: "空间音乐 1" },
+        { file: "bgm2.mp3", title: "空间音乐 2" },
+        { file: "bgm3.mp3", title: "空间音乐 3" },
+        { file: "bgm4.mp3", title: "空间音乐 4" },
+        { file: "bgm5.mp3", title: "空间音乐 5" }
+      ];
+      let currentBgmIndex = 0;
+      const bgmAudio = new Audio();
+      bgmAudio.preload = "auto";
+      bgmAudio.loop = false;
       let bgmAmbient = false;
+
+      const getBgmUrl = (index) => `${SUPABASE_URL}/storage/v1/object/public/${BUCKET_NAME}/${bgmPlaylist[index].file}`;
+      const updateBgmStatus = () => {
+        const track = bgmPlaylist[currentBgmIndex];
+        $("#audio-status").textContent = bgmAmbient ? `♫ ${currentBgmIndex + 1}/5 ${track.title}` : `空间音乐：关闭`;
+      };
+      const loadBgmTrack = (index) => {
+        currentBgmIndex = (index + bgmPlaylist.length) % bgmPlaylist.length;
+        bgmAudio.src = getBgmUrl(currentBgmIndex);
+        bgmAudio.load();
+        updateBgmStatus();
+      };
+
+      loadBgmTrack(0);
 
       const startBgmPlayback = () => {
         if (!bgmAmbient) {
           bgmAudio.play().then(() => {
             bgmAmbient = true;
-            $("#audio-status").textContent = "空间背景音: 开启";
+            updateBgmStatus();
             showToast("已自动播放背景音乐 ♫");
           }).catch(err => {
             console.warn("自动播放被限制或仍在加载:", err);
           });
         }
       };
+
+      const playNextBgm = () => {
+        loadBgmTrack(currentBgmIndex + 1);
+        bgmAmbient = true;
+        bgmAudio.play().then(() => {
+          updateBgmStatus();
+          showToast(`正在播放：${bgmPlaylist[currentBgmIndex].title}`);
+        }).catch(err => {
+          console.error("下一首音乐播放失败:", err);
+          bgmAmbient = false;
+          updateBgmStatus();
+          showToast(`无法播放 ${bgmPlaylist[currentBgmIndex].file}，请检查文件是否已上传`);
+        });
+      };
+
+      bgmAudio.addEventListener("ended", playNextBgm);
 
       const showToast = (msg) => {
         const toast = $("#toast");
@@ -1118,6 +1175,25 @@
           toast.classList.add("opacity-0", "pointer-events-none");
         }, 2600);
       };
+
+      const confirmDelete = (message = "删除后将无法恢复。") => new Promise(resolve => {
+        const dialog = $("#modal-delete-confirm");
+        $("#delete-confirm-message").textContent = message;
+        let finished = false;
+        const finish = (confirmed) => {
+          if (finished) return;
+          finished = true;
+          dialog.close();
+          resolve(confirmed);
+        };
+        $("#btn-confirm-delete").onclick = () => finish(true);
+        $("#btn-cancel-delete").onclick = () => finish(false);
+        dialog.oncancel = (event) => {
+          event.preventDefault();
+          finish(false);
+        };
+        dialog.showModal();
+      });
 
       const CLOUD_STATE_PATH = "data/circle-k-universe-state.json";
       const SYNCED_STORAGE_KEYS = new Set([
@@ -1274,14 +1350,22 @@
         setTimeout(() => {
           $("#stage-envelope").classList.add("hidden");
           $("#stage-scroll").classList.remove("hidden");
-          startBgmPlayback();
         }, 700);
+      });
+
+      const autoplayBgmToggle = $("#input-autoplay-bgm");
+      let autoplayBgmEnabled = localStorage.getItem("circleK.autoplayBgm") !== "false";
+      autoplayBgmToggle.checked = autoplayBgmEnabled;
+      autoplayBgmToggle.addEventListener("change", () => {
+        autoplayBgmEnabled = autoplayBgmToggle.checked;
+        localStorage.setItem("circleK.autoplayBgm", String(autoplayBgmEnabled));
+        showToast(autoplayBgmEnabled ? "进入空间将自动播放音乐 ♫" : "已关闭进入空间自动播放");
       });
 
       $("#btn-enter-world").addEventListener("click", () => {
         $("#stage-scroll").classList.add("hidden");
         $("#stage-world").classList.remove("hidden");
-        startBgmPlayback();
+        if (autoplayBgmEnabled) startBgmPlayback();
       });
 
       const switchTab = (tabId) => {
@@ -1575,6 +1659,7 @@
           `;
 
           card.querySelector(".btn-del-take").addEventListener("click", async () => {
+            if (!(await confirmDelete(`确认删除配音片段“${item.name}”吗？`))) return;
             await deleteFromSupabase(item.path);
             let current = storage.get("circleK_supabase_memories", []);
             current = current.filter(x => x.id !== item.id);
@@ -1987,6 +2072,7 @@
           </div>`;
 
           card.querySelector(".btn-del-col").addEventListener("click", async () => {
+            if (!(await confirmDelete(`确认删除“${item.title}”这张收藏卡吗？`))) return;
             if (item.imagePath) await deleteFromSupabase(item.imagePath);
             collections = collections.filter(x => x.id !== item.id);
             storage.set("circleK.collections", collections);
@@ -2202,7 +2288,8 @@
             <span class="absolute bottom-2 right-3 text-[10px] text-slate-600 font-mono">✦ KRESNIK WISH</span>
           `;
 
-          card.querySelector(".btn-del-wish").addEventListener("click", () => {
+          card.querySelector(".btn-del-wish").addEventListener("click", async () => {
+            if (!(await confirmDelete("确认删除这张愿望卡吗？"))) return;
             wishes = wishes.filter(x => x.id !== item.id);
             storage.set("circleK.wishes", wishes);
             renderWishes();
@@ -2327,6 +2414,7 @@
           }
 
           card.querySelector(".btn-del-mem").addEventListener("click", async () => {
+            if (!(await confirmDelete(`确认删除记忆文件“${item.name}”吗？`))) return;
             await deleteFromSupabase(item.path);
             let current = storage.get("circleK_supabase_memories", []);
             current = current.filter(x => x.id !== item.id);
@@ -2469,22 +2557,33 @@
       });
 
       $("#btn-audio-toggle").addEventListener("click", () => {
-        bgmAmbient = !bgmAmbient;
-        if (bgmAmbient) {
+        if (!bgmAmbient) {
           bgmAudio.play().then(() => {
-            $("#audio-status").textContent = "空间背景音: 开启";
-            showToast("已开启 Supabase 背景音乐 ♫");
+            bgmAmbient = true;
+            updateBgmStatus();
+            showToast(`已开启：${bgmPlaylist[currentBgmIndex].title} ♫`);
           }).catch(err => {
             console.error("音频播放失败:", err);
             bgmAmbient = false;
-            $("#audio-status").textContent = "空间背景音: 关闭";
+            updateBgmStatus();
             showToast("音乐加载失败，请确认文件名与 Storage 公开权限");
           });
         } else {
           bgmAudio.pause();
-          $("#audio-status").textContent = "空间背景音: 关闭";
-          showToast("已暂停背景音乐");
+          bgmAmbient = false;
+          updateBgmStatus();
+          showToast("空间音乐已关闭");
         }
+      });
+
+      $("#btn-audio-next").addEventListener("click", playNextBgm);
+
+      $("#btn-audio-stop").addEventListener("click", () => {
+        bgmAudio.pause();
+        bgmAudio.currentTime = 0;
+        bgmAmbient = false;
+        updateBgmStatus();
+        showToast("空间音乐已停止");
       });
 
     })();
