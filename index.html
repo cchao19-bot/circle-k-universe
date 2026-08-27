@@ -584,8 +584,8 @@
               <p class="text-sm text-slate-400 leading-relaxed">
                 记录强袭自由、RX-78-2、沙扎比等最爱的机体模型与经典名台词。
               </p>
-              <button data-switch="tab-collections" class="text-xs font-bold text-blue-400 hover:text-blue-300 flex items-center gap-1 pt-2">
-                <span>前往机库</span> ➔
+              <button type="button" data-open-collection="高达机库" class="text-xs font-bold text-blue-400 hover:text-blue-300 flex items-center gap-1 pt-2">
+                <span>打开机库卡片</span> ➔
               </button>
             </div>
 
@@ -597,8 +597,8 @@
               <p class="text-sm text-slate-400 leading-relaxed">
                 收藏皮卡丘、喷火龙、耿鬼与你旅途中最想收服的宝可梦伙伴。
               </p>
-              <button data-switch="tab-collections" class="text-xs font-bold text-yellow-400 hover:text-yellow-300 flex items-center gap-1 pt-2">
-                <span>打开图鉴</span> ➔
+              <button type="button" data-open-collection="宝可梦图鉴" class="text-xs font-bold text-yellow-400 hover:text-yellow-300 flex items-center gap-1 pt-2">
+                <span>打开图鉴卡片</span> ➔
               </button>
             </div>
           </div>
@@ -927,6 +927,16 @@
         <div>
           <label class="block text-slate-300 mb-1">想记下的话 / 喜爱理由</label>
           <textarea id="col-note" rows="3" maxlength="150" placeholder="写几句简短的感想或台词吧..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white placeholder-slate-600 resize-none"></textarea>
+        </div>
+
+        <div>
+          <label class="block text-slate-300 mb-1">图鉴图片</label>
+          <label for="col-image" class="block border-2 border-dashed border-slate-700 hover:border-blue-500/60 rounded-xl p-3 text-center cursor-pointer bg-slate-950/60 transition">
+            <img id="col-image-preview" alt="图片预览" class="hidden w-full h-40 object-contain rounded-lg mb-2 bg-slate-900">
+            <span id="col-image-hint" class="text-slate-400">📷 点击上传图片（JPG、PNG、WEBP）</span>
+          </label>
+          <input id="col-image" type="file" accept="image/jpeg,image/png,image/webp" class="hidden">
+          <input id="col-image-data" type="hidden" value="">
         </div>
       </div>
 
@@ -1635,6 +1645,31 @@
       let selectedColCategory = "全部";
       let colSortType = "newest";
 
+      const resetCollectionImage = (image = "") => {
+        $("#col-image").value = "";
+        $("#col-image-data").value = image;
+        const preview = $("#col-image-preview");
+        const hint = $("#col-image-hint");
+        if (image) {
+          preview.src = image;
+          preview.classList.remove("hidden");
+          hint.textContent = "点击可更换图片";
+        } else {
+          preview.removeAttribute("src");
+          preview.classList.add("hidden");
+          hint.textContent = "📷 点击上传图片（JPG、PNG、WEBP）";
+        }
+      };
+
+      const openCollectionCard = (category) => {
+        $("#col-modal-title").textContent = category === "宝可梦图鉴" ? "添加宝可梦图鉴卡" : "添加高达机库卡";
+        $("#col-edit-id").value = "";
+        $("#form-collection").reset();
+        $("#col-category").value = category;
+        resetCollectionImage();
+        modalCol.showModal();
+      };
+
       const renderCollectionCategoryFilters = () => {
         const categories = ["全部", "高达机库", "宝可梦图鉴", "琴谱书架", "配音星球", "好吃研究所"];
         const filterBox = $("#col-category-filters");
@@ -1687,6 +1722,7 @@
                              "bg-purple-900/40 text-purple-300 border-purple-500/30";
 
           card.innerHTML = `
+            ${item.image ? `<img src="${item.image}" alt="${item.title}" class="w-full h-48 object-contain rounded-xl bg-slate-950 border border-slate-800 p-2">` : ''}
             <div class="flex items-center justify-between">
               <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${badgeClass}">${item.category}</span>
               <div class="flex items-center gap-2">
@@ -1711,6 +1747,7 @@
             $("#col-category").value = item.category;
             $("#col-title").value = item.title;
             $("#col-note").value = item.note || "";
+            resetCollectionImage(item.image || "");
             modalCol.showModal();
           });
 
@@ -1728,9 +1765,27 @@
         $("#col-modal-title").textContent = "归档一件新收藏";
         $("#col-edit-id").value = "";
         $("#form-collection").reset();
+        resetCollectionImage();
         modalCol.showModal();
       });
       $("#btn-close-modal").addEventListener("click", () => modalCol.close());
+
+      $$('[data-open-collection]').forEach(btn => {
+        btn.addEventListener("click", () => openCollectionCard(btn.dataset.openCollection));
+      });
+
+      $("#col-image").addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        if (file.size > 3 * 1024 * 1024) {
+          showToast("图片请控制在 3MB 以内");
+          e.target.value = "";
+          return;
+        }
+        const reader = new FileReader();
+        reader.addEventListener("load", () => resetCollectionImage(reader.result));
+        reader.readAsDataURL(file);
+      });
 
       $("#form-collection").addEventListener("submit", (e) => {
         e.preventDefault();
@@ -1742,6 +1797,7 @@
             item.category = $("#col-category").value;
             item.title = $("#col-title").value.trim();
             item.note = $("#col-note").value.trim();
+            item.image = $("#col-image-data").value;
             showToast("成功更新收藏资料 ✏️");
           }
         } else {
@@ -1749,7 +1805,8 @@
             id: Date.now(),
             category: $("#col-category").value,
             title: $("#col-title").value.trim(),
-            note: $("#col-note").value.trim()
+            note: $("#col-note").value.trim(),
+            image: $("#col-image-data").value
           });
           showToast("成功添加到收藏基地 🤖");
         }
