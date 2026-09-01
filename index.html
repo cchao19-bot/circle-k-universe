@@ -406,6 +406,14 @@
     ::-webkit-scrollbar-track { background: #0a0f1d; }
     ::-webkit-scrollbar-thumb { background: #2a3a5a; border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: #0055b8; }
+    body.visitor-mode .citizen-card,
+    body.visitor-mode #tab-voice,
+    body.visitor-mode #tab-wishes,
+    body.visitor-mode #tab-memories,
+    body.visitor-mode [data-tab="tab-voice"],
+    body.visitor-mode [data-tab="tab-wishes"],
+    body.visitor-mode [data-tab="tab-memories"],
+    body.visitor-mode [data-switch="tab-voice"] { display: none !important; }
   </style>
 </head>
 
@@ -502,7 +510,7 @@
 
     <section id="stage-world" class="stage hidden">
       <header class="sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 px-4 py-3">
-        <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div class="flex items-center gap-3">
             <div class="relative w-10 h-10 rounded-full bg-gradient-to-tr from-yellow-400 to-red-600 p-0.5 flex items-center justify-center shadow-lg">
               <div class="w-full h-full bg-slate-900 rounded-full flex items-center justify-center text-yellow-400 font-extrabold font-orbitron text-lg">
@@ -520,6 +528,15 @@
           </div>
 
           <div class="flex items-center justify-end gap-1.5 flex-wrap">
+            <div class="relative w-full sm:w-auto order-first sm:order-none">
+              <input id="global-search" type="search" autocomplete="off" placeholder="搜索收藏、台词、愿望…" class="w-full sm:w-56 bg-slate-950/90 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white placeholder-slate-500 outline-none focus:border-blue-500" aria-label="全站搜索">
+              <div id="global-search-results" class="hidden absolute right-0 top-full mt-2 w-full sm:w-80 max-h-80 overflow-y-auto rounded-xl border border-slate-700 bg-slate-950 shadow-2xl p-2 z-50"></div>
+            </div>
+            <span id="sync-status" class="px-2.5 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-[10px] text-emerald-300">● 已同步</span>
+            <button id="btn-export-backup" type="button" class="px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-xs text-slate-200 hover:bg-slate-700">导出备份</button>
+            <button id="btn-import-backup" type="button" class="px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-xs text-slate-200 hover:bg-slate-700">导入恢复</button>
+            <input id="backup-file-input" type="file" accept="application/json,.json" class="hidden">
+            <button id="btn-visitor-mode" type="button" class="px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-xs text-slate-200 hover:bg-slate-700">访客模式：关</button>
             <button id="btn-audio-toggle" class="px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-xs text-slate-200 hover:bg-slate-700 transition flex items-center gap-2">
               <span id="audio-icon" class="text-yellow-400">♪</span>
               <span id="audio-status">空间音乐：关闭</span>
@@ -530,7 +547,7 @@
         </div>
       </header>
 
-      <nav class="sticky top-[61px] z-30 bg-slate-950/80 backdrop-blur-md border-b border-slate-800/60 py-2.5 px-4 overflow-x-auto">
+      <nav class="sticky top-0 sm:top-[61px] z-30 bg-slate-950/80 backdrop-blur-md border-b border-slate-800/60 py-2.5 px-4 overflow-x-auto">
         <div class="max-w-7xl mx-auto flex items-center justify-start md:justify-center gap-2">
           <button class="nav-btn active" data-tab="tab-home">☁ 宇宙首页</button>
           <button class="nav-btn" data-tab="tab-voice">🎙 配音试音棚</button>
@@ -573,6 +590,9 @@
                 <button data-switch="tab-collections" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-sm transition border border-slate-700 flex items-center gap-2">
                   <span>🤖 高达 & 宝可梦机库</span>
                 </button>
+                <button id="btn-open-food-lab" type="button" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-rose-600 to-orange-500 text-white font-bold text-sm hover:brightness-110 transition shadow-lg flex items-center gap-2">
+                  <span>🍳 好吃研究所</span>
+                </button>
               </div>
             </div>
           </div>
@@ -580,14 +600,17 @@
           <div class="citizen-card rounded-3xl p-6 md:p-8 space-y-6">
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
               <div class="flex items-center gap-3">
-                <span class="text-2xl">✦</span>
+                <div class="w-14 h-14 rounded-full bg-slate-900 border border-yellow-400/30 overflow-hidden grid place-items-center text-2xl shrink-0">
+                  <img id="profile-avatar" class="hidden w-full h-full object-cover" alt="居民头像">
+                  <span id="profile-avatar-placeholder">✦</span>
+                </div>
                 <div>
                   <h3 class="text-xl font-bold text-white font-orbitron tracking-wide">宇宙居民档案 · CITIZEN PROFILE</h3>
                   <span class="text-xs text-yellow-400 font-mono">PASSPORT ID: KRESNIK-818</span>
                 </div>
               </div>
-              <div class="flex items-center gap-2">
-                <button id="btn-edit-profile" type="button" class="px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-slate-200 text-xs font-bold hover:bg-slate-700 transition">✏️ 编辑 / 添加</button>
+              <div class="w-full sm:w-auto flex flex-wrap items-center gap-2">
+                <button id="btn-edit-profile" type="button" class="flex-1 sm:flex-none min-h-10 px-4 py-2 rounded-full bg-slate-800 border border-slate-700 text-slate-200 text-xs font-bold hover:bg-slate-700 transition">✏️ 编辑 / 添加</button>
                 <span class="px-3 py-1 rounded-full bg-blue-900/60 border border-blue-400/40 text-blue-300 text-xs font-bold tracking-wider uppercase">
                   认证成功 · VERIFIED
                 </span>
@@ -620,6 +643,14 @@
                 <span id="profile-weakness" class="text-sm font-bold text-rose-300">菠萝 · 芒果 · 竹笋</span>
               </div>
             </div>
+          </div>
+
+          <div id="home-activity" class="rounded-3xl bg-slate-900/80 border border-slate-800 p-6 space-y-4">
+            <div class="flex items-center justify-between gap-3">
+              <h3 class="text-lg font-bold text-white">✦ 宇宙近期动态</h3>
+              <span class="text-xs text-slate-500">自动汇总最近内容</span>
+            </div>
+            <div id="home-activity-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3"></div>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -690,6 +721,7 @@
                     <option value="newest">最新创建</option>
                     <option value="oldest">最早创建</option>
                     <option value="title">按名称排序</option>
+                    <option value="folder">按文件夹排序</option>
                   </select>
                   <select id="select-script" class="bg-slate-900 border border-slate-700 text-white text-xs rounded-lg px-3 py-1.5 outline-none"></select>
                   <button id="btn-new-script" type="button" class="px-3 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold transition">＋ 新建台词卡</button>
@@ -703,6 +735,11 @@
                 <p id="script-text-note" class="text-xs text-purple-300 italic">
                   【配音情绪指南】：声音沉稳有力，带有机甲出击时的热血与专注。
                 </p>
+                <div class="pt-3 flex flex-wrap justify-center gap-2">
+                  <button id="btn-edit-script" type="button" class="px-3 py-1.5 rounded-lg bg-slate-800 text-xs text-slate-200">✏️ 编辑</button>
+                  <button id="btn-copy-script" type="button" class="px-3 py-1.5 rounded-lg bg-slate-800 text-xs text-slate-200">复制台词卡</button>
+                  <button id="btn-delete-script" type="button" class="px-3 py-1.5 rounded-lg bg-red-950/50 text-xs text-red-300">删除</button>
+                </div>
               </div>
             </div>
           </div>
@@ -718,6 +755,10 @@
                 <option value="oldest">最早文件</option>
                 <option value="title">按名称排序</option>
               </select>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-slate-950/60 border border-slate-800 rounded-xl p-3">
+              <input id="voice-next-name" maxlength="80" class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white" placeholder="本次录音名称（可选）">
+              <input id="voice-next-role" maxlength="50" class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white" placeholder="角色名（可选）">
             </div>
             <div id="voice-takes-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
             </div>
@@ -832,6 +873,7 @@
             </div>
           </div>
 
+          <div id="food-lab-summary" class="hidden rounded-2xl bg-orange-950/20 border border-orange-500/20 p-5"></div>
           <div id="collection-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
           </div>
         </div>
@@ -948,12 +990,21 @@
         <label class="space-y-1">特殊技能 / SPECIAL SKILL<input id="profile-input-skill" maxlength="100" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-white"></label>
         <label class="space-y-1 sm:col-span-2">弱点属性 / WEAKNESS<input id="profile-input-weakness" maxlength="100" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-white" value="菠萝 · 芒果 · 竹笋"></label>
       </div>
+      <div class="space-y-2">
+        <span class="text-xs font-bold text-slate-300">居民头像</span>
+        <label for="profile-avatar-file" class="flex items-center gap-3 p-3 rounded-xl bg-slate-950 border border-dashed border-slate-700 hover:border-blue-500 cursor-pointer">
+          <img id="profile-avatar-preview" class="hidden w-14 h-14 rounded-full object-cover" alt="头像预览">
+          <span id="profile-avatar-hint" class="text-xs text-slate-400">📷 点击上传头像（最大 5MB）</span>
+        </label>
+        <input id="profile-avatar-file" type="file" accept="image/jpeg,image/png,image/webp" class="hidden">
+      </div>
       <div class="border-t border-slate-800 pt-4 space-y-3">
         <span class="text-xs font-bold text-blue-300">＋ 添加一个新属性（可选）</span>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <input id="profile-extra-label" maxlength="40" class="bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white" placeholder="属性名称">
           <input id="profile-extra-value" maxlength="100" class="bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white" placeholder="属性内容">
         </div>
+        <div id="profile-extra-editor" class="space-y-2"></div>
       </div>
       <button type="submit" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm font-bold hover:brightness-110">保存档案</button>
     </form>
@@ -961,6 +1012,7 @@
 
   <dialog id="modal-script" class="bg-slate-900 text-white rounded-2xl p-6 border border-slate-700 max-w-md w-full shadow-2xl backdrop:bg-black/70">
     <form id="form-script" class="space-y-4">
+      <input id="script-edit-id" type="hidden" value="">
       <div class="flex items-center justify-between">
         <h3 class="text-lg font-bold text-white">📜 新建配音台词卡</h3>
         <button id="btn-close-script-modal" type="button" class="text-slate-400 hover:text-white text-xl" aria-label="关闭">×</button>
@@ -977,7 +1029,11 @@
         <label for="script-card-note" class="block text-xs font-bold text-slate-300 mb-1.5">配音情绪提示</label>
         <input id="script-card-note" maxlength="200" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white outline-none focus:border-purple-500" placeholder="例如：轻柔、缓慢、有磁性">
       </div>
-      <button type="submit" class="w-full px-4 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-sm font-bold hover:brightness-110">创建台词卡</button>
+      <div>
+        <label for="script-card-folder" class="block text-xs font-bold text-slate-300 mb-1.5">台词文件夹</label>
+        <input id="script-card-folder" maxlength="40" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white" placeholder="例如：动画 / 电台 / 原创">
+      </div>
+      <button id="btn-save-script" type="submit" class="w-full px-4 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-sm font-bold hover:brightness-110">创建台词卡</button>
     </form>
   </dialog>
 
@@ -1038,6 +1094,29 @@
         <div>
           <label class="block text-slate-300 mb-1">想记下的话 / 喜爱理由</label>
           <textarea id="col-note" rows="3" maxlength="150" placeholder="写几句简短的感想或台词吧..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white placeholder-slate-600 resize-none"></textarea>
+        </div>
+
+        <div id="food-fields" class="hidden p-3 rounded-xl bg-orange-950/20 border border-orange-500/20 space-y-3">
+          <span class="block text-xs font-bold text-orange-300">🍳 好吃研究所专用资料</span>
+          <div class="grid grid-cols-2 gap-3">
+            <label class="space-y-1">好吃指数
+              <select id="food-rating" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white">
+                <option value="5">★★★★★</option><option value="4">★★★★☆</option><option value="3">★★★☆☆</option><option value="2">★★☆☆☆</option><option value="1">★☆☆☆☆</option>
+              </select>
+            </label>
+            <label class="space-y-1">辣度
+              <select id="food-spice" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white">
+                <option value="不辣">不辣</option><option value="微辣">微辣</option><option value="中辣">中辣</option><option value="很辣">很辣</option>
+              </select>
+            </label>
+            <label class="space-y-1">状态
+              <select id="food-status" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white">
+                <option value="吃过">吃过</option><option value="想吃">想吃清单</option><option value="常吃">常吃</option>
+              </select>
+            </label>
+            <label class="space-y-1">谁做的<input id="food-chef" maxlength="40" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white" placeholder="例如：棣棣"></label>
+            <label class="space-y-1">吃过日期<input id="food-date" type="date" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white"></label>
+          </div>
         </div>
 
         <div>
@@ -1125,9 +1204,10 @@
     </form>
   </dialog>
 
-  <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-full bg-slate-900/95 text-white text-xs border border-slate-700 shadow-2xl transition-all duration-300 flex items-center gap-2 opacity-0 pointer-events-none">
+  <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-full bg-slate-900/95 text-white text-xs border border-slate-700 shadow-2xl transition-all duration-300 flex items-center gap-3 opacity-0 pointer-events-none max-w-[92vw]">
     <span class="text-yellow-400">✦</span>
     <span id="toast-msg">提示信息</span>
+    <button id="toast-action" type="button" class="hidden px-2.5 py-1 rounded-full bg-blue-600 text-white font-bold whitespace-nowrap">撤销</button>
   </div>
 
   <script>
@@ -1198,7 +1278,11 @@
       bgmAudio.addEventListener("ended", playNextBgm);
 
       const showToast = (msg) => {
+        if (showUndoToast.pendingCommit) showUndoToast.pendingCommit();
         const toast = $("#toast");
+        const action = $("#toast-action");
+        action.classList.add("hidden");
+        action.onclick = null;
         $("#toast-msg").textContent = msg;
         toast.classList.remove("opacity-0", "pointer-events-none");
         toast.classList.add("opacity-100");
@@ -1206,6 +1290,38 @@
         showToast.timer = setTimeout(() => {
           toast.classList.add("opacity-0", "pointer-events-none");
         }, 2600);
+      };
+
+      const showUndoToast = (msg, undo, commit = () => {}) => {
+        if (showUndoToast.pendingCommit) showUndoToast.pendingCommit();
+        const toast = $("#toast");
+        const action = $("#toast-action");
+        $("#toast-msg").textContent = msg;
+        action.classList.remove("hidden");
+        toast.classList.remove("opacity-0", "pointer-events-none");
+        toast.classList.add("opacity-100");
+        clearTimeout(showToast.timer);
+        let finished = false;
+        showUndoToast.pendingCommit = () => {
+          if (finished) return;
+          finished = true;
+          commit();
+          showUndoToast.pendingCommit = null;
+        };
+        action.onclick = () => {
+          if (finished) return;
+          finished = true;
+          showUndoToast.pendingCommit = null;
+          undo();
+          showToast("已撤销删除");
+        };
+        showToast.timer = setTimeout(() => {
+          if (!finished) {
+            showUndoToast.pendingCommit();
+          }
+          action.classList.add("hidden");
+          toast.classList.add("opacity-0", "pointer-events-none");
+        }, 6000);
       };
 
       const confirmDelete = (message = "删除后将无法恢复。") => new Promise(resolve => {
@@ -1238,6 +1354,11 @@
       ]);
       let cloudSyncReady = false;
       let cloudSyncTimer = null;
+      const setSyncStatus = (state, text) => {
+        const status = $("#sync-status");
+        status.textContent = text;
+        status.className = `px-2.5 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-[10px] ${state === "ok" ? "text-emerald-300" : state === "error" ? "text-red-300" : "text-amber-300"}`;
+      };
 
       const collectCloudState = () => {
         const data = {};
@@ -1252,6 +1373,8 @@
 
       const pushCloudState = async () => {
         if (!cloudSyncReady) return;
+        if (!navigator.onLine) { setSyncStatus("error", "● 离线 · 等待同步"); return; }
+        setSyncStatus("pending", "● 正在同步");
         const body = new Blob([JSON.stringify(collectCloudState())], { type: "application/json" });
         const { error } = await supabase.storage.from(BUCKET_NAME).upload(CLOUD_STATE_PATH, body, {
           contentType: "application/json",
@@ -1261,11 +1384,15 @@
         if (error) {
           console.error("Supabase data sync failed:", error);
           showToast("云端同步暂时失败，已保留本机副本");
+          setSyncStatus("error", "● 暂未同步");
+        } else {
+          setSyncStatus("ok", "● 已同步");
         }
       };
 
       const scheduleCloudSync = () => {
         clearTimeout(cloudSyncTimer);
+        setSyncStatus("pending", "● 等待同步");
         cloudSyncTimer = setTimeout(pushCloudState, 500);
       };
 
@@ -1298,6 +1425,50 @@
       };
 
       await loadCloudState();
+
+      window.addEventListener("offline", () => setSyncStatus("error", "● 离线 · 等待同步"));
+      window.addEventListener("online", () => { setSyncStatus("pending", "● 恢复网络"); scheduleCloudSync(); });
+
+      $("#btn-export-backup").addEventListener("click", () => {
+        const blob = new Blob([JSON.stringify(collectCloudState(), null, 2)], { type: "application/json" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = `circle-k-universe-backup-${new Date().toISOString().slice(0, 10)}.json`;
+        link.click();
+        URL.revokeObjectURL(link.href);
+        showToast("备份文件已导出");
+      });
+      $("#btn-import-backup").addEventListener("click", () => $("#backup-file-input").click());
+      $("#backup-file-input").addEventListener("change", async event => {
+        const file = event.target.files[0];
+        if (!file) return;
+        try {
+          const backup = JSON.parse(await file.text());
+          if (!backup.data || typeof backup.data !== "object") throw new Error("invalid");
+          if (!(await confirmDelete("导入会覆盖当前资料，确认继续吗？"))) return;
+          Object.entries(backup.data).forEach(([key, value]) => {
+            if (SYNCED_STORAGE_KEYS.has(key)) localStorage.setItem(key, JSON.stringify(value));
+          });
+          scheduleCloudSync();
+          showToast("资料已恢复，页面即将刷新");
+          setTimeout(() => location.reload(), 800);
+        } catch { showToast("备份文件格式不正确"); }
+      });
+
+      let visitorMode = localStorage.getItem("circleK.visitorMode") === "true";
+      const applyVisitorMode = () => {
+        document.body.classList.toggle("visitor-mode", visitorMode);
+        $("#btn-visitor-mode").textContent = `访客模式：${visitorMode ? "开" : "关"}`;
+        if (visitorMode && !$("#tab-home").classList.contains("hidden")) return;
+        if (visitorMode) switchTab("tab-home");
+      };
+      $("#btn-visitor-mode").addEventListener("click", () => {
+        visitorMode = !visitorMode;
+        localStorage.setItem("circleK.visitorMode", String(visitorMode));
+        applyVisitorMode();
+        renderHomeActivity();
+        showToast(visitorMode ? "访客模式已开启，私人内容已隐藏" : "访客模式已关闭");
+      });
 
       let audioCtx = null;
       const getAudioContext = () => {
@@ -1415,6 +1586,7 @@
       $$("[data-switch]").forEach(btn => {
         btn.addEventListener("click", () => switchTab(btn.dataset.switch));
       });
+      applyVisitorMode();
 
       // ==================== 宇宙居民档案 (Profile) ====================
       const defaultProfile = {
@@ -1423,6 +1595,8 @@
         energy: "琴声、热爱与好吃的 🍰",
         skill: "把普通日子过得有趣 ✨",
         weakness: "菠萝 · 芒果 · 竹笋",
+        avatar: "",
+        avatarPath: "",
         extras: []
       };
       let profile = { ...defaultProfile, ...storage.get("circleK.profile", {}) };
@@ -1433,6 +1607,15 @@
         $("#profile-energy").textContent = profile.energy;
         $("#profile-skill").textContent = profile.skill;
         $("#profile-weakness").textContent = profile.weakness;
+        const avatar = $("#profile-avatar");
+        if (profile.avatar) {
+          avatar.src = profile.avatar;
+          avatar.classList.remove("hidden");
+          $("#profile-avatar-placeholder").classList.add("hidden");
+        } else {
+          avatar.classList.add("hidden");
+          $("#profile-avatar-placeholder").classList.remove("hidden");
+        }
         $$(".profile-extra-card").forEach(card => card.remove());
         (profile.extras || []).forEach(item => {
           const card = document.createElement("div");
@@ -1448,6 +1631,55 @@
         });
       };
 
+      const syncProfileExtrasFromEditor = () => {
+        const rows = $$(".profile-extra-row");
+        if (!rows.length) return;
+        profile.extras = rows.map(row => ({
+          label: row.querySelector(".extra-label").value.trim(),
+          value: row.querySelector(".extra-value").value.trim()
+        })).filter(item => item.label && item.value);
+      };
+
+      const renderProfileExtraEditor = () => {
+        const box = $("#profile-extra-editor");
+        box.replaceChildren();
+        (profile.extras || []).forEach((item, index) => {
+          const row = document.createElement("div");
+          row.className = "profile-extra-row grid grid-cols-[1fr_1fr_auto] gap-2 items-center";
+          row.dataset.index = index;
+          row.innerHTML = `
+            <input class="extra-label bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs text-white" maxlength="40" value="${item.label.replace(/&/g, "&amp;").replace(/\"/g, "&quot;")}">
+            <input class="extra-value bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs text-white" maxlength="100" value="${item.value.replace(/&/g, "&amp;").replace(/\"/g, "&quot;")}">
+            <div class="flex gap-1">
+              <button type="button" class="extra-up px-2 py-2 rounded-lg bg-slate-800" title="上移">↑</button>
+              <button type="button" class="extra-down px-2 py-2 rounded-lg bg-slate-800" title="下移">↓</button>
+              <button type="button" class="extra-delete px-2 py-2 rounded-lg bg-red-950/60 text-red-300" title="删除">×</button>
+            </div>`;
+          row.querySelector(".extra-up").onclick = () => {
+            syncProfileExtrasFromEditor();
+            if (index < 1) return;
+            [profile.extras[index - 1], profile.extras[index]] = [profile.extras[index], profile.extras[index - 1]];
+            storage.set("circleK.profile", profile); renderProfile(); renderProfileExtraEditor();
+          };
+          row.querySelector(".extra-down").onclick = () => {
+            syncProfileExtrasFromEditor();
+            if (index >= profile.extras.length - 1) return;
+            [profile.extras[index + 1], profile.extras[index]] = [profile.extras[index], profile.extras[index + 1]];
+            storage.set("circleK.profile", profile); renderProfile(); renderProfileExtraEditor();
+          };
+          row.querySelector(".extra-delete").onclick = () => {
+            syncProfileExtrasFromEditor();
+            const removed = profile.extras.splice(index, 1)[0];
+            storage.set("circleK.profile", profile); renderProfile(); renderProfileExtraEditor();
+            showUndoToast("自定义属性已删除", () => {
+              profile.extras.splice(index, 0, removed);
+              storage.set("circleK.profile", profile); renderProfile(); renderProfileExtraEditor();
+            });
+          };
+          box.appendChild(row);
+        });
+      };
+
       const profileModal = $("#modal-profile");
       $("#btn-edit-profile").addEventListener("click", () => {
         $("#profile-input-name").value = profile.name;
@@ -1457,9 +1689,28 @@
         $("#profile-input-weakness").value = profile.weakness;
         $("#profile-extra-label").value = "";
         $("#profile-extra-value").value = "";
+        const preview = $("#profile-avatar-preview");
+        if (profile.avatar) { preview.src = profile.avatar; preview.classList.remove("hidden"); }
+        else preview.classList.add("hidden");
+        renderProfileExtraEditor();
         profileModal.showModal();
       });
       $("#btn-close-profile-modal").addEventListener("click", () => profileModal.close());
+      $("#profile-avatar-file").addEventListener("change", async (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+        if (file.size > 5 * 1024 * 1024) { showToast("头像请控制在 5MB 以内"); return; }
+        $("#profile-avatar-hint").textContent = "正在上传头像…";
+        const result = await uploadToSupabase(await compressImage(file, 800, 0.82), "profiles/");
+        $("#profile-avatar-hint").textContent = result ? "点击可更换头像" : "上传失败，请重试";
+        if (!result) return;
+        profile.avatar = result.url;
+        profile.avatarPath = result.path;
+        storage.set("circleK.profile", profile);
+        renderProfile();
+        $("#profile-avatar-preview").src = result.url;
+        $("#profile-avatar-preview").classList.remove("hidden");
+      });
       $("#form-profile").addEventListener("submit", (event) => {
         event.preventDefault();
         profile.name = $("#profile-input-name").value.trim() || defaultProfile.name;
@@ -1467,6 +1718,7 @@
         profile.energy = $("#profile-input-energy").value.trim() || defaultProfile.energy;
         profile.skill = $("#profile-input-skill").value.trim() || defaultProfile.skill;
         profile.weakness = $("#profile-input-weakness").value.trim() || defaultProfile.weakness;
+        syncProfileExtrasFromEditor();
         const extraLabel = $("#profile-extra-label").value.trim();
         const extraValue = $("#profile-extra-value").value.trim();
         if (extraLabel && extraValue) profile.extras = [...(profile.extras || []), { label: extraLabel, value: extraValue }];
@@ -1523,12 +1775,13 @@
         if (sortType === "newest") entries.sort((a, b) => (b[1].createdAt || 0) - (a[1].createdAt || 0));
         if (sortType === "oldest") entries.sort((a, b) => (a[1].createdAt || 0) - (b[1].createdAt || 0));
         if (sortType === "title") entries.sort((a, b) => a[1].title.localeCompare(b[1].title, "zh-CN"));
+        if (sortType === "folder") entries.sort((a, b) => (a[1].folder || "未分类").localeCompare(b[1].folder || "未分类", "zh-CN"));
 
         select.replaceChildren();
         entries.forEach(([id, item]) => {
           const option = document.createElement("option");
           option.value = id;
-          option.textContent = item.title;
+          option.textContent = `${item.folder ? `[${item.folder}] ` : ""}${item.title}`;
           select.appendChild(option);
         });
         select.value = scripts[selectedId] ? selectedId : entries[0]?.[0] || "";
@@ -1547,28 +1800,81 @@
       $("#script-sort-select").addEventListener("change", () => renderScriptOptions());
 
       const scriptModal = $("#modal-script");
-      $("#btn-new-script").addEventListener("click", () => scriptModal.showModal());
+      const openScriptEditor = (item = null, editId = "") => {
+        $("#script-edit-id").value = editId;
+        $("#script-card-title").value = item?.title || "";
+        $("#script-card-text").value = item?.zh || "";
+        $("#script-card-note").value = item?.note || "";
+        $("#script-card-folder").value = item?.folder || "";
+        $("#btn-save-script").textContent = editId ? "保存台词卡修改" : "创建台词卡";
+        scriptModal.showModal();
+      };
+      $("#btn-new-script").addEventListener("click", () => openScriptEditor());
       $("#btn-close-script-modal").addEventListener("click", () => scriptModal.close());
+      $("#btn-edit-script").addEventListener("click", () => {
+        const id = $("#select-script").value;
+        openScriptEditor(scripts[id], id);
+      });
+      $("#btn-copy-script").addEventListener("click", () => {
+        const item = scripts[$("#select-script").value];
+        openScriptEditor({ ...item, title: `${item.title}（副本）` });
+      });
+      $("#btn-delete-script").addEventListener("click", async () => {
+        const id = $("#select-script").value;
+        const index = customScripts.findIndex(item => item.id === id);
+        if (index < 0) { showToast("内置台词卡不能删除，可以复制后编辑"); return; }
+        if (!(await confirmDelete(`确认删除“${scripts[id].title}”吗？`))) return;
+        const removed = customScripts.splice(index, 1)[0];
+        if (builtInScripts[id]) scripts[id] = builtInScripts[id];
+        else delete scripts[id];
+        storage.set("circleK.voiceScripts", customScripts);
+        renderScriptOptions();
+        showUndoToast("台词卡已删除", () => {
+          customScripts.splice(index, 0, removed); scripts[id] = removed;
+          storage.set("circleK.voiceScripts", customScripts); renderScriptOptions(id);
+        });
+      });
       $("#form-script").addEventListener("submit", (e) => {
         e.preventDefault();
-        const id = `custom_${Date.now()}`;
+        const editId = $("#script-edit-id").value;
+        const id = editId || `custom_${Date.now()}`;
+        const newTitle = $("#script-card-title").value.trim();
+        const duplicate = Object.entries(scripts).find(([scriptId, script]) => scriptId !== editId && script.title.toLocaleLowerCase("zh-CN") === newTitle.toLocaleLowerCase("zh-CN"));
+        if (duplicate && !window.confirm(`台词卡“${newTitle}”已经存在，仍要继续保存吗？`)) return;
         const item = {
           id,
-          title: $("#script-card-title").value.trim(),
+          title: newTitle,
           zh: $("#script-card-text").value.trim(),
           note: $("#script-card-note").value.trim() || "【配音情绪指南】：按你喜欢的方式自由演绎。",
+          folder: $("#script-card-folder").value.trim() || "未分类",
           createdAt: Date.now()
         };
-        customScripts.push(item);
+        const existingIndex = customScripts.findIndex(script => script.id === id);
+        if (existingIndex >= 0) customScripts[existingIndex] = item;
+        else customScripts.push(item);
         scripts[id] = item;
         storage.set("circleK.voiceScripts", customScripts);
         renderScriptOptions(id);
         e.target.reset();
         scriptModal.close();
-        showToast("新台词卡已创建并保存 📜");
+        showToast(editId ? "台词卡已更新 ✏️" : "新台词卡已创建并保存 📜");
       });
 
       renderScriptOptions();
+
+      const compressImage = async (file, maxSide = 1600, quality = 0.82) => {
+        if (!file.type.startsWith("image/") || file.type === "image/gif" || typeof createImageBitmap === "undefined") return file;
+        const bitmap = await createImageBitmap(file);
+        const scale = Math.min(1, maxSide / Math.max(bitmap.width, bitmap.height));
+        if (scale === 1 && file.size < 900 * 1024) { bitmap.close(); return file; }
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.round(bitmap.width * scale);
+        canvas.height = Math.round(bitmap.height * scale);
+        canvas.getContext("2d").drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+        bitmap.close();
+        const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/webp", quality));
+        return blob ? new File([blob], file.name.replace(/\.[^.]+$/, ".webp"), { type: "image/webp" }) : file;
+      };
 
       const uploadToSupabase = async (file, pathPrefix = "") => {
         const fileExt = file.name.split('.').pop();
@@ -1661,6 +1967,9 @@
               const extension = isMp4 ? "m4a" : "webm";
               const file = new File([audioBlob], `voice_${Date.now()}.${extension}`, { type: actualType });
               const currentScript = $("#select-script").options[$("#select-script").selectedIndex].text;
+              const currentScriptId = $("#select-script").value;
+              const customTakeName = $("#voice-next-name").value.trim();
+              const voiceRole = $("#voice-next-role").value.trim();
               
               const res = await uploadToSupabase(file, "voice/");
               if (res) {
@@ -1669,14 +1978,20 @@
                   id: Date.now(),
                   kind: "voiceover",
                   folder: "录音试音",
-                  name: `试音: ${currentScript.slice(0, 15)}...`,
+                  name: customTakeName || `试音: ${currentScript.slice(0, 15)}...`,
+                  role: voiceRole,
+                  scriptId: currentScriptId,
+                  scriptTitle: currentScript,
                   url: res.url,
                   path: res.path
                 });
                 storage.set("circleK_supabase_memories", list);
                 renderMemories();
                 renderVoiceTakes();
+                renderHomeActivity();
                 showToast("配音录制完毕，已同步至 Supabase！🎙");
+                $("#voice-next-name").value = "";
+                $("#voice-next-role").value = "";
               }
               resetRecordButton();
             };
@@ -1747,20 +2062,31 @@
                 <span class="w-2 h-2 rounded-full bg-purple-400"></span>
                 ${item.name}
               </span>
-              <button class="btn-del-take text-slate-500 hover:text-red-400 font-bold" data-id="${item.id}">✕</button>
+              <div class="flex gap-2">
+                <button class="btn-edit-take text-slate-400 hover:text-amber-300 font-bold" data-id="${item.id}">✏️</button>
+                <button class="btn-del-take text-slate-500 hover:text-red-400 font-bold" data-id="${item.id}">✕</button>
+              </div>
             </div>
+            ${(item.role || item.scriptTitle) ? `<div class="text-[10px] text-slate-500 flex flex-wrap gap-2">${item.role ? `<span>角色：${item.role}</span>` : ""}${item.scriptTitle ? `<span>台词：${item.scriptTitle}</span>` : ""}</div>` : ""}
             <audio src="${item.url}" controls class="w-full h-8 mt-1"></audio>
           `;
 
+          card.querySelector(".btn-edit-take").addEventListener("click", () => openGenericModal('memory', item));
+
           card.querySelector(".btn-del-take").addEventListener("click", async () => {
             if (!(await confirmDelete(`确认删除配音片段“${item.name}”吗？`))) return;
-            await deleteFromSupabase(item.path);
             let current = storage.get("circleK_supabase_memories", []);
+            const removedIndex = current.findIndex(x => x.id === item.id);
             current = current.filter(x => x.id !== item.id);
             storage.set("circleK_supabase_memories", current);
             renderVoiceTakes();
             renderMemories();
-            showToast("已从 Supabase 移除配音片段");
+            showUndoToast("配音片段已移除", () => {
+              const restored = storage.get("circleK_supabase_memories", []);
+              restored.splice(Math.max(0, removedIndex), 0, item);
+              storage.set("circleK_supabase_memories", restored);
+              renderVoiceTakes(); renderMemories();
+            }, () => deleteFromSupabase(item.path));
           });
 
           grid.appendChild(card);
@@ -1980,10 +2306,13 @@
           title: "番茄炒蛋",
           number: "MENU 001",
           type: "家常美味",
-          note: "酸甜开胃、温暖下饭的经典家常菜。"
+          note: "酸甜开胃、温暖下饭的经典家常菜。",
+          rating: "5", spice: "不辣", status: "吃过", chef: "", eatenDate: ""
         });
         storage.set("circleK.collections", collections);
       }
+      const tomatoEgg = collections.find(item => item.category === "好吃研究所" && item.title === "番茄炒蛋");
+      if (tomatoEgg) Object.assign(tomatoEgg, { rating: tomatoEgg.rating || "5", spice: tomatoEgg.spice || "不辣", status: tomatoEgg.status || "吃过", type: tomatoEgg.type || "家常美味" });
 
       let selectedColCategory = "全部";
       let colSortType = "newest";
@@ -2030,9 +2359,11 @@
         const select = $("#col-type");
         const pokemonTypes = ["一般", "火", "水", "电", "草", "冰", "格斗", "毒", "地面", "飞行", "超能力", "虫", "岩石", "幽灵", "龙", "恶", "钢", "妖精"];
         const gundamTypes = ["泛用型", "格斗型", "射击型", "炮击型", "突击型", "狙击型", "可变型", "重装型", "水陆两用型", "支援型", "试作型", "专用机"];
+        const foodTypes = ["家常美味", "甜点", "饮品", "早餐", "正餐", "夜宵", "零食", "餐厅打卡"];
         const otherTypes = ["未分类", "收藏", "限定", "纪念"];
-        const values = category === "宝可梦图鉴" ? pokemonTypes : category === "高达机库" ? gundamTypes : otherTypes;
-        $("#col-type-label").textContent = category === "宝可梦图鉴" ? "宝可梦属性" : category === "高达机库" ? "机体类型" : "收藏类型";
+        const values = category === "宝可梦图鉴" ? pokemonTypes : category === "高达机库" ? gundamTypes : category === "好吃研究所" ? foodTypes : otherTypes;
+        $("#col-type-label").textContent = category === "宝可梦图鉴" ? "宝可梦属性" : category === "高达机库" ? "机体类型" : category === "好吃研究所" ? "菜品类型" : "收藏类型";
+        $("#food-fields").classList.toggle("hidden", category !== "好吃研究所");
         select.replaceChildren();
         values.forEach(value => {
           const option = document.createElement("option");
@@ -2053,11 +2384,12 @@
       const updateCollectionCardPreview = () => {
         const category = $("#col-category").value;
         const isGundam = category === "高达机库";
+        const isFood = category === "好吃研究所";
         applyCollectionCardTheme($("#col-live-card"), category, $("#col-type").value.trim());
-        $("#col-live-title").textContent = $("#col-title").value.trim() || (isGundam ? "未命名机体" : "未命名伙伴");
-        $("#col-live-number").textContent = $("#col-number").value.trim() || (isGundam ? "MODEL ???" : "NO. ???");
+        $("#col-live-title").textContent = $("#col-title").value.trim() || (isGundam ? "未命名机体" : isFood ? "未命名菜品" : "未命名伙伴");
+        $("#col-live-number").textContent = $("#col-number").value.trim() || (isGundam ? "MODEL ???" : isFood ? "MENU ???" : "NO. ???");
         $("#col-live-category").textContent = category;
-        $("#col-live-type").textContent = `${isGundam ? "类型" : "属性"}：${$("#col-type").value.trim() || "未知"}`;
+        $("#col-live-type").textContent = `${isGundam ? "类型" : isFood ? "菜品" : "属性"}：${$("#col-type").value.trim() || "未知"}`;
         $("#col-live-note").textContent = $("#col-note").value.trim() || "在这里写下它的介绍、特点和属于你们的故事。";
         const image = $("#col-image-data").value;
         const box = $("#col-live-image-box");
@@ -2069,7 +2401,7 @@
           img.style.cssText = "display:block;width:auto;height:auto;max-width:100%;max-height:100%;object-fit:contain;";
           box.appendChild(img);
         } else {
-          box.textContent = isGundam ? "🤖" : "⚡";
+          box.textContent = isGundam ? "🤖" : isFood ? "🍳" : "⚡";
         }
       };
 
@@ -2092,10 +2424,15 @@
       };
 
       const openCollectionCard = (category) => {
-        $("#col-modal-title").textContent = category === "宝可梦图鉴" ? "添加宝可梦图鉴卡" : "添加高达机库卡";
+        $("#col-modal-title").textContent = category === "宝可梦图鉴" ? "添加宝可梦图鉴卡" : category === "好吃研究所" ? "添加好吃研究所菜品" : "添加高达机库卡";
         $("#col-edit-id").value = "";
         $("#form-collection").reset();
         $("#col-category").value = category;
+        $("#food-rating").value = "5";
+        $("#food-spice").value = "不辣";
+        $("#food-status").value = "吃过";
+        $("#food-chef").value = "";
+        $("#food-date").value = "";
         updateCollectionTypeOptions();
         resetCollectionImage();
         updateCollectionCardPreview();
@@ -2120,9 +2457,23 @@
         });
       };
 
+      const renderFoodLabSummary = () => {
+        const box = $("#food-lab-summary");
+        const foods = collections.filter(item => item.category === "好吃研究所");
+        box.classList.toggle("hidden", selectedColCategory !== "好吃研究所");
+        if (selectedColCategory !== "好吃研究所") return;
+        const rated = foods.filter(item => Number(item.rating));
+        const average = rated.length ? (rated.reduce((sum, item) => sum + Number(item.rating), 0) / rated.length).toFixed(1) : "—";
+        const favorite = [...foods].sort((a, b) => Number(b.rating || 0) - Number(a.rating || 0))[0];
+        const latest = [...foods].sort((a, b) => b.id - a.id)[0];
+        const wishlist = foods.filter(item => item.status === "想吃").length;
+        box.innerHTML = `<div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-center"><div><b class="text-2xl text-orange-300">${foods.length}</b><span class="block text-[10px] text-slate-400">收录菜品</span></div><div><b class="text-2xl text-yellow-300">${average}</b><span class="block text-[10px] text-slate-400">平均好吃指数</span></div><div><b class="text-sm text-white">${favorite?.title || "暂无"}</b><span class="block text-[10px] text-slate-400">当前最爱</span></div><div><b class="text-sm text-white">${wishlist ? `${wishlist} 道想吃` : latest?.title || "暂无"}</b><span class="block text-[10px] text-slate-400">想吃清单 / 最近新增</span></div></div>`;
+      };
+
       const renderCollections = () => {
         const grid = $("#collection-grid");
         grid.replaceChildren();
+        renderFoodLabSummary();
 
         let filtered = [...collections];
         if (selectedColCategory !== "全部") {
@@ -2136,6 +2487,7 @@
         } else if (colSortType === "title") {
           filtered.sort((a,b) => a.title.localeCompare(b.title, 'zh-CN'));
         }
+        filtered.sort((a, b) => Number(Boolean(b.favorite)) - Number(Boolean(a.favorite)));
 
         if (!filtered.length) {
           grid.innerHTML = `<div class="col-span-full p-8 text-center text-slate-500 border border-dashed border-slate-800 rounded-2xl">该分类下暂无收藏。归档你的第一台高达或宝可梦伙伴吧 ✦</div>`;
@@ -2163,6 +2515,7 @@
             <div class="flex items-center justify-between">
               <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${badgeClass}">${item.category}</span>
               <div class="flex items-center gap-2">
+                <button class="btn-favorite-col text-lg ${item.favorite ? "text-yellow-400" : "text-slate-600 hover:text-yellow-300"}" data-id="${item.id}" title="置顶收藏">★</button>
                 <button class="btn-edit-col text-slate-400 hover:text-amber-300 font-bold text-xs" data-id="${item.id}" title="重命名与编辑">✏️ 编辑</button>
                 <button class="btn-del-col text-slate-500 hover:text-red-400 font-bold text-sm" data-id="${item.id}" title="删除">✕</button>
               </div>
@@ -2171,18 +2524,33 @@
               <h3 class="text-lg font-bold ${isGundam || isPoke ? "text-slate-900" : "text-white"}">${item.title}</h3>
               <span class="text-[10px] font-bold font-orbitron ${isGundam || isPoke ? "text-slate-700" : "text-slate-400"}">${item.number || "NO. ???"}</span>
             </div>
-            <div class="dex-card-image text-5xl">${item.image ? `<img src="${item.image}" alt="${item.title}">` : (isGundam ? "🤖" : isPoke ? "⚡" : "✦")}</div>
-            ${item.type ? `<div class="text-[11px] font-bold ${isGundam || isPoke ? "text-slate-700" : "text-slate-300"}">${isGundam ? "机体类型" : "属性"}：${item.type}</div>` : ""}
+            <div class="dex-card-image text-5xl">${item.image ? `<img src="${item.image}" alt="${item.title}">` : (isGundam ? "🤖" : isPoke ? "⚡" : item.category === "好吃研究所" ? "🍳" : "✦")}</div>
+            ${item.type ? `<div class="text-[11px] font-bold ${isGundam || isPoke ? "text-slate-700" : "text-slate-300"}">${isGundam ? "机体类型" : item.category === "好吃研究所" ? "菜品类型" : "属性"}：${item.type}</div>` : ""}
+            ${item.category === "好吃研究所" ? `<div class="text-[11px] text-orange-300 flex flex-wrap gap-3"><span>好吃指数：${"★".repeat(Number(item.rating || 5))}${"☆".repeat(5 - Number(item.rating || 5))}</span><span>${item.status || "吃过"}</span><span>辣度：${item.spice || "不辣"}</span>${item.chef ? `<span>制作：${item.chef}</span>` : ""}${item.eatenDate ? `<span>日期：${item.eatenDate}</span>` : ""}</div>` : ""}
             <p class="text-xs leading-relaxed ${isGundam || isPoke ? "dex-card-description text-slate-700" : "text-slate-400"}">${item.note || "喜爱本身，就是收藏的理由。"}</p>
           </div>`;
 
           card.querySelector(".btn-del-col").addEventListener("click", async () => {
             if (!(await confirmDelete(`确认删除“${item.title}”这张收藏卡吗？`))) return;
-            if (item.imagePath) await deleteFromSupabase(item.imagePath);
+            const removedIndex = collections.findIndex(x => x.id === item.id);
             collections = collections.filter(x => x.id !== item.id);
             storage.set("circleK.collections", collections);
             renderCollections();
-            showToast("已移除该项收藏");
+            renderHomeActivity();
+            showUndoToast("已移除该项收藏", () => {
+              collections.splice(Math.max(0, removedIndex), 0, item);
+              storage.set("circleK.collections", collections);
+              renderCollections();
+              renderHomeActivity();
+            }, () => { if (item.imagePath) deleteFromSupabase(item.imagePath); });
+          });
+
+          card.querySelector(".btn-favorite-col").addEventListener("click", event => {
+            event.stopPropagation();
+            item.favorite = !item.favorite;
+            storage.set("circleK.collections", collections);
+            renderCollections(); renderHomeActivity();
+            showToast(item.favorite ? "已加入近期最爱 ★" : "已取消置顶");
           });
 
           card.querySelector(".btn-edit-col").addEventListener("click", () => {
@@ -2192,6 +2560,11 @@
             $("#col-title").value = item.title;
             $("#col-note").value = item.note || "";
             $("#col-number").value = item.number || "";
+            $("#food-rating").value = item.rating || "5";
+            $("#food-spice").value = item.spice || "不辣";
+            $("#food-status").value = item.status || "吃过";
+            $("#food-chef").value = item.chef || "";
+            $("#food-date").value = item.eatenDate || "";
             updateCollectionTypeOptions(item.type || "");
             resetCollectionImage(item.image || "", item.imagePath || "");
             modalCol.showModal();
@@ -2239,7 +2612,7 @@
           img.style.cssText = "display:block;width:auto;height:auto;max-width:100%;max-height:100%;object-fit:contain;";
           imageBox.appendChild(img);
         } else {
-          imageBox.textContent = isGundam ? "🤖" : "⚡";
+          imageBox.textContent = isGundam ? "🤖" : item.category === "好吃研究所" ? "🍳" : "⚡";
         }
         modalCardDetail.showModal();
       };
@@ -2252,6 +2625,9 @@
         $("#col-modal-title").textContent = "归档一件新收藏";
         $("#col-edit-id").value = "";
         $("#form-collection").reset();
+        $("#food-rating").value = "5";
+        $("#food-spice").value = "不辣";
+        $("#food-status").value = "吃过";
         updateCollectionTypeOptions();
         resetCollectionImage();
         modalCol.showModal();
@@ -2260,6 +2636,13 @@
 
       $$('[data-open-collection]').forEach(btn => {
         btn.addEventListener("click", () => openCollectionCard(btn.dataset.openCollection));
+      });
+
+      $("#btn-open-food-lab").addEventListener("click", () => {
+        selectedColCategory = "好吃研究所";
+        renderCollectionCategoryFilters();
+        renderCollections();
+        switchTab("tab-collections");
       });
 
       $("#col-category").addEventListener("change", () => updateCollectionTypeOptions());
@@ -2281,7 +2664,7 @@
         const saveButton = $("#btn-save-collection");
         saveButton.disabled = true;
         saveButton.textContent = "正在上传图片…";
-        const result = await uploadToSupabase(file, "cards/");
+        const result = await uploadToSupabase(await compressImage(file), "cards/");
         saveButton.disabled = false;
         saveButton.textContent = "保存并同步卡牌";
         if (result) {
@@ -2304,24 +2687,41 @@
             item.type = $("#col-type").value.trim();
             item.image = $("#col-image-data").value;
             item.imagePath = $("#col-image-path").value;
+            item.rating = $("#food-rating").value;
+            item.spice = $("#food-spice").value;
+            item.status = $("#food-status").value;
+            item.chef = $("#food-chef").value.trim();
+            item.eatenDate = $("#food-date").value;
             showToast("成功更新收藏资料 ✏️");
           }
         } else {
+          const newTitle = $("#col-title").value.trim();
+          const duplicate = collections.find(item => item.title.toLocaleLowerCase("zh-CN") === newTitle.toLocaleLowerCase("zh-CN") && item.category === $("#col-category").value);
+          if (duplicate && !window.confirm(`“${newTitle}”已经存在。确定仍要继续添加吗？`)) {
+            showToast("已取消重复添加，可以编辑原有卡片");
+            return;
+          }
           collections.push({
             id: Date.now(),
             category: $("#col-category").value,
-            title: $("#col-title").value.trim(),
+            title: newTitle,
             note: $("#col-note").value.trim(),
             number: $("#col-number").value.trim(),
             type: $("#col-type").value.trim(),
             image: $("#col-image-data").value,
-            imagePath: $("#col-image-path").value
+            imagePath: $("#col-image-path").value,
+            rating: $("#food-rating").value,
+            spice: $("#food-spice").value,
+            status: $("#food-status").value,
+            chef: $("#food-chef").value.trim(),
+            eatenDate: $("#food-date").value
           });
           showToast("成功添加到收藏基地 🤖");
         }
 
         storage.set("circleK.collections", collections);
         renderCollections();
+        renderHomeActivity();
         modalCol.close();
         e.target.reset();
       });
@@ -2351,6 +2751,7 @@
             selectedWishCategory = cat;
             renderWishCategoryFilters();
             renderWishes();
+            renderHomeActivity();
           });
           filterBox.appendChild(btn);
         });
@@ -2395,10 +2796,16 @@
 
           card.querySelector(".btn-del-wish").addEventListener("click", async () => {
             if (!(await confirmDelete("确认删除这张愿望卡吗？"))) return;
+            const removedIndex = wishes.findIndex(x => x.id === item.id);
             wishes = wishes.filter(x => x.id !== item.id);
             storage.set("circleK.wishes", wishes);
             renderWishes();
-            showToast("已取下愿望小纸条");
+            showUndoToast("已取下愿望小纸条", () => {
+              wishes.splice(Math.max(0, removedIndex), 0, item);
+              storage.set("circleK.wishes", wishes);
+              renderWishes();
+              renderHomeActivity();
+            });
           });
 
           card.querySelector(".btn-edit-wish").addEventListener("click", () => {
@@ -2412,6 +2819,7 @@
       $("#wish-sort-select").addEventListener("change", (e) => {
         wishSortType = e.target.value;
         renderWishes();
+        renderHomeActivity();
       });
 
       $("#form-wish").addEventListener("submit", (e) => {
@@ -2424,6 +2832,7 @@
         });
         storage.set("circleK.wishes", wishes);
         renderWishes();
+        renderHomeActivity();
         $("#input-wish-text").value = "";
         showToast("愿望已挂到次元星空 ✦");
       });
@@ -2520,14 +2929,21 @@
 
           card.querySelector(".btn-del-mem").addEventListener("click", async () => {
             if (!(await confirmDelete(`确认删除记忆文件“${item.name}”吗？`))) return;
-            await deleteFromSupabase(item.path);
             let current = storage.get("circleK_supabase_memories", []);
+            const removedIndex = current.findIndex(x => x.id === item.id);
             current = current.filter(x => x.id !== item.id);
             storage.set("circleK_supabase_memories", current);
             renderMemFolderFilters();
             renderMemories();
             renderVoiceTakes();
-            showToast("已从 Supabase 存储库中移除");
+            renderHomeActivity();
+            showUndoToast("记忆文件已移除", () => {
+              const restored = storage.get("circleK_supabase_memories", []);
+              restored.splice(Math.max(0, removedIndex), 0, item);
+              storage.set("circleK_supabase_memories", restored);
+              renderMemFolderFilters(); renderMemories(); renderVoiceTakes();
+              renderHomeActivity();
+            }, () => deleteFromSupabase(item.path));
           });
 
           card.querySelector(".btn-edit-mem").addEventListener("click", () => {
@@ -2546,7 +2962,7 @@
       $("#file-photo").addEventListener("change", async (e) => {
         const file = e.target.files[0];
         if (!file) return;
-        const res = await uploadToSupabase(file, "photos/");
+        const res = await uploadToSupabase(await compressImage(file), "photos/");
         if (res) {
           let list = storage.get("circleK_supabase_memories", []);
           list.unshift({
@@ -2560,6 +2976,7 @@
           storage.set("circleK_supabase_memories", list);
           renderMemFolderFilters();
           renderMemories();
+          renderHomeActivity();
           showToast("照片已成功保存至 Supabase Storage 📷");
         }
       });
@@ -2582,6 +2999,7 @@
           renderMemFolderFilters();
           renderMemories();
           renderVoiceTakes();
+          renderHomeActivity();
           showToast("音频文件已上传至 Supabase 🎙");
         }
       });
@@ -2659,6 +3077,107 @@
         }
 
         genericModal.close();
+      });
+
+      const renderHomeActivity = () => {
+        const grid = $("#home-activity-grid");
+        const memories = storage.get("circleK_supabase_memories", []);
+        const recentCollection = [...collections].sort((a, b) => b.id - a.id)[0];
+        const favorite = collections.find(item => item.favorite);
+        const recentWish = [...wishes].sort((a, b) => b.id - a.id)[0];
+        const recentMemory = [...memories].sort((a, b) => b.id - a.id)[0];
+        const items = [
+          { icon: "★", label: "近期最爱", value: favorite?.title || "还没有置顶收藏" },
+          { icon: "✦", label: "最新收藏", value: recentCollection?.title || "暂无收藏" },
+          { icon: "🎙", label: "最近录音 / 记忆", value: visitorMode ? "访客模式下已隐藏" : (recentMemory?.name || "暂无文件") },
+          { icon: "💫", label: "最新愿望", value: visitorMode ? "访客模式下已隐藏" : (recentWish?.text || "暂无愿望") }
+        ];
+        grid.replaceChildren();
+        items.forEach(item => {
+          const card = document.createElement("div");
+          card.className = "rounded-xl bg-slate-950/70 border border-slate-800 p-4";
+          const label = document.createElement("span");
+          label.className = "block text-[10px] text-slate-500 mb-2";
+          label.textContent = `${item.icon} ${item.label}`;
+          const value = document.createElement("strong");
+          value.className = "block text-xs text-slate-200 line-clamp-2";
+          value.textContent = item.value;
+          card.append(label, value); grid.appendChild(card);
+        });
+      };
+      renderHomeActivity();
+
+      // ==================== 全站搜索 ====================
+      const searchInput = $("#global-search");
+      const searchResults = $("#global-search-results");
+      const openSearchResult = (item) => {
+        searchResults.classList.add("hidden");
+        searchInput.blur();
+        if (item.kind === "profile") {
+          switchTab("tab-home");
+          document.querySelector(".citizen-card")?.scrollIntoView({ behavior: "smooth", block: "center" });
+        } else if (item.kind === "script") {
+          switchTab("tab-voice");
+          $("#select-script").value = item.id;
+          $("#select-script").dispatchEvent(new Event("change"));
+        } else if (item.kind === "song") {
+          switchTab("tab-piano");
+          $("#song-select").value = item.id;
+          $("#song-select").dispatchEvent(new Event("change"));
+        } else if (item.kind === "collection") {
+          selectedColCategory = item.data.category;
+          renderCollectionCategoryFilters(); renderCollections(); switchTab("tab-collections");
+        } else if (item.kind === "wish") {
+          selectedWishCategory = item.data.category || "未分类";
+          renderWishCategoryFilters(); renderWishes(); switchTab("tab-wishes");
+        } else if (item.kind === "memory") {
+          selectedMemFolder = item.data.folder || "未分类";
+          renderMemFolderFilters(); renderMemories(); switchTab("tab-memories");
+        }
+      };
+
+      const renderGlobalSearch = () => {
+        const query = searchInput.value.trim().toLocaleLowerCase("zh-CN");
+        searchResults.replaceChildren();
+        if (!query) { searchResults.classList.add("hidden"); return; }
+        const results = [];
+        const add = (kind, title, detail, data = {}, id = "") => {
+          if (`${title} ${detail}`.toLocaleLowerCase("zh-CN").includes(query)) results.push({ kind, title, detail, data, id });
+        };
+        if (!visitorMode) add("profile", profile.name, `${profile.identity} ${profile.energy} ${profile.skill} ${profile.weakness} ${(profile.extras || []).map(x => `${x.label} ${x.value}`).join(" ")}`);
+        if (!visitorMode) Object.entries(scripts).forEach(([id, item]) => add("script", item.title, `${item.zh} ${item.note}`, item, id));
+        Object.entries(songs).forEach(([id, item]) => add("song", item.title, `${item.sheet || ""} 琴谱 音乐`, item, id));
+        collections.forEach(item => add("collection", item.title, `${item.category} ${item.type || ""} ${item.note || ""} ${item.chef || ""}`, item));
+        if (!visitorMode) wishes.forEach(item => add("wish", item.text, item.category || "愿望", item));
+        if (!visitorMode) storage.get("circleK_supabase_memories", []).forEach(item => add("memory", item.name || "记忆文件", `${item.folder || ""} ${item.kind || ""}`, item));
+        results.slice(0, 12).forEach(item => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "w-full text-left p-3 rounded-lg hover:bg-slate-800 transition block";
+          const title = document.createElement("strong");
+          title.className = "block text-xs text-white";
+          title.textContent = item.title;
+          const detail = document.createElement("span");
+          detail.className = "block text-[10px] text-slate-400 mt-1 truncate";
+          detail.textContent = item.detail;
+          button.append(title, detail);
+          button.onclick = () => openSearchResult(item);
+          searchResults.appendChild(button);
+        });
+        if (!results.length) {
+          const empty = document.createElement("div");
+          empty.className = "p-4 text-center text-xs text-slate-500";
+          empty.textContent = "没有找到相关内容";
+          searchResults.appendChild(empty);
+        }
+        searchResults.classList.remove("hidden");
+      };
+      searchInput.addEventListener("input", renderGlobalSearch);
+      searchInput.addEventListener("keydown", event => {
+        if (event.key === "Escape") { searchInput.value = ""; searchResults.classList.add("hidden"); }
+      });
+      document.addEventListener("click", event => {
+        if (!event.target.closest("#global-search") && !event.target.closest("#global-search-results")) searchResults.classList.add("hidden");
       });
 
       $("#btn-audio-toggle").addEventListener("click", () => {
