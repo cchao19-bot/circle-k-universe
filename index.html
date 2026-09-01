@@ -586,30 +586,38 @@
                   <span class="text-xs text-yellow-400 font-mono">PASSPORT ID: KRESNIK-818</span>
                 </div>
               </div>
-              <span class="px-3 py-1 rounded-full bg-blue-900/60 border border-blue-400/40 text-blue-300 text-xs font-bold tracking-wider uppercase">
-                认证成功 · VERIFIED
-              </span>
+              <div class="flex items-center gap-2">
+                <button id="btn-edit-profile" type="button" class="px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-slate-200 text-xs font-bold hover:bg-slate-700 transition">✏️ 编辑 / 添加</button>
+                <span class="px-3 py-1 rounded-full bg-blue-900/60 border border-blue-400/40 text-blue-300 text-xs font-bold tracking-wider uppercase">
+                  认证成功 · VERIFIED
+                </span>
+              </div>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
+            <div id="profile-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 text-sm">
               <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-1">
                 <span class="text-xs text-slate-400 block">代号 / NAME</span>
-                <span class="text-base font-bold text-yellow-300 font-mashan">Kresnik 王棣</span>
+                <span id="profile-name" class="text-base font-bold text-yellow-300 font-mashan">Kresnik 王棣</span>
               </div>
 
               <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-1">
                 <span class="text-xs text-slate-400 block">属性 / IDENTITY</span>
-                <span class="text-sm font-bold text-purple-300">音乐人 / 配音演员 / 次元旅人</span>
+                <span id="profile-identity" class="text-sm font-bold text-purple-300">音乐人 / 配音演员 / 次元旅人</span>
               </div>
 
               <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-1">
                 <span class="text-xs text-slate-400 block">能量来源 / ENERGY SOURCE</span>
-                <span class="text-sm font-bold text-amber-300">琴声、热爱与好吃的 🍰</span>
+                <span id="profile-energy" class="text-sm font-bold text-amber-300">琴声、热爱与好吃的 🍰</span>
               </div>
 
               <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-1">
                 <span class="text-xs text-slate-400 block">特殊技能 / SPECIAL SKILL</span>
-                <span class="text-sm font-bold text-emerald-300">把普通日子过得有趣 ✨</span>
+                <span id="profile-skill" class="text-sm font-bold text-emerald-300">把普通日子过得有趣 ✨</span>
+              </div>
+
+              <div class="p-4 rounded-2xl bg-slate-900/80 border border-red-500/25 space-y-1">
+                <span class="text-xs text-slate-400 block">弱点属性 / WEAKNESS</span>
+                <span id="profile-weakness" class="text-sm font-bold text-rose-300">菠萝 · 芒果 · 竹笋</span>
               </div>
             </div>
           </div>
@@ -927,6 +935,30 @@
     </section>
   </main>
 
+  <dialog id="modal-profile" class="bg-slate-900 text-white rounded-2xl p-6 border border-slate-700 max-w-lg w-full shadow-2xl backdrop:bg-black/70">
+    <form id="form-profile" class="space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 class="text-lg font-bold">✦ 编辑居民档案</h3>
+        <button id="btn-close-profile-modal" type="button" class="text-slate-400 hover:text-white text-xl" aria-label="关闭">×</button>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+        <label class="space-y-1">代号 / NAME<input id="profile-input-name" maxlength="60" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-white"></label>
+        <label class="space-y-1">属性 / IDENTITY<input id="profile-input-identity" maxlength="100" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-white"></label>
+        <label class="space-y-1">能量来源 / ENERGY SOURCE<input id="profile-input-energy" maxlength="100" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-white"></label>
+        <label class="space-y-1">特殊技能 / SPECIAL SKILL<input id="profile-input-skill" maxlength="100" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-white"></label>
+        <label class="space-y-1 sm:col-span-2">弱点属性 / WEAKNESS<input id="profile-input-weakness" maxlength="100" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-white" value="菠萝 · 芒果 · 竹笋"></label>
+      </div>
+      <div class="border-t border-slate-800 pt-4 space-y-3">
+        <span class="text-xs font-bold text-blue-300">＋ 添加一个新属性（可选）</span>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <input id="profile-extra-label" maxlength="40" class="bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white" placeholder="属性名称">
+          <input id="profile-extra-value" maxlength="100" class="bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white" placeholder="属性内容">
+        </div>
+      </div>
+      <button type="submit" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm font-bold hover:brightness-110">保存档案</button>
+    </form>
+  </dialog>
+
   <dialog id="modal-script" class="bg-slate-900 text-white rounded-2xl p-6 border border-slate-700 max-w-md w-full shadow-2xl backdrop:bg-black/70">
     <form id="form-script" class="space-y-4">
       <div class="flex items-center justify-between">
@@ -1197,6 +1229,7 @@
 
       const CLOUD_STATE_PATH = "data/circle-k-universe-state.json";
       const SYNCED_STORAGE_KEYS = new Set([
+        "circleK.profile",
         "circleK.voiceScripts",
         "circleK_piano_leaderboard",
         "circleK.collections",
@@ -1382,6 +1415,67 @@
       $$("[data-switch]").forEach(btn => {
         btn.addEventListener("click", () => switchTab(btn.dataset.switch));
       });
+
+      // ==================== 宇宙居民档案 (Profile) ====================
+      const defaultProfile = {
+        name: "Kresnik 王棣",
+        identity: "音乐人 / 配音演员 / 次元旅人",
+        energy: "琴声、热爱与好吃的 🍰",
+        skill: "把普通日子过得有趣 ✨",
+        weakness: "菠萝 · 芒果 · 竹笋",
+        extras: []
+      };
+      let profile = { ...defaultProfile, ...storage.get("circleK.profile", {}) };
+
+      const renderProfile = () => {
+        $("#profile-name").textContent = profile.name;
+        $("#profile-identity").textContent = profile.identity;
+        $("#profile-energy").textContent = profile.energy;
+        $("#profile-skill").textContent = profile.skill;
+        $("#profile-weakness").textContent = profile.weakness;
+        $$(".profile-extra-card").forEach(card => card.remove());
+        (profile.extras || []).forEach(item => {
+          const card = document.createElement("div");
+          card.className = "profile-extra-card p-4 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-1";
+          const label = document.createElement("span");
+          label.className = "text-xs text-slate-400 block";
+          label.textContent = item.label;
+          const value = document.createElement("span");
+          value.className = "text-sm font-bold text-blue-300";
+          value.textContent = item.value;
+          card.append(label, value);
+          $("#profile-grid").appendChild(card);
+        });
+      };
+
+      const profileModal = $("#modal-profile");
+      $("#btn-edit-profile").addEventListener("click", () => {
+        $("#profile-input-name").value = profile.name;
+        $("#profile-input-identity").value = profile.identity;
+        $("#profile-input-energy").value = profile.energy;
+        $("#profile-input-skill").value = profile.skill;
+        $("#profile-input-weakness").value = profile.weakness;
+        $("#profile-extra-label").value = "";
+        $("#profile-extra-value").value = "";
+        profileModal.showModal();
+      });
+      $("#btn-close-profile-modal").addEventListener("click", () => profileModal.close());
+      $("#form-profile").addEventListener("submit", (event) => {
+        event.preventDefault();
+        profile.name = $("#profile-input-name").value.trim() || defaultProfile.name;
+        profile.identity = $("#profile-input-identity").value.trim() || defaultProfile.identity;
+        profile.energy = $("#profile-input-energy").value.trim() || defaultProfile.energy;
+        profile.skill = $("#profile-input-skill").value.trim() || defaultProfile.skill;
+        profile.weakness = $("#profile-input-weakness").value.trim() || defaultProfile.weakness;
+        const extraLabel = $("#profile-extra-label").value.trim();
+        const extraValue = $("#profile-extra-value").value.trim();
+        if (extraLabel && extraValue) profile.extras = [...(profile.extras || []), { label: extraLabel, value: extraValue }];
+        storage.set("circleK.profile", profile);
+        renderProfile();
+        profileModal.close();
+        showToast("居民档案已更新 ✦");
+      });
+      renderProfile();
 
       const builtInScripts = {
         gundam1: {
@@ -1879,6 +1973,17 @@
         { id: 3, category: "配音星球", title: "动漫名台词配音试音", note: "用声音赋予角色灵魂与温暖。" },
         { id: 4, category: "琴谱书架", title: "Merry Christmas Mr. Lawrence", note: "坂本龙一经典曲目，琴键下的温柔与力量。" }
       ]);
+      if (!collections.some(item => item.category === "好吃研究所" && item.title === "番茄炒蛋")) {
+        collections.push({
+          id: Date.now(),
+          category: "好吃研究所",
+          title: "番茄炒蛋",
+          number: "MENU 001",
+          type: "家常美味",
+          note: "酸甜开胃、温暖下饭的经典家常菜。"
+        });
+        storage.set("circleK.collections", collections);
+      }
 
       let selectedColCategory = "全部";
       let colSortType = "newest";
