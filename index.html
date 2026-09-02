@@ -3,6 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Circle K 宇宙">
   <meta name="theme-color" content="#121b2d">
   <meta name="description" content="送给 Circle K (KRESNIK 棣棣) 的第三份生日礼物：包含高达机库、宝可梦图鉴、互动琴谱小游戏与配音试音棚的次元小宇宙。">
   <title>Circle K (棣棣) 的次元小宇宙 ✦ 高达 & 宝可梦 & 配音基地</title>
@@ -422,6 +425,7 @@
     body.visitor-mode [data-tab="tab-life"],
     body.visitor-mode [data-switch="tab-voice"],
     body.visitor-mode [data-switch="tab-life"] { display: none !important; }
+    body.visitor-mode [data-tool-tab="tab-life"],body.visitor-mode [data-tool-target="footer-tools"],body.visitor-mode #music-upload,body.visitor-mode label:has(#music-upload),body.visitor-mode .music-rename,body.visitor-mode .music-delete,body.visitor-mode #music-new-list,body.visitor-mode #music-rename-list,body.visitor-mode #music-delete-list,body.visitor-mode #btn-export-backup,body.visitor-mode #btn-import-backup,body.visitor-mode #btn-local-versions,body.visitor-mode #backup-import-mode,body.visitor-mode #backup-scope{display:none!important}
     .calendar-grid { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:6px; }
     .calendar-day { min-height:92px; padding:8px; border:1px solid #26334d; border-radius:12px; background:rgba(2,6,23,.72); text-align:left; transition:.2s; overflow:hidden; }
     .calendar-day:hover, .calendar-day:focus-visible { border-color:#3b82f6; background:rgba(30,58,138,.22); outline:none; }
@@ -450,7 +454,7 @@
       .calendar-grid{gap:3px}.calendar-day{min-height:70px;padding:5px}.calendar-event{font-size:8px}.calendar-weekday{font-size:9px}
       #stage-world>nav{position:fixed;top:auto;bottom:0;left:0;right:0;z-index:45;padding:7px 8px;background:rgba(2,6,23,.96)}
       #stage-world>nav>div{justify-content:flex-start;overflow-x:auto}.nav-btn{min-height:44px;white-space:nowrap}
-      #stage-world{padding-bottom:72px} dialog{max-height:86vh;overflow-y:auto} input,select,textarea,button{scroll-margin-bottom:160px}
+      #stage-world{padding-bottom:calc(72px + env(safe-area-inset-bottom))} dialog{max-height:86vh;overflow-y:auto} input,select,textarea,button{scroll-margin-bottom:160px}
       .tool-menu-panel{top:auto!important;bottom:76px!important;right:10px!important;left:10px!important;width:auto;max-height:72vh;overflow-y:auto;padding:16px}
       .tool-menu-panel button{min-height:58px;font-size:15px}.tool-menu-heading strong{font-size:20px}
     }
@@ -1046,12 +1050,12 @@
             </div>
             <div class="calendar-grid text-center text-xs text-slate-500"><span class="calendar-weekday">周日</span><span class="calendar-weekday">周一</span><span class="calendar-weekday">周二</span><span class="calendar-weekday">周三</span><span class="calendar-weekday">周四</span><span class="calendar-weekday">周五</span><span class="calendar-weekday">周六</span></div>
             <div id="calendar-grid" class="calendar-grid"></div>
-            <div id="calendar-selected" class="text-xs text-cyan-200">选择一个日期查看安排</div>
+            <div class="flex flex-wrap items-center justify-between gap-2"><div id="calendar-selected" class="text-xs text-cyan-200">选择一个日期查看安排</div><button id="calendar-quick-add" type="button" class="px-3 py-2 rounded-lg bg-blue-600 text-xs text-white">＋ 添加当天计划</button></div>
           </section>
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <section id="mood-section" class="rounded-3xl bg-slate-900/80 border border-pink-500/20 p-6 space-y-4">
               <div><h2 class="text-xl font-bold text-white mt-1">🌤 今天又是美好的一天</h2></div>
-              <form id="form-mood" class="space-y-3">
+              <form id="form-mood" class="space-y-3"><div class="grid grid-cols-1 sm:grid-cols-2 gap-2"><input id="mood-date" type="date" class="bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm"><label class="bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm cursor-pointer">📷 添加当天照片<input id="mood-photo" type="file" accept="image/*" class="hidden"></label></div>
                 <div class="flex flex-wrap gap-2" id="mood-options">
                   <label><input type="radio" name="mood" value="😊" class="sr-only peer" checked><span class="block text-2xl p-2 rounded-xl bg-slate-950 border border-slate-700 peer-checked:border-pink-400 cursor-pointer">😊</span></label>
                   <label><input type="radio" name="mood" value="🥰" class="sr-only peer"><span class="block text-2xl p-2 rounded-xl bg-slate-950 border border-slate-700 peer-checked:border-pink-400 cursor-pointer">🥰</span></label>
@@ -1063,7 +1067,7 @@
                 <button class="w-full py-2.5 rounded-xl bg-pink-600 text-white text-sm font-bold">保存今天的心情</button>
               </form>
               <div id="mood-history" class="space-y-2 max-h-72 overflow-y-auto"></div>
-              <div id="mood-stats" class="p-3 rounded-xl bg-pink-950/30 border border-pink-500/20 text-xs text-pink-100"></div>
+              <div id="mood-stats" class="p-3 rounded-xl bg-pink-950/30 border border-pink-500/20 text-xs text-pink-100"></div><button id="mood-month-review" type="button" class="w-full py-2 rounded-xl bg-pink-900/50 text-xs text-pink-100">生成本月心情回顾</button>
             </section>
 
             <section class="rounded-3xl bg-slate-900/80 border border-amber-500/20 p-6 space-y-4">
@@ -1128,8 +1132,10 @@
       <footer id="footer-tools" class="max-w-7xl mx-auto px-4 py-8 border-t border-slate-800/60 mt-12 space-y-5">
         <button id="btn-footer-tools" type="button" class="w-full py-3 rounded-xl bg-slate-900 border border-slate-800 text-sm text-slate-200">🎵 音乐与数据设置⌄</button><div id="footer-tools-panel" class="hidden space-y-4">
         <section class="rounded-2xl bg-slate-900/80 border border-purple-500/20 p-4 space-y-3 text-left">
-          <div class="flex flex-wrap items-center justify-between gap-3"><div><strong class="text-sm text-white">🎵 次元音乐播放器</strong><p id="music-player-title" class="text-[10px] text-purple-300 mt-1">空间音乐 1</p></div><div class="flex flex-wrap gap-2"><button id="music-prev" class="px-3 py-2 rounded-lg bg-slate-800 text-white">⏮</button><button id="music-play" class="px-4 py-2 rounded-lg bg-purple-600 text-white">播放 ▶</button><button id="music-next" class="px-3 py-2 rounded-lg bg-slate-800 text-white">⏭</button><button id="music-loop" class="px-3 py-2 rounded-lg bg-slate-800 text-white">循环：关</button><button id="music-shuffle" class="px-3 py-2 rounded-lg bg-slate-800 text-white">随机：关</button></div></div>
-          <div id="music-playlist" class="grid grid-cols-1 sm:grid-cols-5 gap-2"></div>
+          <div class="flex flex-wrap items-center justify-between gap-3"><div><strong class="text-sm text-white">🎵 次元音乐播放器</strong><p id="music-player-title" class="text-[10px] text-purple-300 mt-1">空间音乐 1</p></div><div class="flex flex-wrap gap-2"><button id="music-prev" class="px-3 py-2 rounded-lg bg-slate-800 text-white">⏮</button><button id="music-play" class="px-4 py-2 rounded-lg bg-purple-600 text-white">播放 ▶</button><button id="music-stop" class="px-3 py-2 rounded-lg bg-red-900 text-white">停止 ■</button><button id="music-next" class="px-3 py-2 rounded-lg bg-slate-800 text-white">⏭</button><button id="music-loop" class="px-3 py-2 rounded-lg bg-slate-800 text-white">循环：关</button><button id="music-shuffle" class="px-3 py-2 rounded-lg bg-slate-800 text-white">随机：关</button></div></div>
+          <div class="flex flex-wrap gap-2"><label class="px-3 py-2 rounded-lg bg-blue-700 text-xs text-white cursor-pointer">＋ 上传音乐<input id="music-upload" type="file" accept="audio/mpeg,audio/mp4,audio/wav,audio/ogg,audio/*" multiple class="hidden"></label><select id="music-list-select" class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs"><option value="all">全部音乐</option><option value="favorites">我的收藏</option><option value="recent">最近播放</option></select><button id="music-new-list" type="button" class="px-3 py-2 rounded-lg bg-slate-800 text-xs">＋ 新建歌单</button><button id="music-rename-list" type="button" class="px-3 py-2 rounded-lg bg-slate-800 text-xs">改名</button><button id="music-delete-list" type="button" class="px-3 py-2 rounded-lg bg-red-950 text-xs">删除歌单</button><input id="music-search" type="search" class="flex-1 min-w-40 bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs" placeholder="搜索歌单……"><span id="music-upload-hint" class="w-full text-[10px] text-slate-500">支持 MP3、M4A、WAV、OGG，单首不超过 30MB；上传前会自动检查重复文件</span></div><div id="music-upload-list" class="space-y-1 text-[10px]"></div>
+          <div id="music-playlist" class="space-y-2 max-h-72 overflow-y-auto"></div>
+          <div class="rounded-xl bg-slate-950 border border-slate-800 p-3"><div class="flex justify-between"><strong class="text-xs text-white">接下来播放</strong><button id="music-clear-queue" class="text-[10px] text-slate-400">清空</button></div><div id="music-queue" class="mt-2 space-y-1 text-[10px] text-slate-400">队列是空的</div></div>
           <input id="music-progress" type="range" min="0" max="100" value="0" class="w-full accent-purple-500" aria-label="音乐进度">
           <div class="flex items-center gap-3"><span id="music-time" class="text-[10px] text-slate-400 w-24">0:00 / 0:00</span><span class="text-xs">🔉</span><input id="music-volume" type="range" min="0" max="1" value="0.6" step="0.05" class="w-32 accent-purple-500" aria-label="音量"></div>
         </section>
@@ -1143,6 +1149,7 @@
     </section>
   </main>
   <button id="btn-back-top" type="button" class="hidden fixed right-4 bottom-20 z-40 w-11 h-11 rounded-full bg-blue-600 text-white shadow-xl" aria-label="返回顶部">↑</button>
+  <dialog id="visitor-password-dialog" class="bg-slate-900 text-white rounded-2xl p-6 border border-purple-500/40 max-w-sm w-full shadow-2xl backdrop:bg-black/75"><form id="visitor-password-form" class="space-y-4"><div><h3 class="font-bold text-lg">🔐 访客模式管理</h3><p class="text-xs text-slate-400 mt-1">请输入密码后才能开启或关闭访客模式</p></div><input id="visitor-password-input" type="password" inputmode="numeric" maxlength="4" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-center tracking-[.4em]" placeholder="••••"><label class="flex items-center gap-2 text-xs text-slate-400"><input id="visitor-remember" type="checkbox">本次浏览期间记住权限</label><p id="visitor-password-error" class="hidden text-xs text-red-300"></p><div class="grid grid-cols-2 gap-2"><button id="visitor-password-cancel" type="button" class="py-2 rounded-xl bg-slate-800">取消</button><button class="py-2 rounded-xl bg-purple-600 font-bold">确认</button></div></form></dialog>
 
   <dialog id="modal-profile" class="bg-slate-900 text-white rounded-2xl p-6 border border-slate-700 max-w-lg w-full shadow-2xl backdrop:bg-black/70">
     <form id="form-profile" class="space-y-4">
@@ -1388,29 +1395,32 @@
 
       const $ = (s, r = document) => r.querySelector(s);
       const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+      const safeText = value => String(value ?? "").replace(/[<>]/g, "");
+      document.addEventListener("input", event => { if ((event.target.matches("input[type=text], input:not([type]), textarea")) && /[<>]/.test(event.target.value)) event.target.value = safeText(event.target.value); });
 
       const SUPABASE_URL = "https://iihcmhgeqewacvldebuk.supabase.co";
       const SUPABASE_ANON_KEY ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlpaGNtaGdlcWV3YWN2bGRlYnVrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc3Njk0ODksImV4cCI6MjEwMzM0NTQ4OX0.z48kB0_bYbMPHmzk0bcb5AG-Aaytze-ZbqH7YNe5eOw"; 
       const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
       const BUCKET_NAME = "media";
 
-      const bgmPlaylist = [
+      let bgmPlaylist = [
         { file: "bgm.mp3", title: "空间音乐 1" },
         { file: "bgm2.mp3", title: "空间音乐 2" },
         { file: "bgm3.mp3", title: "空间音乐 3" },
         { file: "bgm4.mp3", title: "空间音乐 4" },
         { file: "bgm5.mp3", title: "空间音乐 5" }
       ];
+      const builtinMusicCount=bgmPlaylist.length;bgmPlaylist.push(...JSON.parse(localStorage.getItem("circleK.customMusic")||"[]"));
       let currentBgmIndex = 0;
       const bgmAudio = new Audio();
       bgmAudio.preload = "auto";
       bgmAudio.loop = false;
       let bgmAmbient = false;
 
-      const getBgmUrl = (index) => `${SUPABASE_URL}/storage/v1/object/public/${BUCKET_NAME}/${bgmPlaylist[index].file}`;
+      const getBgmUrl = (index) => bgmPlaylist[index].url||`${SUPABASE_URL}/storage/v1/object/public/${BUCKET_NAME}/${bgmPlaylist[index].file}`;
       const updateBgmStatus = () => {
         const track = bgmPlaylist[currentBgmIndex];
-        $("#audio-status").textContent = bgmAmbient ? `♫ ${currentBgmIndex + 1}/5 ${track.title}` : `空间音乐：关闭`;
+        $("#audio-status").textContent = bgmAmbient ? `♫ ${currentBgmIndex + 1}/${bgmPlaylist.length} ${track.title}` : `空间音乐：关闭`;
       };
       const loadBgmTrack = (index) => {
         currentBgmIndex = (index + bgmPlaylist.length) % bgmPlaylist.length;
@@ -1426,7 +1436,7 @@
           bgmAudio.play().then(() => {
             bgmAmbient = true;
             updateBgmStatus();
-            showToast("已自动播放背景音乐 ♫");
+            // 自动播放成功时不显示遮挡内容的提示。
           }).catch(err => {
             console.warn("自动播放被限制或仍在加载:", err);
           });
@@ -1461,7 +1471,7 @@
         clearTimeout(showToast.timer);
         showToast.timer = setTimeout(() => {
           toast.classList.add("opacity-0", "pointer-events-none");
-        }, 2600);
+        }, 1200);
       };
 
       const showUndoToast = (msg, undo, commit = () => {}) => {
@@ -1526,6 +1536,7 @@
         "circleK.moods",
         "circleK.plans",
         "circleK.dailySummaries",
+        "circleK.customMusic",
         "circleK.anniversaries",
         "circleK.dailyPokemon",
         "circleK.voiceChallenges"
@@ -1649,13 +1660,12 @@
         if (visitorMode && !$("#tab-home").classList.contains("hidden")) return;
         if (visitorMode) switchTab("tab-home");
       };
-      $("#btn-visitor-mode").addEventListener("click", () => {
-        visitorMode = !visitorMode;
+      const visitorDialog=$("#visitor-password-dialog");let visitorAuthorized=sessionStorage.getItem("circleK.visitorAuthorized")==="true",visitorFails=0,visitorLockUntil=0;const toggleVisitor=()=>{visitorMode = !visitorMode;
         localStorage.setItem("circleK.visitorMode", String(visitorMode));
         applyVisitorMode();
         renderHomeActivity();
         showToast(visitorMode ? "访客模式已开启，私人内容已隐藏" : "访客模式已关闭");
-      });
+      };$("#btn-visitor-mode").addEventListener("click",()=>{if(visitorAuthorized){toggleVisitor();return;}if(Date.now()<visitorLockUntil){showToast("密码尝试过多，请稍后再试");return;}$("#visitor-password-input").value="";$("#visitor-password-error").classList.add("hidden");visitorDialog.showModal();setTimeout(()=>$("#visitor-password-input").focus(),50);});$("#visitor-password-cancel").onclick=()=>visitorDialog.close();$("#visitor-password-form").onsubmit=e=>{e.preventDefault();if($("#visitor-password-input").value!=="0811"){visitorFails++;$("#visitor-password-error").textContent=`密码不正确${visitorFails>=3?"，已锁定30秒":""}`;$("#visitor-password-error").classList.remove("hidden");if(visitorFails>=3){visitorLockUntil=Date.now()+30000;visitorDialog.close();}return;}visitorFails=0;visitorAuthorized=true;if($("#visitor-remember").checked)sessionStorage.setItem("circleK.visitorAuthorized","true");visitorDialog.close();toggleVisitor();};
 
       let audioCtx = null;
       const getAudioContext = () => {
@@ -3432,16 +3442,17 @@
 
       const renderCalendar = () => {
         const grid = $("#calendar-grid"); if (!grid) return; grid.replaceChildren();
-        const year = calendarView.getFullYear(), month = calendarView.getMonth();
-        $("#calendar-title").textContent = `${year} 年 ${month + 1} 月`;
-        const start = new Date(year, month, 1 - new Date(year, month, 1).getDay());
-        for (let i = 0; i < 42; i++) {
+        const view=$("#calendar-view").value,year = calendarView.getFullYear(), month = calendarView.getMonth();
+        grid.className=view==="agenda"?"space-y-2":"calendar-grid";grid.previousElementSibling.classList.toggle("hidden",view==="agenda");
+        let start,total;if(view==="month"){start=new Date(year,month,1-new Date(year,month,1).getDay());total=42;$("#calendar-title").textContent=`${year} 年 ${month+1} 月`;}else{const base=new Date(calendarView),day=base.getDay();start=new Date(base);start.setDate(base.getDate()-day);total=view==="week"?7:30;const end=new Date(start);end.setDate(start.getDate()+total-1);$("#calendar-title").textContent=view==="week"?`${start.getMonth()+1}/${start.getDate()} — ${end.getMonth()+1}/${end.getDate()}`:"未来 30 天日程";}
+        for (let i = 0; i < total; i++) {
           const date = new Date(start); date.setDate(start.getDate() + i); const key = localDateKey(date);
           const dayPlans = plans.filter(x => x.date === key), dayAnniversaries = anniversaries.filter(x => x.date === key || (x.repeat === "yearly" && x.date.slice(5) === key.slice(5))), dayMood=moods.find(x=>x.date===key);
+          if(view==="agenda"&&!dayPlans.length&&!dayAnniversaries.length&&!dayMood)continue;
           const button = document.createElement("button"); button.type = "button";
-          button.className = `calendar-day${date.getMonth() !== month ? " is-other" : ""}${key === todayKey() ? " is-today" : ""}`;
+          button.className = view==="agenda"?`w-full p-4 rounded-xl bg-slate-950 border border-slate-800 text-left${key===todayKey()?" ring-2 ring-yellow-400":""}`:`calendar-day${view==="month"&&date.getMonth() !== month ? " is-other" : ""}${key === todayKey() ? " is-today" : ""}`;
           button.setAttribute("aria-label", `${key}，${dayPlans.length + dayAnniversaries.length} 项安排`);
-          const number = document.createElement("strong"); number.className = "text-xs text-white flex justify-between"; number.innerHTML=`<span>${date.getDate()}</span><span>${dayMood?.mood||""}</span>`; button.appendChild(number);
+          const number = document.createElement("strong"); number.className = "text-xs text-white flex justify-between"; number.innerHTML=`<span>${view==="agenda"?`${key} · 周${"日一二三四五六"[date.getDay()]}`:date.getDate()}</span><span>${dayMood?.mood||""}</span>`; button.appendChild(number);
           dayPlans.slice(0,2).forEach(item => { const event = document.createElement("span"); event.className = "calendar-event todo"; event.draggable=true;event.dataset.planId=item.id;event.textContent = `${item.done ? "✓ " : ""}${item.time || "待办"} ${item.title}`;event.ondragstart=e=>{e.dataTransfer.setData("text/plan-id",item.id);e.stopPropagation();};button.appendChild(event); });
           dayAnniversaries.slice(0,1).forEach(item => { const event = document.createElement("span"); event.className = "calendar-event anniversary"; event.textContent = `🎁 ${item.name}`; button.appendChild(event); });
           if (dayPlans.length + dayAnniversaries.length > 3) { const more = document.createElement("span"); more.className = "block text-[9px] text-slate-500 mt-1"; more.textContent = `还有 ${dayPlans.length + dayAnniversaries.length - 3} 项`; button.appendChild(more); }
@@ -3449,25 +3460,31 @@
           button.ondragover=e=>e.preventDefault();button.ondrop=e=>{e.preventDefault();const item=plans.find(x=>x.id==e.dataTransfer.getData("text/plan-id"));if(item){item.date=key;storage.set("circleK.plans",plans);renderCalendar();renderPlans();showToast(`已移动到 ${key}`);}};
           grid.appendChild(button);
         }
+        if(view==="agenda"&&!grid.children.length)grid.innerHTML='<div class="p-8 text-center text-sm text-slate-500">未来30天没有安排</div>';
       };
-      $("#calendar-prev").onclick = () => { calendarView.setMonth(calendarView.getMonth()-1); renderCalendar(); };
-      $("#calendar-next").onclick = () => { calendarView.setMonth(calendarView.getMonth()+1); renderCalendar(); };
-      $("#calendar-today").onclick = () => { calendarView = new Date(); calendarView.setDate(1); selectedCalendarDate = todayKey(); renderCalendar(); $("#plan-date").value = selectedCalendarDate; };
-      $("#calendar-view").onchange=e=>{if(e.target.value==="agenda")showToast("日程视图：请查看下方按日期排列的计划清单");if(e.target.value==="week"){renderWeekView();$("#week-plan-view").classList.remove("hidden");}else $("#week-plan-view").classList.add("hidden");};
+      const moveCalendar=direction=>{const view=$("#calendar-view").value;if(view==="month")calendarView.setMonth(calendarView.getMonth()+direction);else calendarView.setDate(calendarView.getDate()+direction*(view==="week"?7:30));renderCalendar();};
+      $("#calendar-prev").onclick = () => moveCalendar(-1);
+      $("#calendar-next").onclick = () => moveCalendar(1);
+      $("#calendar-today").onclick = () => { calendarView = new Date(); selectedCalendarDate = todayKey(); renderCalendar(); $("#plan-date").value = selectedCalendarDate; };
+      $("#calendar-view").onchange=()=>{calendarView=new Date();$("#week-plan-view").classList.add("hidden");renderCalendar();};
+      $("#calendar-quick-add").onclick=()=>{$("#form-plan").classList.remove("hidden");$("#form-plan").classList.add("grid");$("#plan-date").value=selectedCalendarDate;$("#plan-title").focus();};
+      let calendarTouch=null;$("#calendar-grid").addEventListener("touchstart",e=>{calendarTouch=e.touches[0].clientX;},{passive:true});$("#calendar-grid").addEventListener("touchend",e=>{if(calendarTouch===null)return;const dx=e.changedTouches[0].clientX-calendarTouch;if(Math.abs(dx)>55)moveCalendar(dx>0?-1:1);calendarTouch=null;},{passive:true});
+      $("#calendar-grid").addEventListener("click",e=>{const event=e.target.closest(".calendar-event.todo");if(!event)return;e.preventDefault();e.stopPropagation();const item=plans.find(x=>x.id==event.dataset.planId);if(!item)return;const box=$("#calendar-selected");box.replaceChildren();const text=document.createElement("span");text.textContent=`${item.title} · ${item.date} ${item.time||"全天"}${item.note?` · ${item.note}`:""}`;const edit=document.createElement("button");edit.className="ml-2 text-amber-300";edit.textContent="编辑";edit.onclick=()=>{$("#form-plan").classList.remove("hidden");$("#form-plan").classList.add("grid");$("#plan-edit-id").value=item.id;$("#plan-title").value=item.title;$("#plan-date").value=item.date;$("#plan-time").value=item.time||"";$("#plan-note").value=item.note||"";$("#plan-title").focus();};const done=document.createElement("button");done.className="ml-2 text-emerald-300";done.textContent=item.done?"取消完成":"完成";done.onclick=()=>{item.done=!item.done;storage.set("circleK.plans",plans);renderCalendar();renderPlans();};box.append(text,edit,done);},true);
 
       const renderMoods = () => {
         const box = $("#mood-history"); box.replaceChildren();
         [...moods].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 30).forEach(item => {
           const row = document.createElement("div"); row.className = "flex items-start gap-3 p-3 rounded-xl bg-slate-950/70 border border-slate-800";
-          row.innerHTML = `<span class="text-2xl">${item.mood}</span><div class="min-w-0"><b class="block text-xs text-white">${item.date}</b><p class="text-xs text-slate-400 break-words">${item.note || "今天又是美好的一天"}</p></div>`;
+          row.innerHTML = `<span class="text-2xl">${item.mood}</span><div class="min-w-0 flex-1"><b class="block text-xs text-white">${item.date}</b><p class="text-xs text-slate-400 break-words">${item.note || "今天又是美好的一天"}</p>${item.photoUrl?`<img src="${item.photoUrl}" class="mt-2 w-24 h-20 object-cover rounded-lg" alt="当天心情照片">`:""}</div>`;
           box.appendChild(row);
         });
         if (!moods.length) box.innerHTML = `<div class="text-xs text-slate-500">记录第一天的美好心情吧 ✦</div>`;
         const current=moods.filter(x=>x.date.startsWith(todayKey().slice(0,7))),counts=current.reduce((a,x)=>(a[x.mood]=(a[x.mood]||0)+1,a),{}),top=Object.entries(counts).sort((a,b)=>b[1]-a[1])[0];$("#mood-stats").textContent=current.length?`本月记录 ${current.length} 天 · 最常出现 ${top[0]}（${top[1]}天）`:`本月还没有心情记录`;
       };
-      $("#form-mood").addEventListener("submit", event => {
-        event.preventDefault(); const date = todayKey();
-        const item = { id: Date.now(), date, mood: document.querySelector('input[name="mood"]:checked').value, note: $("#mood-note").value.trim() || "今天又是美好的一天" };
+      $("#mood-month-review").onclick=()=>{const current=moods.filter(x=>x.date.startsWith(todayKey().slice(0,7))),counts=current.reduce((a,x)=>(a[x.mood]=(a[x.mood]||0)+1,a),{}),top=Object.entries(counts).sort((a,b)=>b[1]-a[1])[0];showToast(current.length?`本月记录${current.length}天，最常见心情是${top[0]}，每一天都值得收藏。`:"本月还没有心情记录");};
+      $("#form-mood").addEventListener("submit", async event => {
+        event.preventDefault(); const date = $("#mood-date").value||todayKey(),photo=$("#mood-photo").files[0];let photoUrl="";if(photo){const uploaded=await uploadToSupabase(photo,"moods/");photoUrl=uploaded?.url||"";}
+        const item = { id: Date.now(), date, mood: document.querySelector('input[name="mood"]:checked').value, note: $("#mood-note").value.trim() || "今天又是美好的一天",photoUrl };
         const existing = moods.findIndex(x => x.date === date);
         if (existing >= 0) moods[existing] = item; else moods.push(item);
         storage.set("circleK.moods", moods); $("#mood-note").value = ""; renderMoods(); renderMemoryTimeline(); renderAchievements(); renderHomeActivity(); showToast("今天的心情已保存 🌤");
@@ -3507,7 +3524,6 @@
       $("#btn-complete-visible").onclick=()=>{plans.forEach(x=>x.done=true);storage.set("circleK.plans",plans);renderPlans();renderCalendar();};$("#btn-delete-completed").onclick=()=>{const trash=storage.get("circleK.trash",[]);plans.filter(x=>x.done).forEach(x=>trash.unshift({...x,deletedAt:Date.now(),trashType:"plan"}));plans=plans.filter(x=>!x.done);storage.set("circleK.trash",trash);storage.set("circleK.plans",plans);renderPlans();renderCalendar();};
       const renderTrash=()=>{const box=$("#trash-list"),trash=storage.get("circleK.trash",[]);box.innerHTML=trash.length?trash.map(x=>`<div class="flex justify-between text-xs"><span>${x.title||x.name}</span><button class="trash-restore text-emerald-300" data-id="${x.id}">恢复</button></div>`).join(""):"回收站是空的";box.querySelectorAll(".trash-restore").forEach(b=>b.onclick=()=>{const list=storage.get("circleK.trash",[]),i=list.findIndex(x=>x.id==b.dataset.id),item=list.splice(i,1)[0];if(item?.trashType==="plan")plans.push(item);storage.set("circleK.trash",list);storage.set("circleK.plans",plans);renderTrash();renderPlans();});};$("#btn-open-trash").onclick=()=>{$("#trash-list").classList.toggle("hidden");renderTrash();};
       const renderWeekView=()=>{const box=$("#week-plan-view");box.replaceChildren();const now=new Date(),start=new Date(now);start.setDate(now.getDate()-((now.getDay()+6)%7));for(let i=0;i<7;i++){const d=new Date(start);d.setDate(start.getDate()+i);const key=localDateKey(d),items=plans.filter(x=>x.date===key);const col=document.createElement("div");col.className="p-3 rounded-xl bg-slate-950 border border-slate-800";col.innerHTML=`<b class="text-xs text-cyan-300">${["周一","周二","周三","周四","周五","周六","周日"][i]} ${d.getMonth()+1}/${d.getDate()}</b>${items.map(x=>`<span class="block mt-2 text-[10px] ${x.done?"line-through text-slate-600":"text-slate-200"}">${x.time||"全天"} ${x.title}</span>`).join("")||'<span class="block mt-2 text-[10px] text-slate-600">暂无安排</span>'}`;box.appendChild(col);}};
-      $("#btn-week-view")?.addEventListener("click",()=>{$("#week-plan-view").classList.toggle("hidden");renderWeekView();});
       $("#btn-week-review").onclick=()=>{const now=new Date(),start=new Date(now);start.setDate(now.getDate()-6);const recent=plans.filter(x=>new Date(x.date)>=start&&new Date(x.date)<=now),done=recent.filter(x=>x.done);$("#week-review").innerHTML=`<b>本周回顾 ✦</b><p class="mt-2">安排 ${recent.length} 件，完成 ${done.length} 件，完成率 ${recent.length?Math.round(done.length/recent.length*100):0}%。${done.length?` 做得很好：${done.slice(0,3).map(x=>x.title).join("、")}。`:"新的一周也可以从一个小计划开始。"}</p>`;$("#week-review").classList.remove("hidden");};
       const dailySummaries=storage.get("circleK.dailySummaries",{});$("#daily-summary").value=dailySummaries[todayKey()]||"";$("#save-daily-summary").onclick=()=>{dailySummaries[todayKey()]=$("#daily-summary").value.trim();storage.set("circleK.dailySummaries",dailySummaries);showToast("今日总结已保存 ✦");};
       const checkPlanReminders=()=>{const now=Date.now();plans.filter(x=>!x.done&&x.time&&x.reminder&&x.reminder!=="none").forEach(x=>{const remindAt=new Date(`${x.date}T${x.time}:00`).getTime()-Number(x.reminder)*60000,key=`circleK.reminded.${x.id}.${x.date}`;if(now>=remindAt&&now<remindAt+60000&&!sessionStorage.getItem(key)){sessionStorage.setItem(key,"1");showToast(`🔔 即将开始：${x.title}（${x.time}）`);}});};setInterval(checkPlanReminders,30000);checkPlanReminders();
@@ -3569,7 +3585,7 @@
         $("#btn-save-challenge").onclick = () => { const history = storage.get("circleK.voiceChallenges", []); history.unshift({ id: Date.now(), scriptId:id, title:script.title, emotion, score:Number($("#challenge-score").value) }); storage.set("circleK.voiceChallenges", history); renderAchievements(); showToast("挑战成绩已保存 🎭"); };
       };
 
-      $("#plan-date").value = todayKey(); $("#anniversary-date").value = todayKey(); renderMoods(); renderPlans(); renderAnniversaries(); renderCalendar(); renderMemoryTimeline(); renderDailyPokemon(); renderAchievements();
+      $("#plan-date").value = todayKey(); $("#anniversary-date").value = todayKey();$("#mood-date").value=todayKey();if(innerWidth<=640)$("#calendar-view").value="agenda"; renderMoods(); renderPlans(); renderAnniversaries(); renderCalendar(); renderMemoryTimeline(); renderDailyPokemon(); renderAchievements();
 
       const renderHomeActivity = () => {
         const grid = $("#home-activity-grid");
@@ -3705,11 +3721,20 @@
       // ==================== 页尾音乐播放器 ====================
       const formatAudioTime=value=>Number.isFinite(value)?`${Math.floor(value/60)}:${String(Math.floor(value%60)).padStart(2,"0")}`:"0:00";
       const syncMusicPlayer=()=>{$("#music-player-title").textContent=`${currentBgmIndex+1}/${bgmPlaylist.length} · ${bgmPlaylist[currentBgmIndex].title}`;$("#music-play").textContent=bgmAudio.paused?"播放 ▶":"暂停 ❚❚";$("#music-time").textContent=`${formatAudioTime(bgmAudio.currentTime)} / ${formatAudioTime(bgmAudio.duration)}`;$("#music-progress").value=bgmAudio.duration?bgmAudio.currentTime/bgmAudio.duration*100:0;};
-      const savedMusic=JSON.parse(localStorage.getItem("circleK.musicState")||"{}");if(Number.isInteger(savedMusic.index)){loadBgmTrack(savedMusic.index);bgmAudio.currentTime=savedMusic.time||0;}bgmAudio.volume=savedMusic.volume??.6;$("#music-volume").value=bgmAudio.volume;let musicShuffle=!!savedMusic.shuffle;bgmAudio.loop=!!savedMusic.loop;$("#music-loop").textContent=`循环：${bgmAudio.loop?"开":"关"}`;$("#music-shuffle").textContent=`随机：${musicShuffle?"开":"关"}`;const saveMusic=()=>localStorage.setItem("circleK.musicState",JSON.stringify({index:currentBgmIndex,time:bgmAudio.currentTime,volume:bgmAudio.volume,loop:bgmAudio.loop,shuffle:musicShuffle}));bgmPlaylist.forEach((t,i)=>{$("#music-playlist").insertAdjacentHTML("beforeend",`<button class="music-track px-2 py-2 rounded-lg bg-slate-800 text-[10px]" data-index="${i}">${i+1}. ${t.title}</button>`)});$$(".music-track").forEach(b=>b.onclick=()=>{loadBgmTrack(Number(b.dataset.index));bgmAudio.play();}); $("#music-play").onclick=()=>{if(bgmAudio.paused){bgmAudio.play().then(()=>{bgmAmbient=true;updateBgmStatus();syncMusicPlayer();}).catch(()=>showToast("音乐暂时无法播放"));}else{bgmAudio.pause();bgmAmbient=false;updateBgmStatus();syncMusicPlayer();}};
+      const savedMusic=JSON.parse(localStorage.getItem("circleK.musicState")||"{}");loadBgmTrack(0);bgmAudio.currentTime=0;bgmAudio.volume=savedMusic.volume??.6;$("#music-volume").value=bgmAudio.volume;let musicShuffle=!!savedMusic.shuffle;bgmAudio.loop=!!savedMusic.loop;$("#music-loop").textContent=`循环：${bgmAudio.loop?"开":"关"}`;$("#music-shuffle").textContent=`随机：${musicShuffle?"开":"关"}`;const saveMusic=()=>localStorage.setItem("circleK.musicState",JSON.stringify({volume:bgmAudio.volume,loop:bgmAudio.loop,shuffle:musicShuffle}));
+      const saveCustomMusic=()=>storage.set("circleK.customMusic",bgmPlaylist.slice(builtinMusicCount));
+      const musicRecent=JSON.parse(localStorage.getItem("circleK.musicRecent")||"[]");const renderMusicPlaylist=(query="")=>{const box=$("#music-playlist"),filter=$("#music-list-select").value;box.replaceChildren();bgmPlaylist.forEach((track,index)=>{if(query&&!track.title.toLowerCase().includes(query.toLowerCase())||filter==="favorites"&&!track.favorite||filter==="recent"&&!musicRecent.includes(track.id||track.file)||(!["all","favorites","recent"].includes(filter)&&track.playlist!==filter))return;const row=document.createElement("div");row.draggable=index>=builtinMusicCount;row.className=`flex items-center gap-2 p-3 rounded-xl border ${index===currentBgmIndex?"bg-purple-900/40 border-purple-400":"bg-slate-950 border-slate-800"}`;row.innerHTML=`<span class="cursor-grab text-slate-600">⋮⋮</span><button class="music-track flex-1 text-left text-xs text-white truncate" data-index="${index}"><span class="text-purple-300 mr-2">${index===currentBgmIndex?"▶":"♪"}</span>${index+1}. ${track.title}</button><button class="music-favorite text-lg" title="收藏">${track.favorite?"★":"☆"}</button>${index>=builtinMusicCount?'<button class="music-rename px-2 py-1 text-amber-300 text-xs">改名</button><button class="music-delete px-2 py-1 text-red-300 text-xs">删除</button>':'<span class="text-[9px] text-slate-600">内置</span>'}`;row.querySelector(".music-track").onclick=()=>{loadBgmTrack(index);bgmAudio.play();const key=track.id||track.file;musicRecent.splice(musicRecent.indexOf(key),1);musicRecent.unshift(key);localStorage.setItem("circleK.musicRecent",JSON.stringify(musicRecent.slice(0,20)));renderMusicPlaylist($("#music-search").value);};row.querySelector(".music-favorite").onclick=()=>{track.favorite=!track.favorite;saveCustomMusic();renderMusicPlaylist(query);};row.ondragstart=e=>e.dataTransfer.setData("text/music-index",index);row.ondragover=e=>e.preventDefault();row.ondrop=e=>{e.preventDefault();const from=Number(e.dataTransfer.getData("text/music-index"));if(from>=builtinMusicCount&&from!==index){const [m]=bgmPlaylist.splice(from,1);bgmPlaylist.splice(index,0,m);saveCustomMusic();renderMusicPlaylist();}};if(index>=builtinMusicCount){row.querySelector(".music-rename").onclick=()=>{const name=prompt("输入新的歌曲名称",track.title)?.trim();if(name){track.title=name;saveCustomMusic();renderMusicPlaylist(query);syncMusicPlayer();}};row.querySelector(".music-delete").onclick=async()=>{if(!(await confirmDelete(`确认删除“${track.title}”吗？`)))return;if(track.path)await supabase.storage.from(BUCKET_NAME).remove([track.path]);bgmPlaylist.splice(index,1);loadBgmTrack(0);saveCustomMusic();renderMusicPlaylist();};}box.appendChild(row);});if(!box.children.length)box.innerHTML='<div class="p-5 text-center text-xs text-slate-500">这个歌单还没有歌曲</div>';};renderMusicPlaylist();$("#music-search").oninput=e=>renderMusicPlaylist(e.target.value);$("#music-list-select").onchange=()=>renderMusicPlaylist($("#music-search").value);$("#music-new-list").onclick=()=>{const name=prompt("新歌单名称")?.trim();if(!name)return;const option=document.createElement("option");option.value=`list-${Date.now()}`;option.textContent=name;$("#music-list-select").appendChild(option);$("#music-list-select").value=option.value;localStorage.setItem("circleK.musicLists",JSON.stringify([...$("#music-list-select").options].slice(3).map(x=>({id:x.value,name:x.textContent}))));renderMusicPlaylist();};JSON.parse(localStorage.getItem("circleK.musicLists")||"[]").forEach(x=>$("#music-list-select").add(new Option(x.name,x.id)));
+      $("#music-upload").onchange=async e=>{const files=[...e.target.files],status=$("#music-upload-list"),playlist=$("#music-list-select").value;status.replaceChildren();for(const file of files){const row=document.createElement("div");row.className="p-2 rounded-lg bg-slate-950 text-slate-300";row.textContent=`${file.name} · 等待上传`;status.appendChild(row);const duplicate=bgmPlaylist.some(x=>x.file===file.name&&x.size===file.size);if(duplicate){row.textContent=`${file.name} · 已存在，已跳过`;row.classList.add("text-amber-300");continue;}if(file.size>30*1024*1024||!file.type.startsWith("audio/")){row.textContent=`${file.name} · 格式不支持或超过30MB`;row.classList.add("text-red-300");continue;}row.textContent=`${file.name} · 正在上传…`;const uploaded=await uploadToSupabase(file,"music/");if(uploaded){bgmPlaylist.push({id:Date.now()+Math.random(),title:file.name.replace(/\.[^.]+$/,"")||"新音乐",file:file.name,size:file.size,path:uploaded.path,url:uploaded.url,custom:true,playlist:!["all","favorites","recent"].includes(playlist)?playlist:"all"});row.textContent=`${file.name} · 上传成功 ✓`;row.classList.add("text-emerald-300");}else{row.textContent=`${file.name} · 上传失败，可重新选择`;row.classList.add("text-red-300");}}saveCustomMusic();renderMusicPlaylist();e.target.value="";setTimeout(()=>status.replaceChildren(),4000);};
+      const saveMusicLists=()=>localStorage.setItem("circleK.musicLists",JSON.stringify([...$("#music-list-select").options].slice(3).map(x=>({id:x.value,name:x.textContent}))));$("#music-rename-list").onclick=()=>{const select=$("#music-list-select"),option=select.selectedOptions[0];if(select.selectedIndex<3){showToast("系统歌单不能改名");return;}const name=prompt("输入新的歌单名称",option.textContent)?.trim();if(name){option.textContent=name;saveMusicLists();}};$("#music-delete-list").onclick=async()=>{const select=$("#music-list-select"),id=select.value;if(select.selectedIndex<3){showToast("系统歌单不能删除");return;}if(!(await confirmDelete("删除歌单不会删除歌曲，确认继续吗？")))return;bgmPlaylist.forEach(x=>{if(x.playlist===id)x.playlist="all";});select.selectedOptions[0].remove();select.value="all";saveMusicLists();saveCustomMusic();renderMusicPlaylist();};
+      let musicQueue=[];const renderQueue=()=>{$("#music-queue").innerHTML=musicQueue.length?musicQueue.map((i,n)=>`<div>${n+1}. ${bgmPlaylist[i]?.title||"已删除"}</div>`).join(""):"队列是空的";};const enhanceMusicRows=()=>{$$("#music-playlist>div").forEach(row=>{if(row.dataset.enhanced||!row.querySelector(".music-track"))return;row.dataset.enhanced="1";const index=Number(row.querySelector(".music-track").dataset.index),queue=document.createElement("button");queue.className="px-2 py-1 text-xs text-blue-300";queue.textContent="＋队列";queue.onclick=()=>{musicQueue.push(index);renderQueue();};row.appendChild(queue);if(index>=builtinMusicCount){const move=document.createElement("button");move.className="px-2 py-1 text-xs text-cyan-300";move.textContent="移动";move.onclick=()=>{const lists=[...$("#music-list-select").options].slice(3);if(!lists.length){showToast("请先新建歌单");return;}const names=lists.map((x,i)=>`${i+1}.${x.textContent}`).join("\n"),choice=Number(prompt(`移动到哪个歌单？\n${names}`))-1;if(lists[choice]){bgmPlaylist[index].playlist=lists[choice].value;saveCustomMusic();renderMusicPlaylist();}};row.appendChild(move);}});};new MutationObserver(enhanceMusicRows).observe($("#music-playlist"),{childList:true});enhanceMusicRows();$("#music-clear-queue").onclick=()=>{musicQueue=[];renderQueue();};bgmAudio.addEventListener("ended",()=>{if(musicQueue.length){const next=musicQueue.shift();loadBgmTrack(next);bgmAudio.play();renderQueue();}});
+      const persistentFavorites=new Set(JSON.parse(localStorage.getItem("circleK.musicFavorites")||"[]"));bgmPlaylist.forEach(x=>x.favorite=persistentFavorites.has(x.id||x.file));renderMusicPlaylist();$("#music-playlist").addEventListener("click",e=>{if(!e.target.closest(".music-favorite"))return;setTimeout(()=>{const values=bgmPlaylist.filter(x=>x.favorite).map(x=>x.id||x.file);localStorage.setItem("circleK.musicFavorites",JSON.stringify(values));},0);});
+      $("#music-play").onclick=()=>{if(bgmAudio.paused){bgmAudio.play().then(()=>{bgmAmbient=true;updateBgmStatus();syncMusicPlayer();renderMusicPlaylist();}).catch(()=>showToast("音乐暂时无法播放"));}else{bgmAudio.pause();bgmAmbient=false;updateBgmStatus();syncMusicPlayer();}};
       $("#music-prev").onclick=()=>{loadBgmTrack(currentBgmIndex-1);bgmAudio.play().then(()=>{bgmAmbient=true;updateBgmStatus();syncMusicPlayer();});};
-      $("#music-next").onclick=playNextBgm; $("#music-volume").oninput=event=>bgmAudio.volume=Number(event.target.value); $("#music-progress").oninput=event=>{if(bgmAudio.duration)bgmAudio.currentTime=Number(event.target.value)/100*bgmAudio.duration;};
+      $("#music-stop").onclick=()=>{bgmAudio.pause();bgmAudio.currentTime=0;bgmAmbient=false;updateBgmStatus();syncMusicPlayer();showToast("音乐已停止");};
+      $("#music-next").onclick=()=>{playNextBgm();renderMusicPlaylist($("#music-search").value);}; $("#music-volume").oninput=event=>{bgmAudio.volume=Number(event.target.value);saveMusic();}; $("#music-progress").oninput=event=>{if(bgmAudio.duration)bgmAudio.currentTime=Number(event.target.value)/100*bgmAudio.duration;};
       $("#music-loop").onclick=()=>{bgmAudio.loop=!bgmAudio.loop;$("#music-loop").textContent=`循环：${bgmAudio.loop?"开":"关"}`;saveMusic();};$("#music-shuffle").onclick=()=>{musicShuffle=!musicShuffle;$("#music-shuffle").textContent=`随机：${musicShuffle?"开":"关"}`;saveMusic();};bgmAudio.addEventListener("ended",()=>{if(musicShuffle){loadBgmTrack(Math.floor(Math.random()*bgmPlaylist.length));bgmAudio.play();}});setInterval(saveMusic,5000);
       bgmAudio.addEventListener("timeupdate",syncMusicPlayer);bgmAudio.addEventListener("play",syncMusicPlayer);bgmAudio.addEventListener("pause",syncMusicPlayer);bgmAudio.addEventListener("loadedmetadata",syncMusicPlayer);syncMusicPlayer();
+      if("mediaSession" in navigator){const updateMedia=()=>{const track=bgmPlaylist[currentBgmIndex];navigator.mediaSession.metadata=new MediaMetadata({title:track.title,artist:"Circle K 的次元小宇宙",album:"次元歌单"});};navigator.mediaSession.setActionHandler("play",()=>bgmAudio.play());navigator.mediaSession.setActionHandler("pause",()=>bgmAudio.pause());navigator.mediaSession.setActionHandler("previoustrack",()=>$("#music-prev").click());navigator.mediaSession.setActionHandler("nexttrack",()=>$("#music-next").click());navigator.mediaSession.setActionHandler("stop",()=>$("#music-stop").click());bgmAudio.addEventListener("play",updateMedia);}
 
       const backTop=$("#btn-back-top");window.addEventListener("scroll",()=>backTop.classList.toggle("hidden",window.scrollY<700),{passive:true});backTop.onclick=()=>window.scrollTo({top:0,behavior:"smooth"});
 
