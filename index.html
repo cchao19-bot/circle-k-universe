@@ -33,6 +33,11 @@
     }
 
     * { box-sizing: border-box; }
+    :focus-visible { outline: 3px solid #facc15; outline-offset: 3px; }
+    .content-card { content-visibility: auto; contain-intrinsic-size: 280px; }
+    .skip-link { position: fixed; left: 12px; top: -60px; z-index: 100; padding: 10px 14px; border-radius: 10px; background: #facc15; color: #111827; font-weight: 800; }
+    .skip-link:focus { top: 12px; }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .01ms !important; } }
     html { scroll-behavior: smooth; }
     body {
       margin: 0;
@@ -410,14 +415,50 @@
     body.visitor-mode #tab-voice,
     body.visitor-mode #tab-wishes,
     body.visitor-mode #tab-memories,
+    body.visitor-mode #tab-life,
     body.visitor-mode [data-tab="tab-voice"],
     body.visitor-mode [data-tab="tab-wishes"],
     body.visitor-mode [data-tab="tab-memories"],
-    body.visitor-mode [data-switch="tab-voice"] { display: none !important; }
+    body.visitor-mode [data-tab="tab-life"],
+    body.visitor-mode [data-switch="tab-voice"],
+    body.visitor-mode [data-switch="tab-life"] { display: none !important; }
+    .calendar-grid { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:6px; }
+    .calendar-day { min-height:92px; padding:8px; border:1px solid #26334d; border-radius:12px; background:rgba(2,6,23,.72); text-align:left; transition:.2s; overflow:hidden; }
+    .calendar-day:hover, .calendar-day:focus-visible { border-color:#3b82f6; background:rgba(30,58,138,.22); outline:none; }
+    .calendar-day.is-today { box-shadow:inset 0 0 0 2px #facc15; }
+    .calendar-day.is-other { opacity:.38; }
+    .calendar-event { display:block; margin-top:4px; padding:2px 5px; border-radius:6px; font-size:9px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .calendar-event.todo { background:rgba(37,99,235,.28); color:#bfdbfe; }
+    .calendar-event.anniversary { background:rgba(245,158,11,.25); color:#fde68a; }
+    .game-canvas { width:min(100%,420px); aspect-ratio:1; image-rendering:pixelated; background:#020617; border:1px solid #334155; border-radius:18px; touch-action:none; }
+    .game-pad { display:grid; grid-template-columns:repeat(3,52px); gap:6px; justify-content:center; }
+    .game-pad button { height:46px; border-radius:12px; background:#1e293b; border:1px solid #475569; color:white; font-weight:800; }
+    .plan-dragging { opacity:.42; transform:scale(.98); }
+    .tool-menu { position:relative; flex:none; }
+    .tool-menu-panel { position:fixed; width:380px; max-width:calc(100vw - 24px); padding:18px; border:1px solid rgba(139,92,246,.5); border-radius:22px; background:linear-gradient(155deg,#111a32,#211b4d); box-shadow:0 28px 80px rgba(0,0,0,.72),0 0 0 1px rgba(255,255,255,.04) inset; z-index:9999; }
+    .tool-menu-heading { padding:3px 4px 14px; border-bottom:1px solid rgba(148,163,184,.18); }
+    .tool-menu-heading strong { font-size:19px; }
+    .tool-menu-heading span { display:block; margin-top:5px; font-size:12px; line-height:1.5; }
+    .tool-menu-label { display:block; margin:15px 5px 7px; color:#a5b4fc; font-size:11px; font-weight:800; letter-spacing:.14em; }
+    .tool-menu-grid { display:grid; grid-template-columns:1fr 1fr; gap:9px; }
+    .tool-menu-panel button { display:flex; align-items:center; gap:10px; width:100%; min-height:56px; padding:12px 14px; border:1px solid rgba(148,163,184,.12); border-radius:14px; background:rgba(15,23,42,.46); text-align:left; font-size:14px; font-weight:700; color:#e2e8f0; transition:.18s; }
+    .tool-menu-panel button:hover,.tool-menu-panel button:focus-visible { background:rgba(99,102,241,.16); border-color:rgba(129,140,248,.28); color:white; outline:none; transform:translateY(-1px); }
+    #sync-status { font-size:0; width:32px; text-align:center; }
+    #sync-status::before { content:"●"; font-size:11px; }
+    .game-pad { display:none; }
+    @media(max-width:640px){
+      .calendar-grid{gap:3px}.calendar-day{min-height:70px;padding:5px}.calendar-event{font-size:8px}.calendar-weekday{font-size:9px}
+      #stage-world>nav{position:fixed;top:auto;bottom:0;left:0;right:0;z-index:45;padding:7px 8px;background:rgba(2,6,23,.96)}
+      #stage-world>nav>div{justify-content:flex-start;overflow-x:auto}.nav-btn{min-height:44px;white-space:nowrap}
+      #stage-world{padding-bottom:72px} dialog{max-height:86vh;overflow-y:auto} input,select,textarea,button{scroll-margin-bottom:160px}
+      .tool-menu-panel{top:auto!important;bottom:76px!important;right:10px!important;left:10px!important;width:auto;max-height:72vh;overflow-y:auto;padding:16px}
+      .tool-menu-panel button{min-height:58px;font-size:15px}.tool-menu-heading strong{font-size:20px}
+    }
   </style>
 </head>
 
 <body>
+  <a href="#main-content" class="skip-link">跳到主要内容</a>
   <div class="sky-bg">
     <div class="star" style="top:12%; left:8%; width:3px; height:3px; animation-delay:0s;"></div>
     <div class="star" style="top:25%; left:82%; width:4px; height:4px; animation-delay:1s;"></div>
@@ -426,7 +467,7 @@
     <div class="star" style="top:85%; left:35%; width:4px; height:4px; animation-delay:2s;"></div>
   </div>
 
-  <main class="relative z-10">
+  <main id="main-content" class="relative z-10" tabindex="-1">
     <section id="stage-envelope" class="stage flex flex-col items-center justify-center p-6 text-center">
       <div class="max-w-md mx-auto space-y-4">
         <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-900/40 border border-blue-500/30 text-xs font-semibold text-blue-300 tracking-wider">
@@ -533,16 +574,8 @@
               <div id="global-search-results" class="hidden absolute right-0 top-full mt-2 w-full sm:w-80 max-h-80 overflow-y-auto rounded-xl border border-slate-700 bg-slate-950 shadow-2xl p-2 z-50"></div>
             </div>
             <span id="sync-status" class="px-2.5 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-[10px] text-emerald-300">● 已同步</span>
-            <button id="btn-export-backup" type="button" class="px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-xs text-slate-200 hover:bg-slate-700">导出备份</button>
-            <button id="btn-import-backup" type="button" class="px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-xs text-slate-200 hover:bg-slate-700">导入恢复</button>
-            <input id="backup-file-input" type="file" accept="application/json,.json" class="hidden">
             <button id="btn-visitor-mode" type="button" class="px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-xs text-slate-200 hover:bg-slate-700">访客模式：关</button>
-            <button id="btn-audio-toggle" class="px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-xs text-slate-200 hover:bg-slate-700 transition flex items-center gap-2">
-              <span id="audio-icon" class="text-yellow-400">♪</span>
-              <span id="audio-status">空间音乐：关闭</span>
-            </button>
-            <button id="btn-audio-next" type="button" class="px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-xs text-slate-200 hover:bg-slate-700 transition" aria-label="播放下一首">下一首 ⏭</button>
-            <button id="btn-audio-stop" type="button" class="px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-xs text-slate-200 hover:bg-slate-700 transition" aria-label="停止空间音乐">停止 ■</button>
+            <span id="audio-status" class="px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-xs text-purple-200">空间音乐：关闭</span>
           </div>
         </div>
       </header>
@@ -551,10 +584,10 @@
         <div class="max-w-7xl mx-auto flex items-center justify-start md:justify-center gap-2">
           <button class="nav-btn active" data-tab="tab-home">☁ 宇宙首页</button>
           <button class="nav-btn" data-tab="tab-voice">🎙 配音试音棚</button>
-          <button class="nav-btn" data-tab="tab-piano">🎹 琴谱小游戏</button>
           <button class="nav-btn" data-tab="tab-collections">🤖 高达与宝可梦收藏</button>
           <button class="nav-btn" data-tab="tab-wishes">✦ 星球许愿墙</button>
           <button class="nav-btn" data-tab="tab-memories">▣ 记忆馆 (照片与声轨)</button>
+          <div class="tool-menu"><button id="btn-tools" type="button" class="nav-btn" aria-haspopup="true" aria-expanded="false">🧰 次元百宝箱 <span aria-hidden="true">⌄</span></button><div id="tool-menu-panel" class="tool-menu-panel hidden" role="menu"><div class="tool-menu-heading"><strong class="block text-sm text-white">次元百宝箱</strong><span class="text-[10px] text-slate-400">生活记录、轻松一下与空间设置</span></div><span class="tool-menu-label">生活舱</span><div class="tool-menu-grid"><button role="menuitem" data-tool-tab="tab-life" data-tool-target="mood-section">🌤 心情日记</button><button role="menuitem" data-tool-tab="tab-life" data-tool-target="calendar-section">📅 星轨日程</button></div><span class="tool-menu-label">休息站</span><div class="tool-menu-grid"><button role="menuitem" data-tool-tab="tab-piano">🎹 指尖琴房</button><button role="menuitem" data-tool-tab="tab-games">🐍 像素游乐场</button></div><span class="tool-menu-label">空间管理</span><button role="menuitem" data-tool-target="footer-tools">🎵 音乐与数据舱</button></div></div>
         </div>
       </nav>
 
@@ -592,6 +625,9 @@
                 </button>
                 <button id="btn-open-food-lab" type="button" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-rose-600 to-orange-500 text-white font-bold text-sm hover:brightness-110 transition shadow-lg flex items-center gap-2">
                   <span>🍳 好吃研究所</span>
+                </button>
+                <button data-switch="tab-life" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-pink-600 to-purple-600 text-white font-bold text-sm hover:brightness-110 transition shadow-lg flex items-center gap-2">
+                  <span>🌤 心情与计划</span>
                 </button>
               </div>
             </div>
@@ -653,6 +689,20 @@
             <div id="home-activity-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3"></div>
           </div>
 
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="rounded-3xl bg-gradient-to-br from-yellow-950/40 to-slate-900 border border-yellow-500/20 p-6 space-y-3">
+              <span class="text-xs font-bold text-yellow-300">⚡ TODAY'S PARTNER</span>
+              <h3 class="text-lg font-bold text-white">今日同行宝可梦</h3>
+              <div id="daily-pokemon" class="text-sm text-slate-300">正在寻找今天的伙伴…</div>
+              <button id="btn-new-daily-pokemon" type="button" class="px-4 py-2 rounded-xl bg-yellow-500 text-slate-950 text-xs font-bold">重新选择伙伴</button>
+            </div>
+            <div class="rounded-3xl bg-gradient-to-br from-amber-950/40 to-slate-900 border border-amber-500/20 p-6 space-y-3">
+              <span class="text-xs font-bold text-amber-300">✦ ACHIEVEMENTS</span>
+              <h3 class="text-lg font-bold text-white">星球成就徽章</h3>
+              <div id="achievement-grid" class="grid grid-cols-2 gap-2"></div>
+            </div>
+          </div>
+
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div class="rounded-2xl bg-slate-900/80 border border-purple-500/20 p-6 space-y-3 hover:border-purple-500/50 transition shadow-lg group">
               <div class="w-12 h-12 rounded-xl bg-purple-600/20 border border-purple-500/30 flex items-center justify-center text-purple-400 text-2xl group-hover:scale-110 transition">
@@ -711,6 +761,22 @@
                 </button>
               </div>
             </div>
+            <div id="record-monitor" class="hidden bg-slate-950 border border-red-500/30 rounded-xl p-4 space-y-3" aria-live="polite">
+              <div class="flex items-center justify-between text-xs"><span id="record-countdown" class="font-bold text-red-300">准备录音</span><span id="record-elapsed" class="font-mono text-slate-300">00:00</span></div>
+              <canvas id="record-waveform" width="900" height="90" role="img" class="w-full h-20 rounded-lg bg-slate-900" aria-label="实时录音声音波形"></canvas>
+            </div>
+            <div id="record-review" class="hidden bg-slate-950 border border-purple-500/30 rounded-xl p-4 space-y-4" aria-live="polite">
+              <div class="flex items-center justify-between"><strong class="text-sm text-white">试听与剪裁</strong><span id="review-duration" class="text-xs text-slate-400"></span></div>
+              <audio id="record-review-audio" controls preload="metadata" class="w-full"></audio>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <label>开始时间：<span id="trim-start-label">0.0s</span><input id="trim-start" type="range" min="0" max="1" step="0.1" value="0" class="w-full"></label>
+                <label>结束时间：<span id="trim-end-label">0.0s</span><input id="trim-end" type="range" min="0" max="1" step="0.1" value="1" class="w-full"></label>
+              </div>
+              <div class="flex gap-2">
+                <button id="btn-save-recording" type="button" class="flex-1 py-2.5 rounded-xl bg-purple-600 text-white text-xs font-bold">剪裁并保存</button>
+                <button id="btn-discard-recording" type="button" class="px-4 py-2.5 rounded-xl bg-slate-800 text-slate-300 text-xs">放弃</button>
+              </div>
+            </div>
 
             <div class="bg-slate-950 border border-slate-800 rounded-2xl p-6 space-y-4">
               <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
@@ -740,6 +806,10 @@
                   <button id="btn-copy-script" type="button" class="px-3 py-1.5 rounded-lg bg-slate-800 text-xs text-slate-200">复制台词卡</button>
                   <button id="btn-delete-script" type="button" class="px-3 py-1.5 rounded-lg bg-red-950/50 text-xs text-red-300">删除</button>
                 </div>
+              </div>
+              <div class="rounded-xl bg-purple-950/25 border border-purple-500/20 p-4 space-y-3">
+                <div class="flex flex-wrap items-center justify-between gap-3"><div><strong class="text-sm text-white">🎭 随机配音挑战</strong><p class="text-[11px] text-slate-400">随机台词 + 随机情绪，录完后为自己评分</p></div><button id="btn-voice-challenge" type="button" class="px-4 py-2 rounded-xl bg-purple-600 text-white text-xs font-bold">抽取挑战</button></div>
+                <div id="voice-challenge-result" class="hidden text-xs text-purple-200"></div>
               </div>
             </div>
           </div>
@@ -968,14 +1038,111 @@
           </div>
         </div>
 
+        <div id="tab-life" class="tab-panel hidden space-y-8">
+          <section id="calendar-section" class="rounded-3xl bg-slate-900/80 border border-cyan-500/20 p-4 sm:p-6 space-y-5">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+              <div><span class="text-xs font-bold text-cyan-300">SMART CALENDAR</span><h2 class="text-xl font-bold text-white mt-1">📅 次元日历</h2><p class="text-xs text-slate-400 mt-1">待办、计划和纪念日都在这里；点击日期快速安排。</p></div>
+              <div class="flex flex-wrap items-center gap-2"><button id="calendar-prev" type="button" class="px-3 py-2 rounded-lg bg-slate-800">‹</button><strong id="calendar-title" class="min-w-28 text-center text-sm text-white"></strong><button id="calendar-next" type="button" class="px-3 py-2 rounded-lg bg-slate-800">›</button><button id="calendar-today" type="button" class="px-3 py-2 rounded-lg bg-cyan-700 text-xs text-white">今天</button><select id="calendar-view" class="bg-slate-950 border border-slate-700 rounded-lg px-2 py-2 text-xs"><option value="month">月视图</option><option value="week">周视图</option><option value="agenda">日程视图</option></select></div>
+            </div>
+            <div class="calendar-grid text-center text-xs text-slate-500"><span class="calendar-weekday">周日</span><span class="calendar-weekday">周一</span><span class="calendar-weekday">周二</span><span class="calendar-weekday">周三</span><span class="calendar-weekday">周四</span><span class="calendar-weekday">周五</span><span class="calendar-weekday">周六</span></div>
+            <div id="calendar-grid" class="calendar-grid"></div>
+            <div id="calendar-selected" class="text-xs text-cyan-200">选择一个日期查看安排</div>
+          </section>
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <section id="mood-section" class="rounded-3xl bg-slate-900/80 border border-pink-500/20 p-6 space-y-4">
+              <div><h2 class="text-xl font-bold text-white mt-1">🌤 今天又是美好的一天</h2></div>
+              <form id="form-mood" class="space-y-3">
+                <div class="flex flex-wrap gap-2" id="mood-options">
+                  <label><input type="radio" name="mood" value="😊" class="sr-only peer" checked><span class="block text-2xl p-2 rounded-xl bg-slate-950 border border-slate-700 peer-checked:border-pink-400 cursor-pointer">😊</span></label>
+                  <label><input type="radio" name="mood" value="🥰" class="sr-only peer"><span class="block text-2xl p-2 rounded-xl bg-slate-950 border border-slate-700 peer-checked:border-pink-400 cursor-pointer">🥰</span></label>
+                  <label><input type="radio" name="mood" value="😌" class="sr-only peer"><span class="block text-2xl p-2 rounded-xl bg-slate-950 border border-slate-700 peer-checked:border-pink-400 cursor-pointer">😌</span></label>
+                  <label><input type="radio" name="mood" value="😴" class="sr-only peer"><span class="block text-2xl p-2 rounded-xl bg-slate-950 border border-slate-700 peer-checked:border-pink-400 cursor-pointer">😴</span></label>
+                  <label><input type="radio" name="mood" value="🥺" class="sr-only peer"><span class="block text-2xl p-2 rounded-xl bg-slate-950 border border-slate-700 peer-checked:border-pink-400 cursor-pointer">🥺</span></label>
+                </div>
+                <textarea id="mood-note" maxlength="300" rows="3" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm text-white" placeholder="今天又是美好的一天……"></textarea>
+                <button class="w-full py-2.5 rounded-xl bg-pink-600 text-white text-sm font-bold">保存今天的心情</button>
+              </form>
+              <div id="mood-history" class="space-y-2 max-h-72 overflow-y-auto"></div>
+              <div id="mood-stats" class="p-3 rounded-xl bg-pink-950/30 border border-pink-500/20 text-xs text-pink-100"></div>
+            </section>
+
+            <section class="rounded-3xl bg-slate-900/80 border border-amber-500/20 p-6 space-y-4">
+              <div><h2 class="text-xl font-bold text-white mt-1">🎁 最近的纪念日</h2></div>
+              <form id="form-anniversary" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <input id="anniversary-name" required maxlength="60" class="bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm text-white" placeholder="纪念日名称">
+                <input id="anniversary-date" required type="date" class="bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm text-white">
+                <select id="anniversary-repeat" class="bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm text-white"><option value="yearly">每年重复</option><option value="once">仅一次</option></select>
+                <select id="anniversary-category" class="bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm text-white"><option>纪念日</option><option>生日</option><option>相识</option><option>旅行</option><option>节日</option></select>
+                <select id="anniversary-reminder" class="bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm text-white"><option value="0">当天提醒</option><option value="1">提前1天</option><option value="3">提前3天</option><option value="7">提前7天</option></select>
+                <button class="rounded-xl bg-amber-500 text-slate-950 text-sm font-bold">添加纪念日</button>
+                <input id="anniversary-message" maxlength="160" class="sm:col-span-2 bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm text-white" placeholder="当天解锁的专属祝福（可选）">
+              </form>
+              <div id="anniversary-list" class="space-y-2"></div>
+            </section>
+          </div>
+
+          <section class="rounded-3xl bg-slate-900/80 border border-blue-500/20 p-6 space-y-5">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3"><div><h2 class="text-xl font-bold text-white mt-1">🗓 计划清单</h2></div><div class="flex flex-wrap gap-2"><button id="btn-toggle-plan-form" type="button" class="px-3 py-2 rounded-lg bg-blue-600 text-xs text-white">＋ 新建安排</button><button id="btn-plan-more" type="button" class="px-3 py-2 rounded-lg bg-slate-800 text-xs">更多 ⋯</button></div></div><div id="plan-more-menu" class="hidden flex flex-wrap gap-2"><button id="btn-week-review" type="button" class="px-3 py-2 rounded-lg bg-purple-800 text-xs text-white">生成周回顾</button><button id="btn-complete-visible" type="button" class="px-3 py-2 rounded-lg bg-emerald-700 text-xs text-white">完成当前列表</button><button id="btn-delete-completed" type="button" class="px-3 py-2 rounded-lg bg-red-900 text-xs text-white">清理已完成</button><button id="btn-open-trash" type="button" class="px-3 py-2 rounded-lg bg-slate-800 text-xs">🗑 回收站</button></div>
+            <form id="form-plan" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3">
+              <input id="plan-edit-id" type="hidden">
+              <input id="plan-title" required maxlength="100" class="lg:col-span-2 bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm text-white" placeholder="要安排的事情">
+              <input id="plan-date" required type="date" class="bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm text-white">
+              <input id="plan-time" type="time" class="bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm text-white">
+              <select id="plan-priority" class="bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm text-white"><option value="high">高优先级</option><option value="medium" selected>中优先级</option><option value="low">低优先级</option></select>
+              <input id="plan-category" maxlength="40" class="bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm text-white" placeholder="分类">
+              <select id="plan-repeat" class="bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm text-white"><option value="none">不重复</option><option value="daily">每天</option><option value="weekly">每周</option><option value="monthly">每月</option></select>
+              <select id="plan-reminder" class="bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm text-white"><option value="none">不提醒</option><option value="10">提前 10 分钟</option><option value="30">提前 30 分钟</option><option value="60">提前 1 小时</option><option value="1440">提前 1 天</option></select>
+              <textarea id="plan-note" maxlength="300" rows="2" class="sm:col-span-2 lg:col-span-5 bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm text-white" placeholder="备注、地点或准备事项"></textarea>
+              <input id="plan-subtasks" maxlength="300" class="sm:col-span-2 lg:col-span-5 bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm text-white" placeholder="子任务，用逗号分开，例如：准备材料，确认时间">
+              <button id="btn-save-plan" class="rounded-xl bg-blue-600 text-white text-sm font-bold">保存计划</button>
+              <button id="btn-cancel-plan" type="button" class="rounded-xl bg-slate-700 text-white text-sm">取消</button>
+            </form>
+            <div class="flex flex-wrap gap-2"><button type="button" class="plan-filter px-3 py-2 rounded-lg bg-blue-600 text-xs text-white" data-filter="all">全部</button><button type="button" class="plan-filter px-3 py-2 rounded-lg bg-slate-800 text-xs" data-filter="today">今天</button><button type="button" class="plan-filter px-3 py-2 rounded-lg bg-slate-800 text-xs" data-filter="upcoming">未来</button><button type="button" class="plan-filter px-3 py-2 rounded-lg bg-slate-800 text-xs" data-filter="done">已完成</button></div>
+            <div id="week-plan-view" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-2"></div>
+            <div id="week-review" class="hidden p-4 rounded-xl bg-purple-950/40 border border-purple-500/20 text-xs text-purple-100"></div>
+            <div class="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-2"><textarea id="daily-summary" rows="2" maxlength="300" class="bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white" placeholder="今天完成了什么？写一段晚间总结……"></textarea><button id="save-daily-summary" type="button" class="px-4 rounded-xl bg-indigo-700 text-xs font-bold text-white">保存今日总结</button></div>
+            <div id="plan-summary" class="text-xs text-slate-400"></div>
+            <div id="plan-list" class="space-y-3"></div>
+            <div id="trash-list" class="hidden space-y-2 p-3 rounded-xl bg-slate-950 border border-slate-800"></div>
+          </section>
+
+          <section id="timeline-section" class="rounded-3xl bg-slate-900/80 border border-purple-500/20 p-6 space-y-4">
+            <div class="flex flex-wrap justify-between gap-3"><div><h2 class="text-xl font-bold text-white mt-1">🪐 回忆时间轴</h2></div><div class="flex flex-wrap gap-2"><select id="timeline-filter" class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs"><option value="all">全部回忆</option><option value="mood">心情</option><option value="media">照片与声音</option><option value="wish">愿望</option><option value="date">重要日期</option></select><button id="timeline-year" class="hidden">只看今年：关</button><button id="timeline-random" class="px-3 py-2 rounded-lg bg-purple-700 text-xs text-white">随机回忆</button></div></div>
+            <div id="memory-timeline" class="space-y-4"></div>
+          </section>
+        </div>
+
+        <div id="tab-games" class="tab-panel hidden space-y-8">
+          <div class="max-w-2xl mx-auto">
+            <section class="rounded-3xl bg-slate-900/80 border border-emerald-500/20 p-5 space-y-4 text-center">
+              <div><span class="text-xs font-bold text-emerald-300">SNAKE</span><h2 class="text-xl font-bold text-white">🐍 贪吃蛇</h2></div>
+              <div class="flex flex-wrap justify-between gap-2 text-xs"><span id="snake-score">得分 0 · 最高 0</span><div class="flex flex-wrap gap-2"><select id="snake-level" class="bg-slate-950 border border-slate-700 rounded-lg px-2"><option value="180">轻松</option><option value="130" selected>标准</option><option value="85">挑战</option></select><select id="snake-mode" class="bg-slate-950 border border-slate-700 rounded-lg px-2"><option value="classic">经典边界</option><option value="wrap">穿墙模式</option></select><button id="snake-sound" class="px-3 py-2 rounded-lg bg-slate-700 text-white">音效：开</button><button id="snake-pause" class="px-3 py-2 rounded-lg bg-slate-700 text-white">暂停</button><button id="snake-start" class="px-3 py-2 rounded-lg bg-emerald-600 text-white">开始 / 重新开始</button></div></div>
+              <canvas id="snake-canvas" class="game-canvas mx-auto" width="400" height="400" aria-label="贪吃蛇游戏"></canvas>
+              <div class="game-pad mx-auto"><span></span><button data-snake-dir="up">▲</button><span></span><button data-snake-dir="left">◀</button><button data-snake-dir="down">▼</button><button data-snake-dir="right">▶</button></div>
+            </section>
+          </div>
+        </div>
+
       </div>
 
-      <footer class="max-w-7xl mx-auto px-4 py-8 text-center text-xs text-slate-500 border-t border-slate-800/60 mt-12 flex flex-col sm:flex-row items-center justify-between gap-4">
-        <span>Made for Circle K (KRESNIK 王棣) · 3rd Birthday Gift · 2026</span>
-        <span>高达 & 宝可梦次元基地 · 纽约 ➔ 武汉</span>
+      <footer id="footer-tools" class="max-w-7xl mx-auto px-4 py-8 border-t border-slate-800/60 mt-12 space-y-5">
+        <button id="btn-footer-tools" type="button" class="w-full py-3 rounded-xl bg-slate-900 border border-slate-800 text-sm text-slate-200">🎵 音乐与数据设置⌄</button><div id="footer-tools-panel" class="hidden space-y-4">
+        <section class="rounded-2xl bg-slate-900/80 border border-purple-500/20 p-4 space-y-3 text-left">
+          <div class="flex flex-wrap items-center justify-between gap-3"><div><strong class="text-sm text-white">🎵 次元音乐播放器</strong><p id="music-player-title" class="text-[10px] text-purple-300 mt-1">空间音乐 1</p></div><div class="flex flex-wrap gap-2"><button id="music-prev" class="px-3 py-2 rounded-lg bg-slate-800 text-white">⏮</button><button id="music-play" class="px-4 py-2 rounded-lg bg-purple-600 text-white">播放 ▶</button><button id="music-next" class="px-3 py-2 rounded-lg bg-slate-800 text-white">⏭</button><button id="music-loop" class="px-3 py-2 rounded-lg bg-slate-800 text-white">循环：关</button><button id="music-shuffle" class="px-3 py-2 rounded-lg bg-slate-800 text-white">随机：关</button></div></div>
+          <div id="music-playlist" class="grid grid-cols-1 sm:grid-cols-5 gap-2"></div>
+          <input id="music-progress" type="range" min="0" max="100" value="0" class="w-full accent-purple-500" aria-label="音乐进度">
+          <div class="flex items-center gap-3"><span id="music-time" class="text-[10px] text-slate-400 w-24">0:00 / 0:00</span><span class="text-xs">🔉</span><input id="music-volume" type="range" min="0" max="1" value="0.6" step="0.05" class="w-32 accent-purple-500" aria-label="音量"></div>
+        </section>
+        <section class="rounded-2xl bg-slate-900/70 border border-slate-800 p-4 flex flex-wrap items-center justify-between gap-3 text-left">
+          <div><strong class="text-xs text-slate-200">资料备份与恢复</strong><p id="backup-last-time" class="text-[10px] text-slate-500 mt-1">尚未在此设备导出备份</p></div>
+          <div class="flex flex-wrap gap-2"><button id="btn-export-backup" type="button" class="px-3 py-2 rounded-lg bg-blue-700 text-xs text-white">导出备份</button><button id="btn-import-backup" type="button" class="px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-xs text-slate-200">导入恢复</button><select id="backup-import-mode" class="bg-slate-950 border border-slate-700 rounded-lg px-2 text-xs"><option value="merge">合并导入</option><option value="replace">覆盖当前资料</option></select><select id="backup-scope" class="bg-slate-950 border border-slate-700 rounded-lg px-2 text-xs"><option value="all">全部资料</option><option value="circleK.plans">仅计划</option><option value="circleK.moods">仅心情</option><option value="circleK.anniversaries">仅纪念日</option></select><button id="btn-local-versions" class="px-3 py-2 rounded-lg bg-slate-800 text-xs">历史版本</button><input id="backup-file-input" type="file" accept="application/json,.json" class="hidden"></div><div id="backup-versions" class="hidden text-[10px] text-slate-400"></div>
+        </section>
+        </div>
+        <div class="text-center text-xs text-slate-500 flex flex-col sm:flex-row items-center justify-between gap-3"><span>Made for Circle K (KRESNIK 王棣) · 3rd Birthday Gift · 2026</span><span>高达 & 宝可梦次元基地 · 纽约 ➔ 武汉</span></div>
       </footer>
     </section>
   </main>
+  <button id="btn-back-top" type="button" class="hidden fixed right-4 bottom-20 z-40 w-11 h-11 rounded-full bg-blue-600 text-white shadow-xl" aria-label="返回顶部">↑</button>
 
   <dialog id="modal-profile" class="bg-slate-900 text-white rounded-2xl p-6 border border-slate-700 max-w-lg w-full shadow-2xl backdrop:bg-black/70">
     <form id="form-profile" class="space-y-4">
@@ -1095,6 +1262,10 @@
           <label class="block text-slate-300 mb-1">想记下的话 / 喜爱理由</label>
           <textarea id="col-note" rows="3" maxlength="150" placeholder="写几句简短的感想或台词吧..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white placeholder-slate-600 resize-none"></textarea>
         </div>
+        <div>
+          <label for="col-tags" class="block text-slate-300 mb-1">标签（用逗号分隔）</label>
+          <input id="col-tags" maxlength="160" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white" placeholder="例如：最喜欢, 想买, 生日回忆">
+        </div>
 
         <div id="food-fields" class="hidden p-3 rounded-xl bg-orange-950/20 border border-orange-500/20 space-y-3">
           <span class="block text-xs font-bold text-orange-300">🍳 好吃研究所专用资料</span>
@@ -1204,7 +1375,8 @@
     </form>
   </dialog>
 
-  <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-full bg-slate-900/95 text-white text-xs border border-slate-700 shadow-2xl transition-all duration-300 flex items-center gap-3 opacity-0 pointer-events-none max-w-[92vw]">
+  <div id="upload-progress" class="hidden fixed top-3 left-1/2 -translate-x-1/2 z-[60] w-[min(420px,92vw)] p-3 rounded-xl bg-slate-950 border border-blue-500/40 shadow-2xl" role="status" aria-live="polite"><div class="flex justify-between text-xs mb-2"><span id="upload-progress-label">准备上传</span><span id="upload-progress-value">0%</span></div><div class="h-2 bg-slate-800 rounded-full overflow-hidden"><div id="upload-progress-bar" class="h-full bg-blue-500 transition-all" style="width:0%"></div></div></div>
+  <div id="toast" role="status" aria-live="polite" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-full bg-slate-900/95 text-white text-xs border border-slate-700 shadow-2xl transition-all duration-300 flex items-center gap-3 opacity-0 pointer-events-none max-w-[92vw]">
     <span class="text-yellow-400">✦</span>
     <span id="toast-msg">提示信息</span>
     <button id="toast-action" type="button" class="hidden px-2.5 py-1 rounded-full bg-blue-600 text-white font-bold whitespace-nowrap">撤销</button>
@@ -1350,7 +1522,13 @@
         "circleK_piano_leaderboard",
         "circleK.collections",
         "circleK.wishes",
-        "circleK_supabase_memories"
+        "circleK_supabase_memories",
+        "circleK.moods",
+        "circleK.plans",
+        "circleK.dailySummaries",
+        "circleK.anniversaries",
+        "circleK.dailyPokemon",
+        "circleK.voiceChallenges"
       ]);
       let cloudSyncReady = false;
       let cloudSyncTimer = null;
@@ -1430,12 +1608,15 @@
       window.addEventListener("online", () => { setSyncStatus("pending", "● 恢复网络"); scheduleCloudSync(); });
 
       $("#btn-export-backup").addEventListener("click", () => {
-        const blob = new Blob([JSON.stringify(collectCloudState(), null, 2)], { type: "application/json" });
+        const fullState=collectCloudState(),scope=$("#backup-scope")?.value||"all",exportState=scope==="all"?fullState:{...fullState,data:{[scope]:fullState.data[scope]}};const blob = new Blob([JSON.stringify(exportState, null, 2)], { type: "application/json" });
         const link = document.createElement("a");
         link.href = URL.createObjectURL(blob);
         link.download = `circle-k-universe-backup-${new Date().toISOString().slice(0, 10)}.json`;
         link.click();
         URL.revokeObjectURL(link.href);
+        localStorage.setItem("circleK.lastBackup", new Date().toISOString());
+        const versions=JSON.parse(localStorage.getItem("circleK.backupVersions")||"[]");versions.unshift({date:new Date().toISOString(),data:fullState.data});localStorage.setItem("circleK.backupVersions",JSON.stringify(versions.slice(0,5)));
+        $("#backup-last-time").textContent = `最近导出：${new Date().toLocaleString("zh-CN")}`;
         showToast("备份文件已导出");
       });
       $("#btn-import-backup").addEventListener("click", () => $("#backup-file-input").click());
@@ -1445,15 +1626,21 @@
         try {
           const backup = JSON.parse(await file.text());
           if (!backup.data || typeof backup.data !== "object") throw new Error("invalid");
-          if (!(await confirmDelete("导入会覆盖当前资料，确认继续吗？"))) return;
+          const count=Object.values(backup.data).reduce((sum,value)=>sum+(Array.isArray(value)?value.length:value&&typeof value==="object"?1:0),0),mode=$("#backup-import-mode").value;
+          if (!(await confirmDelete(`备份中约有 ${count} 条资料。将以“${mode==="merge"?"合并":"覆盖"}”方式导入，继续吗？`))) return;
+          const safety = new Blob([JSON.stringify(collectCloudState(), null, 2)], { type: "application/json" }), safetyLink=document.createElement("a");safetyLink.href=URL.createObjectURL(safety);safetyLink.download=`circle-k-auto-before-import-${todayKey()}.json`;safetyLink.click();URL.revokeObjectURL(safetyLink.href);
           Object.entries(backup.data).forEach(([key, value]) => {
-            if (SYNCED_STORAGE_KEYS.has(key)) localStorage.setItem(key, JSON.stringify(value));
+            if (!SYNCED_STORAGE_KEYS.has(key)) return;
+            if(mode==="merge"&&Array.isArray(value)){const current=storage.get(key,[]),map=new Map([...current,...value].map(x=>[x?.id||x?.date||JSON.stringify(x),x]));localStorage.setItem(key,JSON.stringify([...map.values()]));}
+            else localStorage.setItem(key, JSON.stringify(value));
           });
           scheduleCloudSync();
           showToast("资料已恢复，页面即将刷新");
           setTimeout(() => location.reload(), 800);
         } catch { showToast("备份文件格式不正确"); }
       });
+      const lastBackup=localStorage.getItem("circleK.lastBackup");if(lastBackup)$("#backup-last-time").textContent=`最近导出：${new Date(lastBackup).toLocaleString("zh-CN")}`;
+      $("#btn-local-versions").onclick=()=>{const box=$("#backup-versions"),versions=JSON.parse(localStorage.getItem("circleK.backupVersions")||"[]");box.classList.toggle("hidden");box.innerHTML=versions.length?versions.map((v,i)=>`<button class="restore-version block mt-2 text-blue-300" data-index="${i}">${new Date(v.date).toLocaleString("zh-CN")} · 恢复此版本</button>`).join(""):"还没有自动历史版本";box.querySelectorAll(".restore-version").forEach(b=>b.onclick=async()=>{if(!(await confirmDelete("确认恢复这个历史版本吗？")))return;Object.entries(versions[b.dataset.index].data).forEach(([k,v])=>{if(SYNCED_STORAGE_KEYS.has(k))localStorage.setItem(k,JSON.stringify(v));});location.reload();});};
 
       let visitorMode = localStorage.getItem("circleK.visitorMode") === "true";
       const applyVisitorMode = () => {
@@ -1576,12 +1763,16 @@
         $$(".tab-panel").forEach(panel => panel.classList.add("hidden"));
         $(`#${tabId}`).classList.remove("hidden");
         $$(".nav-btn").forEach(btn => btn.classList.toggle("active", btn.dataset.tab === tabId));
+        $("#btn-tools").classList.toggle("active", ["tab-life","tab-piano","tab-games"].includes(tabId));
         window.scrollTo({ top: 0, behavior: 'smooth' });
       };
 
       $$(".nav-btn").forEach(btn => {
-        btn.addEventListener("click", () => switchTab(btn.dataset.tab));
+        if(btn.dataset.tab) btn.addEventListener("click", () => switchTab(btn.dataset.tab));
       });
+      const toolPanel=$("#tool-menu-panel"),toolButton=$("#btn-tools");document.body.appendChild(toolPanel);const positionTools=()=>{if(innerWidth<=640)return;const rect=toolButton.getBoundingClientRect(),width=Math.min(380,innerWidth-24);toolPanel.style.top=`${rect.bottom+12}px`;toolPanel.style.left=`${Math.max(12,Math.min(rect.right-width,innerWidth-width-12))}px`;toolPanel.style.right="auto";toolPanel.style.bottom="auto";};const closeTools=()=>{toolPanel.classList.add("hidden");toolButton.setAttribute("aria-expanded","false");};toolButton.onclick=e=>{e.stopPropagation();const opening=toolPanel.classList.contains("hidden");toolPanel.classList.toggle("hidden");toolButton.setAttribute("aria-expanded",String(opening));if(opening){positionTools();setTimeout(()=>toolPanel.querySelector("button")?.focus(),0);}};$$('[data-tool-tab]').forEach(btn=>btn.onclick=()=>{switchTab(btn.dataset.toolTab);closeTools();setTimeout(()=>btn.dataset.toolTarget&&$(`#${btn.dataset.toolTarget}`)?.scrollIntoView({behavior:"smooth",block:"start"}),120);});toolPanel.querySelector('[data-tool-target="footer-tools"]').onclick=()=>{closeTools();$("#footer-tools").scrollIntoView({behavior:"smooth"});$("#footer-tools-panel").classList.remove("hidden");};document.addEventListener("click",e=>{if(!e.target.closest(".tool-menu")&&!e.target.closest("#tool-menu-panel"))closeTools();});document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!toolPanel.classList.contains("hidden")){closeTools();toolButton.focus();}});window.addEventListener("resize",()=>{if(!toolPanel.classList.contains("hidden"))positionTools();});
+      $("#btn-footer-tools").onclick=()=>$("#footer-tools-panel").classList.toggle("hidden");$("#btn-plan-more").onclick=()=>$("#plan-more-menu").classList.toggle("hidden");
+      $("#tab-memories").appendChild($("#timeline-section"));
 
       $$("[data-switch]").forEach(btn => {
         btn.addEventListener("click", () => switchTab(btn.dataset.switch));
@@ -1701,6 +1892,7 @@
         if (!file) return;
         if (file.size > 5 * 1024 * 1024) { showToast("头像请控制在 5MB 以内"); return; }
         $("#profile-avatar-hint").textContent = "正在上传头像…";
+        setUploadProgress(5, "正在压缩头像");
         const result = await uploadToSupabase(await compressImage(file, 800, 0.82), "profiles/");
         $("#profile-avatar-hint").textContent = result ? "点击可更换头像" : "上传失败，请重试";
         if (!result) return;
@@ -1876,11 +2068,22 @@
         return blob ? new File([blob], file.name.replace(/\.[^.]+$/, ".webp"), { type: "image/webp" }) : file;
       };
 
+      const setUploadProgress = (value, label = "正在上传") => {
+        const panel = $("#upload-progress");
+        panel.classList.remove("hidden");
+        $("#upload-progress-label").textContent = label;
+        $("#upload-progress-value").textContent = `${value}%`;
+        $("#upload-progress-bar").style.width = `${value}%`;
+        if (value >= 100) setTimeout(() => panel.classList.add("hidden"), 900);
+      };
+
       const uploadToSupabase = async (file, pathPrefix = "") => {
         const fileExt = file.name.split('.').pop();
         const fileName = `${pathPrefix}${Date.now()}_${Math.random().toString(36).substring(2, 7)}.${fileExt}`;
 
-        showToast("正在上传文件至 Supabase Storage...");
+        setUploadProgress(10, "正在准备文件");
+        await new Promise(resolve => setTimeout(resolve, 80));
+        setUploadProgress(35, "正在上传到云端");
 
         const { data, error } = await supabase.storage
           .from(BUCKET_NAME)
@@ -1889,13 +2092,17 @@
         if (error) {
           console.error("Supabase Upload Error:", error);
           showToast("上传到 Supabase 失败，请检查配置与网络");
+          setUploadProgress(100, "上传失败");
           return null;
         }
+
+        setUploadProgress(85, "正在完成同步");
 
         const { data: publicUrlData } = supabase.storage
           .from(BUCKET_NAME)
           .getPublicUrl(fileName);
 
+        setUploadProgress(100, "上传完成");
         return {
           path: fileName,
           url: publicUrlData.publicUrl
@@ -1905,6 +2112,75 @@
       let mediaRecorder = null;
       let audioChunks = [];
       let isRecording = false;
+      let pendingRecording = null;
+      let recordTimer = null;
+      let waveformFrame = null;
+      let recordStartedAt = 0;
+      let monitorAudioContext = null;
+
+      const stopRecordMonitor = () => {
+        clearInterval(recordTimer);
+        cancelAnimationFrame(waveformFrame);
+        if (monitorAudioContext && monitorAudioContext.state !== "closed") monitorAudioContext.close();
+        monitorAudioContext = null;
+        $("#record-monitor").classList.add("hidden");
+      };
+
+      const startRecordMonitor = (stream) => {
+        const monitor = $("#record-monitor");
+        monitor.classList.remove("hidden");
+        const context = new (window.AudioContext || window.webkitAudioContext)();
+        monitorAudioContext = context;
+        const analyser = context.createAnalyser();
+        analyser.fftSize = 256;
+        context.createMediaStreamSource(stream).connect(analyser);
+        const data = new Uint8Array(analyser.frequencyBinCount);
+        const canvas = $("#record-waveform");
+        const ctx = canvas.getContext("2d");
+        const draw = () => {
+          analyser.getByteTimeDomainData(data);
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.strokeStyle = "#f43f5e"; ctx.lineWidth = 3; ctx.beginPath();
+          data.forEach((value, index) => {
+            const x = index / (data.length - 1) * canvas.width;
+            const y = value / 255 * canvas.height;
+            index ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+          });
+          ctx.stroke(); waveformFrame = requestAnimationFrame(draw);
+        };
+        draw();
+        recordStartedAt = Date.now();
+        recordTimer = setInterval(() => {
+          const seconds = Math.floor((Date.now() - recordStartedAt) / 1000);
+          $("#record-elapsed").textContent = `${String(Math.floor(seconds / 60)).padStart(2, "0")}:${String(seconds % 60).padStart(2, "0")}`;
+        }, 250);
+      };
+
+      const audioBufferToWav = (buffer) => {
+        const channels = buffer.numberOfChannels, rate = buffer.sampleRate, length = buffer.length * channels * 2 + 44;
+        const out = new ArrayBuffer(length), view = new DataView(out);
+        const write = (offset, text) => [...text].forEach((char, i) => view.setUint8(offset + i, char.charCodeAt(0)));
+        write(0, "RIFF"); view.setUint32(4, length - 8, true); write(8, "WAVE"); write(12, "fmt ");
+        view.setUint32(16, 16, true); view.setUint16(20, 1, true); view.setUint16(22, channels, true); view.setUint32(24, rate, true);
+        view.setUint32(28, rate * channels * 2, true); view.setUint16(32, channels * 2, true); view.setUint16(34, 16, true); write(36, "data"); view.setUint32(40, length - 44, true);
+        let offset = 44;
+        for (let i = 0; i < buffer.length; i++) for (let ch = 0; ch < channels; ch++) {
+          const sample = Math.max(-1, Math.min(1, buffer.getChannelData(ch)[i]));
+          view.setInt16(offset, sample < 0 ? sample * 32768 : sample * 32767, true); offset += 2;
+        }
+        return new Blob([out], { type: "audio/wav" });
+      };
+
+      const trimAudioBlob = async (blob, start, end) => {
+        const context = new (window.AudioContext || window.webkitAudioContext)();
+        const source = await context.decodeAudioData(await blob.arrayBuffer());
+        const from = Math.max(0, Math.floor(start * source.sampleRate));
+        const to = Math.min(source.length, Math.floor(end * source.sampleRate));
+        const trimmed = context.createBuffer(source.numberOfChannels, Math.max(1, to - from), source.sampleRate);
+        for (let ch = 0; ch < source.numberOfChannels; ch++) trimmed.copyToChannel(source.getChannelData(ch).slice(from, to), ch);
+        await context.close();
+        return audioBufferToWav(trimmed);
+      };
 
       const getSupportedAudioType = () => {
         if (typeof MediaRecorder === "undefined") return "";
@@ -1963,36 +2239,27 @@
                 resetRecordButton();
                 return;
               }
-              const isMp4 = actualType.includes("mp4");
-              const extension = isMp4 ? "m4a" : "webm";
-              const file = new File([audioBlob], `voice_${Date.now()}.${extension}`, { type: actualType });
               const currentScript = $("#select-script").options[$("#select-script").selectedIndex].text;
-              const currentScriptId = $("#select-script").value;
-              const customTakeName = $("#voice-next-name").value.trim();
-              const voiceRole = $("#voice-next-role").value.trim();
-              
-              const res = await uploadToSupabase(file, "voice/");
-              if (res) {
-                let list = storage.get("circleK_supabase_memories", []);
-                list.unshift({
-                  id: Date.now(),
-                  kind: "voiceover",
-                  folder: "录音试音",
-                  name: customTakeName || `试音: ${currentScript.slice(0, 15)}...`,
-                  role: voiceRole,
-                  scriptId: currentScriptId,
-                  scriptTitle: currentScript,
-                  url: res.url,
-                  path: res.path
-                });
-                storage.set("circleK_supabase_memories", list);
-                renderMemories();
-                renderVoiceTakes();
-                renderHomeActivity();
-                showToast("配音录制完毕，已同步至 Supabase！🎙");
-                $("#voice-next-name").value = "";
-                $("#voice-next-role").value = "";
-              }
+              const url = URL.createObjectURL(audioBlob);
+              pendingRecording = {
+                blob: audioBlob, url,
+                name: $("#voice-next-name").value.trim() || `试音: ${currentScript.slice(0, 15)}...`,
+                role: $("#voice-next-role").value.trim(),
+                scriptId: $("#select-script").value,
+                scriptTitle: currentScript
+              };
+              const reviewAudio = $("#record-review-audio");
+              reviewAudio.src = url;
+              $("#record-review").classList.remove("hidden");
+              reviewAudio.onloadedmetadata = () => {
+                const duration = Number.isFinite(reviewAudio.duration) ? reviewAudio.duration : (Date.now() - recordStartedAt) / 1000;
+                $("#review-duration").textContent = `总时长 ${duration.toFixed(1)} 秒`;
+                $("#trim-start").max = duration; $("#trim-start").value = 0;
+                $("#trim-end").max = duration; $("#trim-end").value = duration;
+                $("#trim-start-label").textContent = "0.0s"; $("#trim-end-label").textContent = `${duration.toFixed(1)}s`;
+              };
+              stopRecordMonitor();
+              showToast("录音完成，请试听并选择剪裁范围");
               resetRecordButton();
             };
 
@@ -2003,15 +2270,25 @@
               showToast("录音中断了，请关闭其他正在使用麦克风的 App 后重试。");
             };
 
+            btnRecord.disabled = true;
+            $("#record-monitor").classList.remove("hidden");
+            for (let count = 3; count > 0; count--) {
+              $("#record-countdown").textContent = `${count}…`;
+              await new Promise(resolve => setTimeout(resolve, 700));
+            }
+            $("#record-countdown").textContent = "● 正在录音";
             mediaRecorder.start(1000);
-            isRecording = true;
-            $("#rec-status-text").textContent = "⏹ 停止录音并保存";
+            startRecordMonitor(stream);
+            isRecording = true; btnRecord.disabled = false;
+            $("#rec-status-text").textContent = "⏹ 停止录音";
             $("#rec-dot").classList.add("rec-pulse");
             btnRecord.classList.remove("from-red-600", "to-rose-600");
             btnRecord.classList.add("from-slate-700", "to-slate-800");
             showToast("正在录音中... 请面对麦克风朗读台词 🎙");
           } catch (err) {
             console.error(err);
+            btnRecord.disabled = false;
+            stopRecordMonitor();
             resetRecordButton();
             if (err?.name === "NotAllowedError") {
               showToast("麦克风权限未开启：请到 iPhone 设置 → Safari → 麦克风，选择“询问”或“允许”。");
@@ -2028,6 +2305,57 @@
           }
           resetRecordButton();
         }
+      });
+
+      const updateTrimLabels = () => {
+        const start = Number($("#trim-start").value), end = Number($("#trim-end").value);
+        if (start > end - 0.2) $("#trim-start").value = Math.max(0, end - 0.2);
+        $("#trim-start-label").textContent = `${Number($("#trim-start").value).toFixed(1)}s`;
+        $("#trim-end-label").textContent = `${end.toFixed(1)}s`;
+      };
+      $("#trim-start").addEventListener("input", updateTrimLabels);
+      $("#trim-end").addEventListener("input", updateTrimLabels);
+      $("#trim-start").addEventListener("change", () => { $("#record-review-audio").currentTime = Number($("#trim-start").value); });
+      $("#record-review-audio").addEventListener("play", event => {
+        if (event.target.currentTime < Number($("#trim-start").value)) event.target.currentTime = Number($("#trim-start").value);
+      });
+      $("#record-review-audio").addEventListener("timeupdate", event => {
+        if (event.target.currentTime >= Number($("#trim-end").value)) event.target.pause();
+      });
+      $("#btn-discard-recording").addEventListener("click", () => {
+        if (pendingRecording?.url) URL.revokeObjectURL(pendingRecording.url);
+        pendingRecording = null;
+        $("#record-review-audio").removeAttribute("src");
+        $("#record-review").classList.add("hidden");
+        showToast("本次录音已放弃");
+      });
+      $("#btn-save-recording").addEventListener("click", async () => {
+        if (!pendingRecording) return;
+        const button = $("#btn-save-recording");
+        button.disabled = true; button.textContent = "正在剪裁…";
+        try {
+          const start = Number($("#trim-start").value), end = Number($("#trim-end").value);
+          const fullDuration = Number($("#trim-end").max);
+          const needsTrim = start > 0.05 || end < fullDuration - 0.05;
+          const finalBlob = needsTrim ? await trimAudioBlob(pendingRecording.blob, start, end) : pendingRecording.blob;
+          const extension = finalBlob.type.includes("wav") ? "wav" : finalBlob.type.includes("mp4") ? "m4a" : "webm";
+          const file = new File([finalBlob], `voice_${Date.now()}.${extension}`, { type: finalBlob.type });
+          button.textContent = "正在上传…";
+          const res = await uploadToSupabase(file, "voice/");
+          if (res) {
+            const list = storage.get("circleK_supabase_memories", []);
+            list.unshift({ id: Date.now(), kind: "voiceover", folder: "录音试音", ...pendingRecording, url: res.url, path: res.path, blob: undefined });
+            delete list[0].blob;
+            storage.set("circleK_supabase_memories", list);
+            renderMemories(); renderVoiceTakes(); renderHomeActivity();
+            URL.revokeObjectURL(pendingRecording.url); pendingRecording = null;
+            $("#record-review-audio").removeAttribute("src"); $("#record-review").classList.add("hidden");
+            $("#voice-next-name").value = ""; $("#voice-next-role").value = "";
+            showToast("配音已剪裁并同步保存 🎙");
+          }
+        } catch (error) {
+          console.error(error); showToast("剪裁失败，可以调整范围后重试");
+        } finally { button.disabled = false; button.textContent = "剪裁并保存"; }
       });
 
       const deleteFromSupabase = async (path) => {
@@ -2054,7 +2382,7 @@
 
         voiceList.forEach(item => {
           const card = document.createElement("div");
-          card.className = "bg-slate-900/90 border border-slate-800 rounded-2xl p-4 space-y-2";
+          card.className = "content-card bg-slate-900/90 border border-slate-800 rounded-2xl p-4 space-y-2";
 
           card.innerHTML = `
             <div class="flex items-center justify-between text-xs">
@@ -2063,12 +2391,12 @@
                 ${item.name}
               </span>
               <div class="flex gap-2">
-                <button class="btn-edit-take text-slate-400 hover:text-amber-300 font-bold" data-id="${item.id}">✏️</button>
-                <button class="btn-del-take text-slate-500 hover:text-red-400 font-bold" data-id="${item.id}">✕</button>
+                <button class="btn-edit-take text-slate-400 hover:text-amber-300 font-bold" data-id="${item.id}" aria-label="编辑配音文件">✏️</button>
+                <button class="btn-del-take text-slate-500 hover:text-red-400 font-bold" data-id="${item.id}" aria-label="删除配音文件">✕</button>
               </div>
             </div>
             ${(item.role || item.scriptTitle) ? `<div class="text-[10px] text-slate-500 flex flex-wrap gap-2">${item.role ? `<span>角色：${item.role}</span>` : ""}${item.scriptTitle ? `<span>台词：${item.scriptTitle}</span>` : ""}</div>` : ""}
-            <audio src="${item.url}" controls class="w-full h-8 mt-1"></audio>
+            <audio src="${item.url}" controls preload="none" class="w-full h-8 mt-1"></audio>
           `;
 
           card.querySelector(".btn-edit-take").addEventListener("click", () => openGenericModal('memory', item));
@@ -2467,7 +2795,13 @@
         const favorite = [...foods].sort((a, b) => Number(b.rating || 0) - Number(a.rating || 0))[0];
         const latest = [...foods].sort((a, b) => b.id - a.id)[0];
         const wishlist = foods.filter(item => item.status === "想吃").length;
-        box.innerHTML = `<div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-center"><div><b class="text-2xl text-orange-300">${foods.length}</b><span class="block text-[10px] text-slate-400">收录菜品</span></div><div><b class="text-2xl text-yellow-300">${average}</b><span class="block text-[10px] text-slate-400">平均好吃指数</span></div><div><b class="text-sm text-white">${favorite?.title || "暂无"}</b><span class="block text-[10px] text-slate-400">当前最爱</span></div><div><b class="text-sm text-white">${wishlist ? `${wishlist} 道想吃` : latest?.title || "暂无"}</b><span class="block text-[10px] text-slate-400">想吃清单 / 最近新增</span></div></div>`;
+        box.innerHTML = `<div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-center"><div><b class="text-2xl text-orange-300">${foods.length}</b><span class="block text-[10px] text-slate-400">收录菜品</span></div><div><b class="text-2xl text-yellow-300">${average}</b><span class="block text-[10px] text-slate-400">平均好吃指数</span></div><div><b class="text-sm text-white">${favorite?.title || "暂无"}</b><span class="block text-[10px] text-slate-400">当前最爱</span></div><div><b class="text-sm text-white">${wishlist ? `${wishlist} 道想吃` : latest?.title || "暂无"}</b><span class="block text-[10px] text-slate-400">想吃清单 / 最近新增</span></div></div><div class="mt-4 flex flex-col sm:flex-row items-center justify-center gap-3"><button id="btn-random-food" type="button" class="px-4 py-2 rounded-xl bg-orange-500 text-slate-950 text-xs font-bold">🍳 今天吃什么</button><strong id="random-food-result" class="text-sm text-orange-200"></strong></div>`;
+        $("#btn-random-food").onclick = () => {
+          const weaknesses = (profile.weakness || "").split(/[·、,，/\s]+/).map(x => x.trim()).filter(x => x.length > 1);
+          const safeFoods = foods.filter(food => !weaknesses.some(word => `${food.title} ${food.note || ""}`.includes(word)));
+          const pool = safeFoods.length ? safeFoods : foods;
+          $("#random-food-result").textContent = pool.length ? `今天推荐：${pool[Math.floor(Math.random() * pool.length)].title} ✦` : "先在好吃研究所添加几道菜吧";
+        };
       };
 
       const renderCollections = () => {
@@ -2498,7 +2832,7 @@
           const card = document.createElement("div");
           const isGundam = item.category === "高达机库";
           const isPoke = item.category === "宝可梦图鉴";
-          card.className = isGundam || isPoke ? `dex-card ${isGundam ? "gundam-card" : ""}` : "bg-slate-900/90 border border-slate-800 rounded-2xl p-5 relative space-y-3 hover:border-slate-700 transition shadow-lg group";
+          card.className = isGundam || isPoke ? `content-card dex-card ${isGundam ? "gundam-card" : ""}` : "content-card bg-slate-900/90 border border-slate-800 rounded-2xl p-5 relative space-y-3 hover:border-slate-700 transition shadow-lg group";
           if (isPoke) applyCollectionCardTheme(card, item.category, item.type || "");
           if (isGundam || isPoke) {
             card.tabIndex = 0;
@@ -2515,18 +2849,19 @@
             <div class="flex items-center justify-between">
               <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${badgeClass}">${item.category}</span>
               <div class="flex items-center gap-2">
-                <button class="btn-favorite-col text-lg ${item.favorite ? "text-yellow-400" : "text-slate-600 hover:text-yellow-300"}" data-id="${item.id}" title="置顶收藏">★</button>
-                <button class="btn-edit-col text-slate-400 hover:text-amber-300 font-bold text-xs" data-id="${item.id}" title="重命名与编辑">✏️ 编辑</button>
-                <button class="btn-del-col text-slate-500 hover:text-red-400 font-bold text-sm" data-id="${item.id}" title="删除">✕</button>
+                <button class="btn-favorite-col text-lg ${item.favorite ? "text-yellow-400" : "text-slate-600 hover:text-yellow-300"}" data-id="${item.id}" title="置顶收藏" aria-label="切换收藏置顶状态">★</button>
+                <button class="btn-edit-col text-slate-400 hover:text-amber-300 font-bold text-xs" data-id="${item.id}" title="重命名与编辑" aria-label="编辑收藏卡">✏️ 编辑</button>
+                <button class="btn-del-col text-slate-500 hover:text-red-400 font-bold text-sm" data-id="${item.id}" title="删除" aria-label="删除收藏卡">✕</button>
               </div>
             </div>
             <div class="flex items-center justify-between gap-2">
               <h3 class="text-lg font-bold ${isGundam || isPoke ? "text-slate-900" : "text-white"}">${item.title}</h3>
               <span class="text-[10px] font-bold font-orbitron ${isGundam || isPoke ? "text-slate-700" : "text-slate-400"}">${item.number || "NO. ???"}</span>
             </div>
-            <div class="dex-card-image text-5xl">${item.image ? `<img src="${item.image}" alt="${item.title}">` : (isGundam ? "🤖" : isPoke ? "⚡" : item.category === "好吃研究所" ? "🍳" : "✦")}</div>
+            <div class="dex-card-image text-5xl">${item.image ? `<img src="${item.image}" alt="${item.title}" loading="lazy" decoding="async">` : (isGundam ? "🤖" : isPoke ? "⚡" : item.category === "好吃研究所" ? "🍳" : "✦")}</div>
             ${item.type ? `<div class="text-[11px] font-bold ${isGundam || isPoke ? "text-slate-700" : "text-slate-300"}">${isGundam ? "机体类型" : item.category === "好吃研究所" ? "菜品类型" : "属性"}：${item.type}</div>` : ""}
             ${item.category === "好吃研究所" ? `<div class="text-[11px] text-orange-300 flex flex-wrap gap-3"><span>好吃指数：${"★".repeat(Number(item.rating || 5))}${"☆".repeat(5 - Number(item.rating || 5))}</span><span>${item.status || "吃过"}</span><span>辣度：${item.spice || "不辣"}</span>${item.chef ? `<span>制作：${item.chef}</span>` : ""}${item.eatenDate ? `<span>日期：${item.eatenDate}</span>` : ""}</div>` : ""}
+            ${(item.tags || []).length ? `<div class="flex flex-wrap gap-1.5">${item.tags.map(tag => `<span class="px-2 py-0.5 rounded-full bg-blue-500/10 border border-blue-400/20 text-[10px] text-blue-300">#${tag}</span>`).join("")}</div>` : ""}
             <p class="text-xs leading-relaxed ${isGundam || isPoke ? "dex-card-description text-slate-700" : "text-slate-400"}">${item.note || "喜爱本身，就是收藏的理由。"}</p>
           </div>`;
 
@@ -2560,6 +2895,7 @@
             $("#col-title").value = item.title;
             $("#col-note").value = item.note || "";
             $("#col-number").value = item.number || "";
+            $("#col-tags").value = (item.tags || []).join(", ");
             $("#food-rating").value = item.rating || "5";
             $("#food-spice").value = item.spice || "不辣";
             $("#food-status").value = item.status || "吃过";
@@ -2625,6 +2961,7 @@
         $("#col-modal-title").textContent = "归档一件新收藏";
         $("#col-edit-id").value = "";
         $("#form-collection").reset();
+        $("#col-tags").value = "";
         $("#food-rating").value = "5";
         $("#food-spice").value = "不辣";
         $("#food-status").value = "吃过";
@@ -2664,6 +3001,7 @@
         const saveButton = $("#btn-save-collection");
         saveButton.disabled = true;
         saveButton.textContent = "正在上传图片…";
+        setUploadProgress(5, "正在压缩图片");
         const result = await uploadToSupabase(await compressImage(file), "cards/");
         saveButton.disabled = false;
         saveButton.textContent = "保存并同步卡牌";
@@ -2692,6 +3030,7 @@
             item.status = $("#food-status").value;
             item.chef = $("#food-chef").value.trim();
             item.eatenDate = $("#food-date").value;
+            item.tags = $("#col-tags").value.split(/[,，]/).map(tag => tag.trim()).filter(Boolean);
             showToast("成功更新收藏资料 ✏️");
           }
         } else {
@@ -2714,7 +3053,8 @@
             spice: $("#food-spice").value,
             status: $("#food-status").value,
             chef: $("#food-chef").value.trim(),
-            eatenDate: $("#food-date").value
+            eatenDate: $("#food-date").value,
+            tags: $("#col-tags").value.split(/[,，]/).map(tag => tag.trim()).filter(Boolean)
           });
           showToast("成功添加到收藏基地 🤖");
         }
@@ -2779,15 +3119,15 @@
 
         filtered.forEach((item, idx) => {
           const card = document.createElement("div");
-          card.className = `wish-card ${item.color}`;
+          card.className = `content-card wish-card ${item.color}`;
           card.style.transform = `rotate(${idx % 2 === 0 ? 1.5 : -1.5}deg)`;
 
           card.innerHTML = `
             <div class="flex items-center justify-between text-xs text-black/60 mb-2 font-bold">
               <span>📁 ${item.category || "未分类"}</span>
               <div class="flex items-center gap-1.5">
-                <button class="btn-edit-wish text-black/60 hover:text-amber-800 font-bold" data-id="${item.id}">✏️</button>
-                <button class="btn-del-wish text-black/50 hover:text-red-600 font-bold">✕</button>
+                <button class="btn-edit-wish text-black/60 hover:text-amber-800 font-bold" data-id="${item.id}" aria-label="编辑愿望">✏️</button>
+                <button class="btn-del-wish text-black/50 hover:text-red-600 font-bold" aria-label="删除愿望">✕</button>
               </div>
             </div>
             <p class="font-medium text-slate-900">${item.text}</p>
@@ -2890,7 +3230,7 @@
 
         list.forEach(item => {
           const card = document.createElement("div");
-          card.className = "bg-slate-900/90 border border-slate-800 rounded-2xl p-4 relative space-y-3 group";
+          card.className = "content-card bg-slate-900/90 border border-slate-800 rounded-2xl p-4 relative space-y-3 group";
 
           const folderTag = `<span class="px-2 py-0.5 rounded text-[10px] bg-slate-800 text-purple-300 border border-slate-700">📁 ${item.folder || "未分类"}</span>`;
 
@@ -2903,7 +3243,7 @@
                   <button class="btn-del-mem text-red-400 hover:text-red-300 font-bold text-xs" data-id="${item.id}">删除</button>
                 </div>
               </div>
-              <img src="${item.url}" alt="${item.name}" class="w-full h-48 object-cover rounded-xl border border-slate-800">
+              <img src="${item.url}" alt="${item.name}" loading="lazy" decoding="async" class="w-full h-48 object-cover rounded-xl border border-slate-800">
               <div class="text-xs text-slate-300 font-medium truncate pt-1">
                 ${item.name}
               </div>
@@ -2919,7 +3259,7 @@
               </div>
               <div class="p-4 bg-slate-950 rounded-xl flex flex-col gap-2 border border-slate-800">
                 <span class="text-xs font-bold text-purple-400">🎙 音频/配音记忆片段</span>
-                <audio src="${item.url}" controls class="w-full mt-2"></audio>
+                <audio src="${item.url}" controls preload="none" class="w-full mt-2"></audio>
               </div>
               <div class="text-xs text-slate-300 font-medium truncate pt-1">
                 ${item.name}
@@ -2962,6 +3302,7 @@
       $("#file-photo").addEventListener("change", async (e) => {
         const file = e.target.files[0];
         if (!file) return;
+        setUploadProgress(5, "正在压缩照片");
         const res = await uploadToSupabase(await compressImage(file), "photos/");
         if (res) {
           let list = storage.get("circleK_supabase_memories", []);
@@ -3079,6 +3420,157 @@
         genericModal.close();
       });
 
+      // ==================== 心情、计划、纪念日与惊喜功能 ====================
+      let moods = storage.get("circleK.moods", []);
+      let plans = storage.get("circleK.plans", []);
+      let anniversaries = storage.get("circleK.anniversaries", []);
+      let planFilter = "all";
+      const todayKey = () => new Date().toISOString().slice(0, 10);
+      const localDateKey = date => `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,"0")}-${String(date.getDate()).padStart(2,"0")}`;
+      let calendarView = new Date(); calendarView.setDate(1);
+      let selectedCalendarDate = todayKey();
+
+      const renderCalendar = () => {
+        const grid = $("#calendar-grid"); if (!grid) return; grid.replaceChildren();
+        const year = calendarView.getFullYear(), month = calendarView.getMonth();
+        $("#calendar-title").textContent = `${year} 年 ${month + 1} 月`;
+        const start = new Date(year, month, 1 - new Date(year, month, 1).getDay());
+        for (let i = 0; i < 42; i++) {
+          const date = new Date(start); date.setDate(start.getDate() + i); const key = localDateKey(date);
+          const dayPlans = plans.filter(x => x.date === key), dayAnniversaries = anniversaries.filter(x => x.date === key || (x.repeat === "yearly" && x.date.slice(5) === key.slice(5))), dayMood=moods.find(x=>x.date===key);
+          const button = document.createElement("button"); button.type = "button";
+          button.className = `calendar-day${date.getMonth() !== month ? " is-other" : ""}${key === todayKey() ? " is-today" : ""}`;
+          button.setAttribute("aria-label", `${key}，${dayPlans.length + dayAnniversaries.length} 项安排`);
+          const number = document.createElement("strong"); number.className = "text-xs text-white flex justify-between"; number.innerHTML=`<span>${date.getDate()}</span><span>${dayMood?.mood||""}</span>`; button.appendChild(number);
+          dayPlans.slice(0,2).forEach(item => { const event = document.createElement("span"); event.className = "calendar-event todo"; event.draggable=true;event.dataset.planId=item.id;event.textContent = `${item.done ? "✓ " : ""}${item.time || "待办"} ${item.title}`;event.ondragstart=e=>{e.dataTransfer.setData("text/plan-id",item.id);e.stopPropagation();};button.appendChild(event); });
+          dayAnniversaries.slice(0,1).forEach(item => { const event = document.createElement("span"); event.className = "calendar-event anniversary"; event.textContent = `🎁 ${item.name}`; button.appendChild(event); });
+          if (dayPlans.length + dayAnniversaries.length > 3) { const more = document.createElement("span"); more.className = "block text-[9px] text-slate-500 mt-1"; more.textContent = `还有 ${dayPlans.length + dayAnniversaries.length - 3} 项`; button.appendChild(more); }
+          button.onclick = () => { selectedCalendarDate = key; $("#plan-date").value = key; const items = [...dayPlans.map(x => `☑ ${x.time || "全天"} ${x.title}`), ...dayAnniversaries.map(x => `🎁 ${x.name}`)]; $("#calendar-selected").textContent = `${key}：${items.length ? items.join(" · ") : "暂无安排，已为你选好日期，可以在下方添加 To Do"}`; $("#plan-title").focus(); };
+          button.ondragover=e=>e.preventDefault();button.ondrop=e=>{e.preventDefault();const item=plans.find(x=>x.id==e.dataTransfer.getData("text/plan-id"));if(item){item.date=key;storage.set("circleK.plans",plans);renderCalendar();renderPlans();showToast(`已移动到 ${key}`);}};
+          grid.appendChild(button);
+        }
+      };
+      $("#calendar-prev").onclick = () => { calendarView.setMonth(calendarView.getMonth()-1); renderCalendar(); };
+      $("#calendar-next").onclick = () => { calendarView.setMonth(calendarView.getMonth()+1); renderCalendar(); };
+      $("#calendar-today").onclick = () => { calendarView = new Date(); calendarView.setDate(1); selectedCalendarDate = todayKey(); renderCalendar(); $("#plan-date").value = selectedCalendarDate; };
+      $("#calendar-view").onchange=e=>{if(e.target.value==="agenda")showToast("日程视图：请查看下方按日期排列的计划清单");if(e.target.value==="week"){renderWeekView();$("#week-plan-view").classList.remove("hidden");}else $("#week-plan-view").classList.add("hidden");};
+
+      const renderMoods = () => {
+        const box = $("#mood-history"); box.replaceChildren();
+        [...moods].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 30).forEach(item => {
+          const row = document.createElement("div"); row.className = "flex items-start gap-3 p-3 rounded-xl bg-slate-950/70 border border-slate-800";
+          row.innerHTML = `<span class="text-2xl">${item.mood}</span><div class="min-w-0"><b class="block text-xs text-white">${item.date}</b><p class="text-xs text-slate-400 break-words">${item.note || "今天又是美好的一天"}</p></div>`;
+          box.appendChild(row);
+        });
+        if (!moods.length) box.innerHTML = `<div class="text-xs text-slate-500">记录第一天的美好心情吧 ✦</div>`;
+        const current=moods.filter(x=>x.date.startsWith(todayKey().slice(0,7))),counts=current.reduce((a,x)=>(a[x.mood]=(a[x.mood]||0)+1,a),{}),top=Object.entries(counts).sort((a,b)=>b[1]-a[1])[0];$("#mood-stats").textContent=current.length?`本月记录 ${current.length} 天 · 最常出现 ${top[0]}（${top[1]}天）`:`本月还没有心情记录`;
+      };
+      $("#form-mood").addEventListener("submit", event => {
+        event.preventDefault(); const date = todayKey();
+        const item = { id: Date.now(), date, mood: document.querySelector('input[name="mood"]:checked').value, note: $("#mood-note").value.trim() || "今天又是美好的一天" };
+        const existing = moods.findIndex(x => x.date === date);
+        if (existing >= 0) moods[existing] = item; else moods.push(item);
+        storage.set("circleK.moods", moods); $("#mood-note").value = ""; renderMoods(); renderMemoryTimeline(); renderAchievements(); renderHomeActivity(); showToast("今天的心情已保存 🌤");
+      });
+
+      const renderPlans = () => {
+        const box = $("#plan-list"); box.replaceChildren(); const today = todayKey();
+        let list = [...plans];
+        if (planFilter === "today") list = list.filter(x => x.date === today && !x.done);
+        if (planFilter === "upcoming") list = list.filter(x => x.date > today && !x.done);
+        if (planFilter === "done") list = list.filter(x => x.done);
+        list.sort((a, b) => (a.order ?? 999999) - (b.order ?? 999999) || `${a.date} ${a.time || "23:59"}`.localeCompare(`${b.date} ${b.time || "23:59"}`));
+        const colors = { high: "border-red-500/40", medium: "border-amber-500/30", low: "border-blue-500/30" };
+        list.forEach(item => {
+          const card = document.createElement("div"); card.draggable=true; card.dataset.planId=item.id; card.className = `content-card p-4 rounded-xl bg-slate-950/70 border ${colors[item.priority] || colors.medium}`;
+          card.innerHTML = `<div class="flex items-start gap-3"><span class="cursor-grab text-slate-600" title="拖动排序">⋮⋮</span><input class="plan-done mt-1 w-5 h-5" type="checkbox" ${item.done ? "checked" : ""} aria-label="标记计划完成"><div class="flex-1 min-w-0"><div class="flex flex-wrap gap-2 items-center"><strong class="text-sm ${item.done ? "line-through text-slate-500" : "text-white"}">${item.title}</strong><span class="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-300">${item.category || "日常"}</span>${item.repeat&&item.repeat!=="none"?`<span class="text-[10px] text-cyan-300">↻ ${item.repeat==="daily"?"每天":item.repeat==="weekly"?"每周":"每月"}</span>`:""}</div><p class="text-[11px] text-blue-300 mt-1">${item.date}${item.time ? ` · ${item.time}` : ""} · ${item.priority === "high" ? "高" : item.priority === "low" ? "低" : "中"}优先级${item.reminder&&item.reminder!=="none"?` · 🔔 提前${item.reminder==="1440"?"1天":item.reminder+"分钟"}`:""}</p>${item.note ? `<p class="text-xs text-slate-400 mt-2">${item.note}</p>` : ""}</div><div class="flex gap-1"><button class="plan-edit px-2 py-1 text-xs text-amber-300" aria-label="编辑计划">✏️</button><button class="plan-delete px-2 py-1 text-xs text-red-300" aria-label="删除计划">×</button></div></div>`;
+          card.querySelector(".plan-done").onchange = event => { item.done = event.target.checked; if(item.done&&item.repeat&&item.repeat!=="none"&&!item.repeated){const next=new Date(`${item.date}T12:00:00`);if(item.repeat==="daily")next.setDate(next.getDate()+1);if(item.repeat==="weekly")next.setDate(next.getDate()+7);if(item.repeat==="monthly")next.setMonth(next.getMonth()+1);item.repeated=true;plans.push({...item,id:Date.now(),date:localDateKey(next),done:false,repeated:false,order:plans.length});} storage.set("circleK.plans", plans); renderPlans(); renderCalendar(); renderAchievements(); renderHomeActivity(); };
+          if(item.subtasks?.length){const subs=document.createElement("div");subs.className="ml-8 mt-2 space-y-1";item.subtasks.forEach((sub,i)=>{const label=document.createElement("label");label.className="block text-[10px] text-slate-400";label.innerHTML=`<input type="checkbox" ${sub.done?"checked":""}> ${sub.text}`;label.querySelector("input").onchange=e=>{sub.done=e.target.checked;storage.set("circleK.plans",plans);};subs.appendChild(label);});card.appendChild(subs);}
+          card.querySelector(".plan-edit").onclick = () => { $("#form-plan").classList.remove("hidden"); $("#form-plan").classList.add("grid"); $("#plan-edit-id").value = item.id; $("#plan-title").value = item.title; $("#plan-date").value = item.date; $("#plan-time").value = item.time || ""; $("#plan-priority").value = item.priority; $("#plan-category").value = item.category || ""; $("#plan-repeat").value=item.repeat||"none"; $("#plan-reminder").value=item.reminder||"none"; $("#plan-subtasks").value=(item.subtasks||[]).map(x=>x.text).join("，"); $("#plan-note").value = item.note || ""; $("#btn-save-plan").textContent = "更新计划"; $("#plan-title").focus(); };
+          card.ondragstart=()=>card.classList.add("plan-dragging");card.ondragend=()=>card.classList.remove("plan-dragging");card.ondragover=e=>e.preventDefault();card.ondrop=e=>{e.preventDefault();const from=$(".plan-dragging");if(!from||from===card)return;const a=plans.findIndex(x=>x.id==from.dataset.planId),b=plans.findIndex(x=>x.id==card.dataset.planId);const [moved]=plans.splice(a,1);plans.splice(b,0,moved);plans.forEach((x,i)=>x.order=i);storage.set("circleK.plans",plans);renderPlans();};
+          card.querySelector(".plan-delete").onclick = async () => { if (!(await confirmDelete(`确认删除计划“${item.title}”吗？`))) return; const index = plans.findIndex(x => x.id === item.id); const removed = plans.splice(index, 1)[0]; const trash=storage.get("circleK.trash",[]);trash.unshift({...removed,deletedAt:Date.now(),trashType:"plan"});storage.set("circleK.trash",trash);storage.set("circleK.plans", plans); renderPlans(); renderCalendar(); renderHomeActivity(); showUndoToast("计划已移入回收站", () => { plans.splice(index, 0, removed); storage.set("circleK.plans", plans); renderPlans(); renderCalendar(); renderHomeActivity(); }); };
+          box.appendChild(card);
+        });
+        if (!list.length) box.innerHTML = `<div class="p-6 text-center text-xs text-slate-500 border border-dashed border-slate-800 rounded-xl">这个分类下还没有计划</div>`;
+        $("#plan-summary").textContent = `共 ${plans.length} 项 · 待完成 ${plans.filter(x => !x.done).length} 项 · 已完成 ${plans.filter(x => x.done).length} 项`;
+      };
+      $("#form-plan").addEventListener("submit", event => {
+        event.preventDefault(); const editId = $("#plan-edit-id").value;
+        const item = { id: editId ? Number(editId) : Date.now(), title: $("#plan-title").value.trim(), date: $("#plan-date").value, time: $("#plan-time").value, priority: $("#plan-priority").value, category: $("#plan-category").value.trim() || "日常", repeat:$("#plan-repeat").value, reminder:$("#plan-reminder").value, note: $("#plan-note").value.trim(), subtasks:$("#plan-subtasks").value.split(/[，,]/).map(x=>x.trim()).filter(Boolean).map(text=>({text,done:false})), done: false, order:plans.length };
+        const index = plans.findIndex(x => x.id == editId); if (index >= 0) item.done = plans[index].done;
+        if (index >= 0) plans[index] = item; else plans.push(item);
+        storage.set("circleK.plans", plans); event.target.reset(); $("#plan-edit-id").value = ""; $("#btn-save-plan").textContent = "保存计划"; $("#plan-date").value = selectedCalendarDate; renderPlans(); renderCalendar(); renderHomeActivity(); showToast(index >= 0 ? "计划已更新" : "新 To Do 已加入日历 🗓");
+      });
+      $$(".plan-filter").forEach(button => button.onclick = () => { planFilter = button.dataset.filter; $$(".plan-filter").forEach(x => x.className = "plan-filter px-3 py-2 rounded-lg bg-slate-800 text-xs"); button.className = "plan-filter px-3 py-2 rounded-lg bg-blue-600 text-xs text-white"; renderPlans(); });
+      $("#btn-toggle-plan-form").onclick=()=>{$("#form-plan").classList.toggle("hidden");$("#form-plan").classList.toggle("grid");if(!$("#form-plan").classList.contains("hidden"))$("#plan-title").focus();};
+      $("#btn-cancel-plan").onclick=()=>{$("#form-plan").reset();$("#form-plan").classList.add("hidden");$("#form-plan").classList.remove("grid");$("#plan-date").value=selectedCalendarDate;$("#plan-edit-id").value="";};
+      $("#btn-complete-visible").onclick=()=>{plans.forEach(x=>x.done=true);storage.set("circleK.plans",plans);renderPlans();renderCalendar();};$("#btn-delete-completed").onclick=()=>{const trash=storage.get("circleK.trash",[]);plans.filter(x=>x.done).forEach(x=>trash.unshift({...x,deletedAt:Date.now(),trashType:"plan"}));plans=plans.filter(x=>!x.done);storage.set("circleK.trash",trash);storage.set("circleK.plans",plans);renderPlans();renderCalendar();};
+      const renderTrash=()=>{const box=$("#trash-list"),trash=storage.get("circleK.trash",[]);box.innerHTML=trash.length?trash.map(x=>`<div class="flex justify-between text-xs"><span>${x.title||x.name}</span><button class="trash-restore text-emerald-300" data-id="${x.id}">恢复</button></div>`).join(""):"回收站是空的";box.querySelectorAll(".trash-restore").forEach(b=>b.onclick=()=>{const list=storage.get("circleK.trash",[]),i=list.findIndex(x=>x.id==b.dataset.id),item=list.splice(i,1)[0];if(item?.trashType==="plan")plans.push(item);storage.set("circleK.trash",list);storage.set("circleK.plans",plans);renderTrash();renderPlans();});};$("#btn-open-trash").onclick=()=>{$("#trash-list").classList.toggle("hidden");renderTrash();};
+      const renderWeekView=()=>{const box=$("#week-plan-view");box.replaceChildren();const now=new Date(),start=new Date(now);start.setDate(now.getDate()-((now.getDay()+6)%7));for(let i=0;i<7;i++){const d=new Date(start);d.setDate(start.getDate()+i);const key=localDateKey(d),items=plans.filter(x=>x.date===key);const col=document.createElement("div");col.className="p-3 rounded-xl bg-slate-950 border border-slate-800";col.innerHTML=`<b class="text-xs text-cyan-300">${["周一","周二","周三","周四","周五","周六","周日"][i]} ${d.getMonth()+1}/${d.getDate()}</b>${items.map(x=>`<span class="block mt-2 text-[10px] ${x.done?"line-through text-slate-600":"text-slate-200"}">${x.time||"全天"} ${x.title}</span>`).join("")||'<span class="block mt-2 text-[10px] text-slate-600">暂无安排</span>'}`;box.appendChild(col);}};
+      $("#btn-week-view")?.addEventListener("click",()=>{$("#week-plan-view").classList.toggle("hidden");renderWeekView();});
+      $("#btn-week-review").onclick=()=>{const now=new Date(),start=new Date(now);start.setDate(now.getDate()-6);const recent=plans.filter(x=>new Date(x.date)>=start&&new Date(x.date)<=now),done=recent.filter(x=>x.done);$("#week-review").innerHTML=`<b>本周回顾 ✦</b><p class="mt-2">安排 ${recent.length} 件，完成 ${done.length} 件，完成率 ${recent.length?Math.round(done.length/recent.length*100):0}%。${done.length?` 做得很好：${done.slice(0,3).map(x=>x.title).join("、")}。`:"新的一周也可以从一个小计划开始。"}</p>`;$("#week-review").classList.remove("hidden");};
+      const dailySummaries=storage.get("circleK.dailySummaries",{});$("#daily-summary").value=dailySummaries[todayKey()]||"";$("#save-daily-summary").onclick=()=>{dailySummaries[todayKey()]=$("#daily-summary").value.trim();storage.set("circleK.dailySummaries",dailySummaries);showToast("今日总结已保存 ✦");};
+      const checkPlanReminders=()=>{const now=Date.now();plans.filter(x=>!x.done&&x.time&&x.reminder&&x.reminder!=="none").forEach(x=>{const remindAt=new Date(`${x.date}T${x.time}:00`).getTime()-Number(x.reminder)*60000,key=`circleK.reminded.${x.id}.${x.date}`;if(now>=remindAt&&now<remindAt+60000&&!sessionStorage.getItem(key)){sessionStorage.setItem(key,"1");showToast(`🔔 即将开始：${x.title}（${x.time}）`);}});};setInterval(checkPlanReminders,30000);checkPlanReminders();
+
+      const renderAnniversaries = () => {
+        const box = $("#anniversary-list"); box.replaceChildren(); const now = new Date(); now.setHours(0,0,0,0);
+        [...anniversaries].sort((a,b)=>a.date.slice(5).localeCompare(b.date.slice(5))).slice(0,3).forEach(item => {
+          let target = new Date(`${item.date}T00:00:00`); if (item.repeat === "yearly") { target.setFullYear(now.getFullYear()); if (target < now) target.setFullYear(now.getFullYear() + 1); }
+          const days = Math.ceil((target - now) / 86400000); const row = document.createElement("div"); row.className = "flex items-center justify-between gap-3 p-3 rounded-xl bg-slate-950 border border-slate-800";
+          const years=item.repeat==="yearly"?Math.max(0,now.getFullYear()-new Date(item.date).getFullYear()):0;row.innerHTML = `<div><b class="text-sm text-white">${item.name}</b><span class="block text-[10px] text-slate-500">${item.category||"纪念日"} · ${item.date}${item.repeat === "yearly" ? ` · ${years?`第 ${years} 周年`:"每年"}` : ""}${item.reminder?` · 提前${item.reminder}天提醒`:""}</span>${days === 0 && item.message ? `<p class="mt-2 text-xs text-amber-200">🎉 今日解锁：${item.message}</p>` : ""}</div><div class="flex items-center gap-3"><strong class="text-amber-300">${days === 0 ? "就是今天 ✦" : days > 0 ? `还有 ${days} 天` : "已到期"}</strong><button class="anniversary-delete text-red-300" aria-label="删除纪念日">×</button></div>`;
+          row.querySelector(".anniversary-delete").onclick = async () => { if (!(await confirmDelete(`确认删除“${item.name}”吗？`))) return; anniversaries = anniversaries.filter(x => x.id !== item.id); storage.set("circleK.anniversaries", anniversaries); renderAnniversaries(); renderCalendar(); };
+          box.appendChild(row);
+        });
+        if (!anniversaries.length) box.innerHTML = `<div class="text-xs text-slate-500">添加一个值得期待的日子吧</div>`;
+      };
+      $("#form-anniversary").addEventListener("submit", event => { event.preventDefault(); anniversaries.push({ id: Date.now(), name: $("#anniversary-name").value.trim(), date: $("#anniversary-date").value, repeat: $("#anniversary-repeat").value, category:$("#anniversary-category").value,reminder:Number($("#anniversary-reminder").value),message: $("#anniversary-message").value.trim() }); storage.set("circleK.anniversaries", anniversaries); event.target.reset();$("#anniversary-date").value=todayKey(); renderAnniversaries(); renderCalendar(); renderMemoryTimeline(); showToast("纪念日已加入日历与倒计时 🎁"); });
+
+      let timelineThisYear=false;
+      const renderMemoryTimeline = () => {
+        const box = $("#memory-timeline"); if (!box) return; const events = [];
+        const dateFromId = id => new Date(Number(id) > 1000000000000 ? Number(id) : Date.now()).toISOString().slice(0,10);
+        moods.forEach(x => events.push({ type:"mood",date: x.date, icon: x.mood, title: "心情记录", detail: x.note }));
+        collections.forEach(x => events.push({ type:"collection",date: dateFromId(x.id), icon: x.category === "好吃研究所" ? "🍳" : x.category === "宝可梦图鉴" ? "⚡" : "✦", title: x.title, detail: x.category }));
+        wishes.forEach(x => events.push({ type:"wish",date: dateFromId(x.id), icon: "💫", title: "许下愿望", detail: x.text }));
+        storage.get("circleK_supabase_memories", []).forEach(x => events.push({ type:"media",date: dateFromId(x.id), icon: x.kind === "photo" ? "📷" : "🎙", title: x.name, detail: x.folder || "记忆馆" }));
+        anniversaries.forEach(x=>events.push({type:"date",date:x.date,icon:"🎁",title:x.name,detail:"重要日期"}));
+        const filter=$("#timeline-filter")?.value||"all", year=String(new Date().getFullYear());let shown=events.filter(x=>(filter==="all"||x.type===filter)&&(!timelineThisYear||x.date.startsWith(year)));shown.sort((a,b) => b.date.localeCompare(a.date)); box.replaceChildren();
+        shown.slice(0, 40).forEach(event => { const row = document.createElement("div"); row.className = "relative pl-8 pb-4 border-l border-purple-500/30"; row.innerHTML = `<span class="absolute -left-3 top-0 w-6 h-6 rounded-full bg-slate-900 border border-purple-400 grid place-items-center text-xs">${event.icon}</span><span class="text-[10px] text-purple-300">${event.date}</span><b class="block text-sm text-white">${event.title}</b><p class="text-xs text-slate-400">${event.detail || ""}</p>`; box.appendChild(row); });
+        if (!shown.length) box.innerHTML = `<div class="text-xs text-slate-500">这个分类暂时没有回忆</div>`;
+        return shown;
+      };
+      $("#timeline-filter").onchange=renderMemoryTimeline;$("#timeline-year").onclick=()=>{timelineThisYear=!timelineThisYear;$("#timeline-year").textContent=`只看今年：${timelineThisYear?"开":"关"}`;renderMemoryTimeline();};$("#timeline-random").onclick=()=>{const items=renderMemoryTimeline();if(!items?.length)return;const pick=items[Math.floor(Math.random()*items.length)];showToast(`${pick.date} · ${pick.icon} ${pick.title}：${pick.detail||""}`);};
+
+      const renderDailyPokemon = (force = false) => {
+        const today = todayKey(); let daily = storage.get("circleK.dailyPokemon", {});
+        const pokemon = collections.filter(item => item.category === "宝可梦图鉴");
+        const fallback = [{ title: "皮卡丘", type: "电" }, { title: "胖丁", type: "妖精" }, { title: "耿鬼", type: "幽灵" }]; const pool = pokemon.length ? pokemon : fallback;
+        if (force || daily.date !== today || !daily.title) { const pick = pool[Math.floor(Math.random() * pool.length)]; daily = { date: today, title: pick.title, type: pick.type || "神秘", note: pick.note || "今天一起出发吧！" }; storage.set("circleK.dailyPokemon", daily); }
+        $("#daily-pokemon").innerHTML = `<strong class="text-xl text-yellow-300">⚡ ${daily.title}</strong><span class="block text-xs text-slate-400 mt-1">${daily.type}属性 · ${daily.note}</span>`;
+      };
+      $("#btn-new-daily-pokemon").onclick = () => { renderDailyPokemon(true); showToast("今日同行伙伴已更新 ⚡"); };
+
+      const renderAchievements = () => {
+        const achievements = [
+          { icon:"🎙", name:"声音启程", ok: storage.get("circleK_supabase_memories", []).some(x => x.kind === "voiceover") },
+          { icon:"⭐", name:"十张收藏", ok: collections.length >= 10 },
+          { icon:"🍳", name:"美食研究员", ok: collections.filter(x => x.category === "好吃研究所").length >= 5 },
+          { icon:"🌤", name:"美好七天", ok: moods.length >= 7 },
+          { icon:"✅", name:"计划达人", ok: plans.filter(x => x.done).length >= 10 },
+          { icon:"💫", name:"愿望收藏家", ok: wishes.length >= 5 }
+        ];
+        $("#achievement-grid").innerHTML = achievements.map(x => `<div class="p-2 rounded-lg border ${x.ok ? "bg-amber-500/15 border-amber-400/40 text-amber-200" : "bg-slate-950 border-slate-800 text-slate-600"} text-xs">${x.icon} ${x.name}${x.ok ? " ✓" : ""}</div>`).join("");
+      };
+
+      $("#btn-voice-challenge").onclick = () => {
+        const entries = Object.entries(scripts), [id, script] = entries[Math.floor(Math.random() * entries.length)]; const emotions = ["治愈温柔", "热血坚定", "神秘低沉", "可爱活泼", "反派气场", "深夜电台"];
+        const emotion = emotions[Math.floor(Math.random() * emotions.length)]; $("#select-script").value = id; $("#select-script").dispatchEvent(new Event("change"));
+        const result = $("#voice-challenge-result"); result.classList.remove("hidden"); result.innerHTML = `<strong>挑战：用“${emotion}”演绎《${script.title}》</strong><div class="mt-2 flex items-center gap-2"><select id="challenge-score" class="bg-slate-900 border border-slate-700 rounded-lg p-2"><option value="5">★★★★★</option><option value="4">★★★★☆</option><option value="3">★★★☆☆</option><option value="2">★★☆☆☆</option><option value="1">★☆☆☆☆</option></select><button id="btn-save-challenge" class="px-3 py-2 rounded-lg bg-purple-600 text-white">保存挑战成绩</button></div>`;
+        $("#btn-save-challenge").onclick = () => { const history = storage.get("circleK.voiceChallenges", []); history.unshift({ id: Date.now(), scriptId:id, title:script.title, emotion, score:Number($("#challenge-score").value) }); storage.set("circleK.voiceChallenges", history); renderAchievements(); showToast("挑战成绩已保存 🎭"); };
+      };
+
+      $("#plan-date").value = todayKey(); $("#anniversary-date").value = todayKey(); renderMoods(); renderPlans(); renderAnniversaries(); renderCalendar(); renderMemoryTimeline(); renderDailyPokemon(); renderAchievements();
+
       const renderHomeActivity = () => {
         const grid = $("#home-activity-grid");
         const memories = storage.get("circleK_supabase_memories", []);
@@ -3086,11 +3578,15 @@
         const favorite = collections.find(item => item.favorite);
         const recentWish = [...wishes].sort((a, b) => b.id - a.id)[0];
         const recentMemory = [...memories].sort((a, b) => b.id - a.id)[0];
+        const todayMood = moods.find(item => item.date === todayKey());
+        const nextPlan = [...plans].filter(item => !item.done).sort((a,b) => `${a.date}${a.time || ""}`.localeCompare(`${b.date}${b.time || ""}`))[0];
         const items = [
           { icon: "★", label: "近期最爱", value: favorite?.title || "还没有置顶收藏" },
           { icon: "✦", label: "最新收藏", value: recentCollection?.title || "暂无收藏" },
           { icon: "🎙", label: "最近录音 / 记忆", value: visitorMode ? "访客模式下已隐藏" : (recentMemory?.name || "暂无文件") },
-          { icon: "💫", label: "最新愿望", value: visitorMode ? "访客模式下已隐藏" : (recentWish?.text || "暂无愿望") }
+          { icon: "💫", label: "最新愿望", value: visitorMode ? "访客模式下已隐藏" : (recentWish?.text || "暂无愿望") },
+          { icon: todayMood?.mood || "🌤", label: "今日心情", value: visitorMode ? "访客模式下已隐藏" : (todayMood?.note || "今天又是美好的一天") },
+          { icon: "🗓", label: "下一项计划", value: visitorMode ? "访客模式下已隐藏" : (nextPlan ? `${nextPlan.date} ${nextPlan.title}` : "暂时没有待办计划") }
         ];
         grid.replaceChildren();
         items.forEach(item => {
@@ -3104,6 +3600,8 @@
           value.textContent = item.value;
           card.append(label, value); grid.appendChild(card);
         });
+        renderAchievements();
+        renderMemoryTimeline();
       };
       renderHomeActivity();
 
@@ -3133,6 +3631,8 @@
         } else if (item.kind === "memory") {
           selectedMemFolder = item.data.folder || "未分类";
           renderMemFolderFilters(); renderMemories(); switchTab("tab-memories");
+        } else if (["mood", "plan", "anniversary"].includes(item.kind)) {
+          switchTab("tab-life");
         }
       };
 
@@ -3147,9 +3647,12 @@
         if (!visitorMode) add("profile", profile.name, `${profile.identity} ${profile.energy} ${profile.skill} ${profile.weakness} ${(profile.extras || []).map(x => `${x.label} ${x.value}`).join(" ")}`);
         if (!visitorMode) Object.entries(scripts).forEach(([id, item]) => add("script", item.title, `${item.zh} ${item.note}`, item, id));
         Object.entries(songs).forEach(([id, item]) => add("song", item.title, `${item.sheet || ""} 琴谱 音乐`, item, id));
-        collections.forEach(item => add("collection", item.title, `${item.category} ${item.type || ""} ${item.note || ""} ${item.chef || ""}`, item));
+        collections.forEach(item => add("collection", item.title, `${item.category} ${item.type || ""} ${item.note || ""} ${item.chef || ""} ${(item.tags || []).join(" ")}`, item));
         if (!visitorMode) wishes.forEach(item => add("wish", item.text, item.category || "愿望", item));
         if (!visitorMode) storage.get("circleK_supabase_memories", []).forEach(item => add("memory", item.name || "记忆文件", `${item.folder || ""} ${item.kind || ""}`, item));
+        if (!visitorMode) moods.forEach(item => add("mood", `${item.mood} ${item.date}`, item.note || "心情记录", item));
+        if (!visitorMode) plans.forEach(item => add("plan", item.title, `${item.date} ${item.category || ""} ${item.note || ""}`, item));
+        if (!visitorMode) anniversaries.forEach(item => add("anniversary", item.name, `${item.date} 纪念日`, item));
         results.slice(0, 12).forEach(item => {
           const button = document.createElement("button");
           button.type = "button";
@@ -3172,7 +3675,11 @@
         }
         searchResults.classList.remove("hidden");
       };
-      searchInput.addEventListener("input", renderGlobalSearch);
+      let searchDebounce = null;
+      searchInput.addEventListener("input", () => {
+        clearTimeout(searchDebounce);
+        searchDebounce = setTimeout(renderGlobalSearch, 140);
+      });
       searchInput.addEventListener("keydown", event => {
         if (event.key === "Escape") { searchInput.value = ""; searchResults.classList.add("hidden"); }
       });
@@ -3180,35 +3687,31 @@
         if (!event.target.closest("#global-search") && !event.target.closest("#global-search-results")) searchResults.classList.add("hidden");
       });
 
-      $("#btn-audio-toggle").addEventListener("click", () => {
-        if (!bgmAmbient) {
-          bgmAudio.play().then(() => {
-            bgmAmbient = true;
-            updateBgmStatus();
-            showToast(`已开启：${bgmPlaylist[currentBgmIndex].title} ♫`);
-          }).catch(err => {
-            console.error("音频播放失败:", err);
-            bgmAmbient = false;
-            updateBgmStatus();
-            showToast("音乐加载失败，请确认文件名与 Storage 公开权限");
-          });
-        } else {
-          bgmAudio.pause();
-          bgmAmbient = false;
-          updateBgmStatus();
-          showToast("空间音乐已关闭");
-        }
-      });
+      // ==================== 次元小游戏 ====================
+      const snakeCanvas = $("#snake-canvas"), snakeCtx = snakeCanvas.getContext("2d");
+      let snake = [], snakeFood = {}, snakeDir = {x:1,y:0}, snakeNextDir = snakeDir, snakeTimer = null, snakeScore = 0, snakePaused = false;
+      let snakeBest = Number(localStorage.getItem("circleK.snakeBest") || 0), snakeTouch = null;
+      const updateSnakeScore = () => $("#snake-score").textContent = `得分 ${snakeScore} · 最高 ${snakeBest}`;
+      const drawSnake = () => { snakeCtx.fillStyle="#020617"; snakeCtx.fillRect(0,0,400,400); snakeCtx.fillStyle="#f43f5e"; snakeCtx.beginPath(); snakeCtx.arc(snakeFood.x*20+10,snakeFood.y*20+10,7,0,Math.PI*2); snakeCtx.fill(); snake.forEach((p,i) => { snakeCtx.fillStyle=i ? "#22c55e" : "#86efac"; snakeCtx.fillRect(p.x*20+2,p.y*20+2,16,16); }); };
+      const newSnakeFood = () => { do { snakeFood={x:Math.floor(Math.random()*20),y:Math.floor(Math.random()*20)}; } while(snake.some(p=>p.x===snakeFood.x&&p.y===snakeFood.y)); };
+      let snakeSound=true;const snakeBeep=()=>{if(!snakeSound)return;try{const c=new AudioContext(),o=c.createOscillator(),g=c.createGain();o.frequency.value=520;g.gain.value=.04;o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+.06);}catch{}};const startSnake = () => { clearInterval(snakeTimer); snake=[{x:10,y:10},{x:9,y:10},{x:8,y:10}]; snakeDir={x:1,y:0}; snakeNextDir=snakeDir; snakeScore=0; snakePaused=false; $("#snake-pause").textContent="暂停"; newSnakeFood(); updateSnakeScore(); drawSnake(); snakeTimer=setInterval(()=>{ if(snakePaused)return; snakeDir=snakeNextDir; const head={x:snake[0].x+snakeDir.x,y:snake[0].y+snakeDir.y};if($("#snake-mode").value==="wrap"){head.x=(head.x+20)%20;head.y=(head.y+20)%20;} if(head.x<0||head.x>=20||head.y<0||head.y>=20||snake.some(p=>p.x===head.x&&p.y===head.y)){clearInterval(snakeTimer);snakeTimer=null;if(snakeScore>snakeBest){snakeBest=snakeScore;localStorage.setItem("circleK.snakeBest",snakeBest);}updateSnakeScore();showToast(`贪吃蛇结束 · 得分 ${snakeScore}`);return;} snake.unshift(head); if(head.x===snakeFood.x&&head.y===snakeFood.y){snakeScore+=10;snakeBeep();updateSnakeScore();newSnakeFood();}else snake.pop();drawSnake();},Number($("#snake-level").value)); };
+      const setSnakeDir = name => { const dirs={up:{x:0,y:-1},down:{x:0,y:1},left:{x:-1,y:0},right:{x:1,y:0}}, next=dirs[name]; if(next&&!(next.x===-snakeDir.x&&next.y===-snakeDir.y)) snakeNextDir=next; };
+      $("#snake-start").onclick=startSnake; $("#snake-pause").onclick=()=>{if(!snakeTimer)return;snakePaused=!snakePaused;$("#snake-pause").textContent=snakePaused?"继续":"暂停";}; $$('[data-snake-dir]').forEach(b=>b.onclick=()=>setSnakeDir(b.dataset.snakeDir)); newSnakeFood(); snake=[{x:10,y:10},{x:9,y:10},{x:8,y:10}]; updateSnakeScore(); drawSnake();
+      $("#snake-sound").onclick=()=>{snakeSound=!snakeSound;$("#snake-sound").textContent=`音效：${snakeSound?"开":"关"}`;};
+      snakeCanvas.addEventListener("touchstart",e=>{const t=e.touches[0];snakeTouch={x:t.clientX,y:t.clientY};},{passive:true}); snakeCanvas.addEventListener("touchend",e=>{if(!snakeTouch)return;const t=e.changedTouches[0],dx=t.clientX-snakeTouch.x,dy=t.clientY-snakeTouch.y;if(Math.max(Math.abs(dx),Math.abs(dy))>18)setSnakeDir(Math.abs(dx)>Math.abs(dy)?(dx>0?"right":"left"):(dy>0?"down":"up"));snakeTouch=null;},{passive:true});
 
-      $("#btn-audio-next").addEventListener("click", playNextBgm);
+      document.addEventListener("keydown",event=>{if($("#tab-games").classList.contains("hidden"))return;const map={ArrowUp:"up",ArrowDown:"down",ArrowLeft:"left",ArrowRight:"right"};if(!map[event.key])return;event.preventDefault();setSnakeDir(map[event.key]);});
 
-      $("#btn-audio-stop").addEventListener("click", () => {
-        bgmAudio.pause();
-        bgmAudio.currentTime = 0;
-        bgmAmbient = false;
-        updateBgmStatus();
-        showToast("空间音乐已停止");
-      });
+      // ==================== 页尾音乐播放器 ====================
+      const formatAudioTime=value=>Number.isFinite(value)?`${Math.floor(value/60)}:${String(Math.floor(value%60)).padStart(2,"0")}`:"0:00";
+      const syncMusicPlayer=()=>{$("#music-player-title").textContent=`${currentBgmIndex+1}/${bgmPlaylist.length} · ${bgmPlaylist[currentBgmIndex].title}`;$("#music-play").textContent=bgmAudio.paused?"播放 ▶":"暂停 ❚❚";$("#music-time").textContent=`${formatAudioTime(bgmAudio.currentTime)} / ${formatAudioTime(bgmAudio.duration)}`;$("#music-progress").value=bgmAudio.duration?bgmAudio.currentTime/bgmAudio.duration*100:0;};
+      const savedMusic=JSON.parse(localStorage.getItem("circleK.musicState")||"{}");if(Number.isInteger(savedMusic.index)){loadBgmTrack(savedMusic.index);bgmAudio.currentTime=savedMusic.time||0;}bgmAudio.volume=savedMusic.volume??.6;$("#music-volume").value=bgmAudio.volume;let musicShuffle=!!savedMusic.shuffle;bgmAudio.loop=!!savedMusic.loop;$("#music-loop").textContent=`循环：${bgmAudio.loop?"开":"关"}`;$("#music-shuffle").textContent=`随机：${musicShuffle?"开":"关"}`;const saveMusic=()=>localStorage.setItem("circleK.musicState",JSON.stringify({index:currentBgmIndex,time:bgmAudio.currentTime,volume:bgmAudio.volume,loop:bgmAudio.loop,shuffle:musicShuffle}));bgmPlaylist.forEach((t,i)=>{$("#music-playlist").insertAdjacentHTML("beforeend",`<button class="music-track px-2 py-2 rounded-lg bg-slate-800 text-[10px]" data-index="${i}">${i+1}. ${t.title}</button>`)});$$(".music-track").forEach(b=>b.onclick=()=>{loadBgmTrack(Number(b.dataset.index));bgmAudio.play();}); $("#music-play").onclick=()=>{if(bgmAudio.paused){bgmAudio.play().then(()=>{bgmAmbient=true;updateBgmStatus();syncMusicPlayer();}).catch(()=>showToast("音乐暂时无法播放"));}else{bgmAudio.pause();bgmAmbient=false;updateBgmStatus();syncMusicPlayer();}};
+      $("#music-prev").onclick=()=>{loadBgmTrack(currentBgmIndex-1);bgmAudio.play().then(()=>{bgmAmbient=true;updateBgmStatus();syncMusicPlayer();});};
+      $("#music-next").onclick=playNextBgm; $("#music-volume").oninput=event=>bgmAudio.volume=Number(event.target.value); $("#music-progress").oninput=event=>{if(bgmAudio.duration)bgmAudio.currentTime=Number(event.target.value)/100*bgmAudio.duration;};
+      $("#music-loop").onclick=()=>{bgmAudio.loop=!bgmAudio.loop;$("#music-loop").textContent=`循环：${bgmAudio.loop?"开":"关"}`;saveMusic();};$("#music-shuffle").onclick=()=>{musicShuffle=!musicShuffle;$("#music-shuffle").textContent=`随机：${musicShuffle?"开":"关"}`;saveMusic();};bgmAudio.addEventListener("ended",()=>{if(musicShuffle){loadBgmTrack(Math.floor(Math.random()*bgmPlaylist.length));bgmAudio.play();}});setInterval(saveMusic,5000);
+      bgmAudio.addEventListener("timeupdate",syncMusicPlayer);bgmAudio.addEventListener("play",syncMusicPlayer);bgmAudio.addEventListener("pause",syncMusicPlayer);bgmAudio.addEventListener("loadedmetadata",syncMusicPlayer);syncMusicPlayer();
+
+      const backTop=$("#btn-back-top");window.addEventListener("scroll",()=>backTop.classList.toggle("hidden",window.scrollY<700),{passive:true});backTop.onclick=()=>window.scrollTo({top:0,behavior:"smooth"});
 
     })();
   </script>
