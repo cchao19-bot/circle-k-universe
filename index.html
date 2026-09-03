@@ -6,6 +6,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Circle K 宇宙">
+  <meta name="theme-color" content="#0f172a">
+  <link rel="manifest" href="./app.webmanifest">
   <meta name="theme-color" content="#121b2d">
   <meta name="description" content="送给 Circle K (KRESNIK 棣棣) 的第三份生日礼物：包含高达机库、宝可梦图鉴、互动琴谱小游戏与配音试音棚的次元小宇宙。">
   <title>Circle K (棣棣) 的次元小宇宙 ✦ 高达 & 宝可梦 & 配音基地</title>
@@ -381,8 +383,53 @@
       pointer-events: none;
     }
     .dex-card-inner { position: relative; z-index: 1; border-radius: 15px; padding: 14px; background: rgba(255,255,255,.88); border: 1px solid rgba(30,41,59,.22); }
-    .dex-card-image { position: relative; display: grid; place-items: center; width: 100%; height: clamp(160px, 28vw, 220px); overflow: hidden; border-radius: 10px; background: radial-gradient(circle, #f8fafc, #cbd5e1); border: 4px solid rgba(51,65,85,.35); }
-    .dex-card-image > img { display: block; width: auto; height: auto; max-width: 100%; max-height: 100%; object-fit: contain; object-position: center; }
+    :root { --collection-card-width: 280px; --collection-image-height: 240px; }
+    #collection-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(min(100%,var(--collection-card-width)),1fr)); }
+    .dex-card-image { position: relative; display: grid; place-items: center; width: 100%; height: var(--collection-image-height); overflow: hidden; border-radius: 10px; background: radial-gradient(circle, #f8fafc, #cbd5e1); border: 4px solid rgba(51,65,85,.35); }
+    .dex-card-image > img { display: block; width: 100%; height: 100%; object-fit: contain; object-position: center; }
+    #modal-card-detail { width:min(92vw,440px); max-width:440px; max-height:94dvh; overflow:auto; }
+    #modal-card-detail #detail-card-shell { width:100%; margin:auto; }
+    #modal-card-detail #detail-card-image { width:100%; height:auto; min-height:0; aspect-ratio:1/1; padding:clamp(12px,3vw,22px); overflow:hidden; }
+    #modal-card-detail #detail-card-image > img { display:block; width:100%; height:100%; max-width:100%; max-height:100%; margin:auto; object-fit:contain; object-position:center; filter:drop-shadow(0 12px 12px rgba(0,0,0,.38)); }
+    #detail-image-nav button { background:#f8fafc; color:#0f172a; border:1px solid #cbd5e1; box-shadow:0 6px 20px rgba(0,0,0,.18); font-weight:800; }
+    #detail-image-prev,#detail-image-next { width:42px; height:42px; padding:0; border-radius:999px; font-size:24px; }
+    .collection-image-preview { display:block; width:auto; height:auto; max-width:100%; max-height:240px; margin:0 auto 8px; object-fit:contain; transition:width .18s ease,max-height .18s ease; }
+    .collection-image-preview.hidden { display:none; }
+    #col-image-preview { width:100%!important; height:220px; max-height:220px; padding:10px; object-fit:contain; object-position:center; }
+    #col-live-image-box { height:260px; }
+    #collection-grid.collection-wall { grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:12px; }
+    #collection-grid.collection-wall .content-card { padding:8px; }
+    #collection-grid.collection-wall .dex-card-image { height:220px; }
+    #collection-grid.collection-wall .dex-card-description { display:none; }
+    .calendar-event { cursor:pointer; }
+    .calendar-event:focus-visible { outline:2px solid #f8fafc; outline-offset:1px; }
+    .daily-pokemon-layout { display:flex; align-items:center; gap:16px; }
+    .daily-pokemon-picture { width:80px; height:80px; flex:none; border-radius:16px; display:grid; place-items:center; overflow:hidden; background:rgba(15,23,42,.75); border:1px solid rgba(250,204,21,.35); font-size:36px; transition:transform .2s ease,border-color .2s ease; }
+    .daily-pokemon-picture:hover { transform:scale(1.05); border-color:rgba(250,204,21,.7); }
+    .daily-pokemon-picture img { width:100%; height:100%; padding:5px; object-fit:contain; object-position:center; }
+    .daily-party-grid{display:grid;grid-template-columns:repeat(6,44px);gap:6px}.daily-party-slot{width:44px;height:44px;border-radius:10px;border:1px solid rgba(250,204,21,.22);background:rgba(2,6,23,.55);display:grid;place-items:center;overflow:hidden;font-size:10px;color:#475569}.daily-party-slot img{width:100%;height:100%;padding:3px;object-fit:contain}
+    #collection-grid.pokemon-book-mode { grid-template-columns:repeat(8,minmax(0,1fr)); gap:14px; }
+    #collection-grid.pokemon-book-mode .dex-card { min-width:0; aspect-ratio:3/4; padding:5px; border-color:rgba(251,191,36,.46); background:linear-gradient(150deg,#172033,#09101e 72%); box-shadow:inset 0 0 0 1px rgba(251,191,36,.12),0 8px 22px rgba(0,0,0,.28); }
+    #collection-grid.pokemon-book-mode .dex-card-inner { height:100%; min-height:0; padding:7px; display:flex; flex-direction:column; gap:4px; background:linear-gradient(160deg,rgba(30,41,59,.96),rgba(8,15,28,.98)); color:#e2e8f0; overflow:hidden; }
+    #collection-grid.pokemon-book-mode .dex-card-inner>div:first-child { min-height:18px; }
+    #collection-grid.pokemon-book-mode .dex-card-inner>div:first-child>span { display:none; }
+    #collection-grid.pokemon-book-mode .dex-card-inner>div:first-child>div { margin-left:auto; gap:3px; }
+    #collection-grid.pokemon-book-mode .btn-edit-col { font-size:0; }
+    #collection-grid.pokemon-book-mode .btn-edit-col::before { content:'✏️'; font-size:10px; }
+    #collection-grid.pokemon-book-mode .btn-favorite-col,#collection-grid.pokemon-book-mode .btn-del-col { font-size:11px; }
+    #collection-grid.pokemon-book-mode .dex-card-inner>div:nth-child(2) { gap:3px; }
+    #collection-grid.pokemon-book-mode h3 { color:#f8fafc; font-size:clamp(10px,1vw,13px); line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    #collection-grid.pokemon-book-mode .dex-card-inner>div:nth-child(2)>span { color:#94a3b8; font-size:8px; }
+    #collection-grid.pokemon-book-mode .dex-card-image { flex:1 1 auto; min-height:0; height:auto; width:100%; border-width:2px; border-color:rgba(251,191,36,.28); background:radial-gradient(circle,#334155 0%,#0f172a 72%); }
+    #collection-grid.pokemon-book-mode .dex-card-image>img { width:100%; height:100%; padding:5px; object-fit:contain; }
+    #collection-grid.pokemon-book-mode .dex-card-description { display:none; }
+    #collection-grid.pokemon-book-mode .dex-card-inner>div:not(:first-child):not(:nth-child(2)):not(.dex-card-image) { font-size:8px; color:#cbd5e1; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+    #collection-grid.gundam-hangar-mode { grid-template-columns:repeat(5,minmax(0,1fr)); gap:18px; }
+    #collection-grid.gundam-hangar-mode .dex-card-image { height:auto; aspect-ratio:4/5; background:linear-gradient(155deg,#e2e8f0,#64748b); }
+    #collection-grid.gundam-hangar-mode .dex-card-image>img { width:100%;height:100%;padding:6px;object-fit:contain; }
+    #collection-grid.gundam-hangar-mode .gundam-card { border-color:rgba(56,189,248,.48);box-shadow:0 12px 30px rgba(2,132,199,.12); }
+    @media(max-width:1100px){#collection-grid.pokemon-book-mode{grid-template-columns:repeat(6,minmax(0,1fr));}}
+    @media(max-width:760px){#collection-grid.pokemon-book-mode{grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;}}
     .dex-card-description { min-height: 58px; padding: 10px; border-radius: 9px; background: rgba(255,255,255,.7); border: 1px solid rgba(100,116,139,.25); }
 
     .citizen-card {
@@ -457,6 +504,22 @@
       #stage-world{padding-bottom:calc(72px + env(safe-area-inset-bottom))} dialog{max-height:86vh;overflow-y:auto} input,select,textarea,button{scroll-margin-bottom:160px}
       .tool-menu-panel{top:auto!important;bottom:76px!important;right:10px!important;left:10px!important;width:auto;max-height:72vh;overflow-y:auto;padding:16px}
       .tool-menu-panel button{min-height:58px;font-size:15px}.tool-menu-heading strong{font-size:20px}
+      :root { --collection-image-height: calc(var(--collection-card-width) * 1.15); }
+      #collection-grid { grid-template-columns:repeat(auto-fill,minmax(min(100%,var(--collection-card-width)),1fr)); gap:14px; }
+      #modal-card-detail { width:94vw; max-width:400px; padding:5px; }
+      #modal-card-detail #detail-card-image { width:100%; height:auto; min-height:0; aspect-ratio:1/1; padding:12px; }
+      #modal-card-detail #detail-card-image > img { width:100%; height:100%; max-width:100%; max-height:100%; object-fit:contain; }
+      .daily-pokemon-layout { align-items:flex-start; }
+      .daily-pokemon-picture { width:60px; height:60px; border-radius:13px; }
+      .daily-pokemon-picture img { padding:3px; }
+      .daily-party-grid{grid-template-columns:repeat(6,minmax(0,1fr));width:100%}.daily-party-slot{width:100%;height:auto;aspect-ratio:1}
+      #col-image-preview { height:180px; max-height:180px; padding:6px; }
+      #col-live-image-box { height:220px; }
+      #collection-grid.pokemon-book-mode{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;}
+      #collection-grid.gundam-hangar-mode{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;}
+      #collection-grid.pokemon-book-mode .dex-card{padding:3px;}
+      #collection-grid.pokemon-book-mode .dex-card-inner{padding:5px;}
+      #collection-grid.pokemon-book-mode .btn-favorite-col,#collection-grid.pokemon-book-mode .btn-del-col{font-size:9px;}
     }
   </style>
 </head>
@@ -597,7 +660,7 @@
 
       <div class="max-w-7xl mx-auto px-4 py-8">
         
-        <div id="tab-home" class="tab-panel space-y-8">
+        <div id="tab-home" class="tab-panel space-y-8"><div class="flex justify-end"><button id="home-quick-settings" type="button" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-slate-200">⚙ 首页快捷显示</button></div>
           <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-slate-900 via-blue-950 to-indigo-950 border border-blue-500/20 p-6 md:p-10 shadow-2xl">
             <div class="absolute right-0 top-0 bottom-0 w-1/2 opacity-15 pointer-events-none flex items-center justify-end pr-6">
               <div class="gundam-v-fin scale-150 transform rotate-12"></div>
@@ -697,8 +760,8 @@
             <div class="rounded-3xl bg-gradient-to-br from-yellow-950/40 to-slate-900 border border-yellow-500/20 p-6 space-y-3">
               <span class="text-xs font-bold text-yellow-300">⚡ TODAY'S PARTNER</span>
               <h3 class="text-lg font-bold text-white">今日同行宝可梦</h3>
-              <div id="daily-pokemon" class="text-sm text-slate-300">正在寻找今天的伙伴…</div>
-              <button id="btn-new-daily-pokemon" type="button" class="px-4 py-2 rounded-xl bg-yellow-500 text-slate-950 text-xs font-bold">重新选择伙伴</button>
+              <div class="daily-pokemon-layout"><div id="daily-pokemon-image" class="daily-pokemon-picture" aria-label="今日同行宝可梦图片">⚡</div><div id="daily-pokemon" class="min-w-0 text-sm text-slate-300">正在寻找今天的伙伴…</div></div>
+              <div class="flex flex-wrap gap-2"><button id="btn-new-daily-pokemon" type="button" class="px-4 py-2 rounded-xl bg-yellow-500 text-slate-950 text-xs font-bold">重新选择伙伴</button><button id="btn-lock-daily-pokemon" type="button" class="px-4 py-2 rounded-xl bg-slate-800 border border-yellow-500/30 text-xs font-bold">🔓 锁定今日伙伴</button><button id="btn-greet-daily-pokemon" type="button" class="px-4 py-2 rounded-xl bg-amber-900/60 text-xs">打个招呼</button></div><div id="daily-pokemon-history" class="text-[10px] text-slate-500"></div>
             </div>
             <div class="rounded-3xl bg-gradient-to-br from-amber-950/40 to-slate-900 border border-amber-500/20 p-6 space-y-3">
               <span class="text-xs font-bold text-amber-300">✦ ACHIEVEMENTS</span>
@@ -937,7 +1000,10 @@
           <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-slate-950/60 p-4 rounded-xl border border-slate-800/80 text-xs">
             <div class="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0" id="col-category-filters">
             </div>
-            <div class="flex items-center gap-2 shrink-0">
+            <div class="flex flex-wrap items-center gap-2 shrink-0">
+              <label for="collection-size" class="text-slate-400">卡牌大小</label>
+              <input id="collection-size" type="range" min="180" max="460" step="10" value="280" class="w-28 accent-blue-500" aria-label="调整卡牌大小">
+              <output id="collection-size-value" for="collection-size" class="w-12 text-center text-blue-300">280</output>
               <span class="text-slate-400">排序:</span>
               <select id="col-sort-select" class="bg-slate-900 border border-slate-700 text-white rounded-lg px-2.5 py-1.5 outline-none">
                 <option value="newest">最新添加</option>
@@ -946,6 +1012,9 @@
               </select>
             </div>
           </div>
+          <div id="collection-stats" class="grid grid-cols-2 sm:grid-cols-4 gap-2"></div>
+          <div id="collection-special-tools" class="hidden flex flex-wrap items-center gap-2 p-3 rounded-xl bg-slate-900/70 border border-amber-500/20 text-xs"></div>
+          <div class="flex flex-wrap gap-2 p-3 rounded-xl bg-slate-950/50 border border-slate-800 text-xs"><input id="collection-search" type="search" placeholder="搜索名称、标签、属性…" class="flex-1 min-w-48 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white"><select id="collection-image-filter" class="bg-slate-900 border border-slate-700 rounded-lg px-2"><option value="all">全部图片状态</option><option value="with">有图片</option><option value="without">无图片</option></select><button id="collection-view-toggle" type="button" class="px-3 py-2 rounded-lg bg-slate-800">▦ 图片墙</button><button id="collection-bulk-toggle" type="button" class="px-3 py-2 rounded-lg bg-slate-800">☑ 多选整理</button><button id="collection-bulk-action" type="button" class="hidden px-3 py-2 rounded-lg bg-blue-700">整理已选</button><button id="collection-trash-toggle" type="button" class="px-3 py-2 rounded-lg bg-slate-800">🗑 最近删除</button></div><div id="collection-trash" class="hidden space-y-2 p-4 rounded-xl bg-slate-950 border border-slate-800"></div>
 
           <div id="food-lab-summary" class="hidden rounded-2xl bg-orange-950/20 border border-orange-500/20 p-5"></div>
           <div id="collection-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -1046,7 +1115,7 @@
           <section id="calendar-section" class="rounded-3xl bg-slate-900/80 border border-cyan-500/20 p-4 sm:p-6 space-y-5">
             <div class="flex flex-wrap items-center justify-between gap-3">
               <div><span class="text-xs font-bold text-cyan-300">SMART CALENDAR</span><h2 class="text-xl font-bold text-white mt-1">📅 次元日历</h2><p class="text-xs text-slate-400 mt-1">待办、计划和纪念日都在这里；点击日期快速安排。</p></div>
-              <div class="flex flex-wrap items-center gap-2"><button id="calendar-prev" type="button" class="px-3 py-2 rounded-lg bg-slate-800">‹</button><strong id="calendar-title" class="min-w-28 text-center text-sm text-white"></strong><button id="calendar-next" type="button" class="px-3 py-2 rounded-lg bg-slate-800">›</button><button id="calendar-today" type="button" class="px-3 py-2 rounded-lg bg-cyan-700 text-xs text-white">今天</button><select id="calendar-view" class="bg-slate-950 border border-slate-700 rounded-lg px-2 py-2 text-xs"><option value="month">月视图</option><option value="week">周视图</option><option value="agenda">日程视图</option></select></div>
+              <div class="flex flex-wrap items-center gap-2"><button id="calendar-prev" type="button" class="px-3 py-2 rounded-lg bg-slate-800">‹</button><strong id="calendar-title" class="min-w-28 text-center text-sm text-white"></strong><button id="calendar-next" type="button" class="px-3 py-2 rounded-lg bg-slate-800">›</button><button id="calendar-today" type="button" class="px-3 py-2 rounded-lg bg-cyan-700 text-xs text-white">今天</button><select id="calendar-view" class="bg-slate-950 border border-slate-700 rounded-lg px-2 py-2 text-xs"><option value="month">月视图</option><option value="week">周视图</option><option value="agenda">日程视图</option></select><input id="calendar-search" type="search" placeholder="搜索计划…" class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs"><button id="calendar-colors" type="button" class="px-3 py-2 rounded-lg bg-slate-800 text-xs">🎨 类型颜色</button></div>
             </div>
             <div class="calendar-grid text-center text-xs text-slate-500"><span class="calendar-weekday">周日</span><span class="calendar-weekday">周一</span><span class="calendar-weekday">周二</span><span class="calendar-weekday">周三</span><span class="calendar-weekday">周四</span><span class="calendar-weekday">周五</span><span class="calendar-weekday">周六</span></div>
             <div id="calendar-grid" class="calendar-grid"></div>
@@ -1055,7 +1124,7 @@
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <section id="mood-section" class="rounded-3xl bg-slate-900/80 border border-pink-500/20 p-6 space-y-4">
               <div><h2 class="text-xl font-bold text-white mt-1">🌤 今天又是美好的一天</h2></div>
-              <form id="form-mood" class="space-y-3"><div class="grid grid-cols-1 sm:grid-cols-2 gap-2"><input id="mood-date" type="date" class="bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm"><label class="bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm cursor-pointer">📷 添加当天照片<input id="mood-photo" type="file" accept="image/*" class="hidden"></label></div>
+              <form id="form-mood" class="space-y-3"><input id="mood-edit-id" type="hidden"><div class="grid grid-cols-1 sm:grid-cols-2 gap-2"><input id="mood-date" type="date" class="bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm"><label class="bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm cursor-pointer">📷 添加当天照片<input id="mood-photo" type="file" accept="image/*" class="hidden"></label></div>
                 <div class="flex flex-wrap gap-2" id="mood-options">
                   <label><input type="radio" name="mood" value="😊" class="sr-only peer" checked><span class="block text-2xl p-2 rounded-xl bg-slate-950 border border-slate-700 peer-checked:border-pink-400 cursor-pointer">😊</span></label>
                   <label><input type="radio" name="mood" value="🥰" class="sr-only peer"><span class="block text-2xl p-2 rounded-xl bg-slate-950 border border-slate-700 peer-checked:border-pink-400 cursor-pointer">🥰</span></label>
@@ -1064,7 +1133,7 @@
                   <label><input type="radio" name="mood" value="🥺" class="sr-only peer"><span class="block text-2xl p-2 rounded-xl bg-slate-950 border border-slate-700 peer-checked:border-pink-400 cursor-pointer">🥺</span></label>
                 </div>
                 <textarea id="mood-note" maxlength="300" rows="3" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm text-white" placeholder="今天又是美好的一天……"></textarea>
-                <button class="w-full py-2.5 rounded-xl bg-pink-600 text-white text-sm font-bold">保存今天的心情</button>
+                <div class="flex gap-2"><button id="mood-save-button" class="flex-1 py-2.5 rounded-xl bg-pink-600 text-white text-sm font-bold">保存今天的心情</button><button id="mood-cancel-edit" type="button" class="hidden px-4 rounded-xl bg-slate-700 text-sm">取消编辑</button></div>
               </form>
               <div id="mood-history" class="space-y-2 max-h-72 overflow-y-auto"></div>
               <div id="mood-stats" class="p-3 rounded-xl bg-pink-950/30 border border-pink-500/20 text-xs text-pink-100"></div><button id="mood-month-review" type="button" class="w-full py-2 rounded-xl bg-pink-900/50 text-xs text-pink-100">生成本月心情回顾</button>
@@ -1072,14 +1141,15 @@
 
             <section class="rounded-3xl bg-slate-900/80 border border-amber-500/20 p-6 space-y-4">
               <div><h2 class="text-xl font-bold text-white mt-1">🎁 最近的纪念日</h2></div>
-              <form id="form-anniversary" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <form id="form-anniversary" class="grid grid-cols-1 sm:grid-cols-2 gap-3"><input id="anniversary-edit-id" type="hidden">
                 <input id="anniversary-name" required maxlength="60" class="bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm text-white" placeholder="纪念日名称">
                 <input id="anniversary-date" required type="date" class="bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm text-white">
                 <select id="anniversary-repeat" class="bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm text-white"><option value="yearly">每年重复</option><option value="once">仅一次</option></select>
                 <select id="anniversary-category" class="bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm text-white"><option>纪念日</option><option>生日</option><option>相识</option><option>旅行</option><option>节日</option></select>
                 <select id="anniversary-reminder" class="bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm text-white"><option value="0">当天提醒</option><option value="1">提前1天</option><option value="3">提前3天</option><option value="7">提前7天</option></select>
-                <button class="rounded-xl bg-amber-500 text-slate-950 text-sm font-bold">添加纪念日</button>
+                <button id="anniversary-save-button" class="rounded-xl bg-amber-500 text-slate-950 text-sm font-bold">添加纪念日</button>
                 <input id="anniversary-message" maxlength="160" class="sm:col-span-2 bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm text-white" placeholder="当天解锁的专属祝福（可选）">
+                <button id="anniversary-cancel-edit" type="button" class="hidden sm:col-span-2 rounded-xl bg-slate-700 py-2 text-sm">取消编辑</button>
               </form>
               <div id="anniversary-list" class="space-y-2"></div>
             </section>
@@ -1264,6 +1334,7 @@
             </select>
           </div>
         </div>
+        <details class="rounded-xl bg-slate-950/60 border border-slate-800 p-3"><summary class="cursor-pointer text-xs text-slate-300">更多图片资料</summary><div class="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2"><input id="col-obtained-date" type="date" class="bg-slate-900 border border-slate-700 rounded-lg p-2"><input id="col-source" maxlength="80" placeholder="来源／获得方式" class="bg-slate-900 border border-slate-700 rounded-lg p-2"><input id="col-location" maxlength="80" placeholder="收藏或拍摄地点" class="bg-slate-900 border border-slate-700 rounded-lg p-2"><input id="col-image-caption" maxlength="160" placeholder="图片说明" class="bg-slate-900 border border-slate-700 rounded-lg p-2"></div></details>
 
         <div>
           <label class="block text-slate-300 mb-1">想记下的话 / 喜爱理由</label>
@@ -1296,16 +1367,26 @@
             <label class="space-y-1">吃过日期<input id="food-date" type="date" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white"></label>
           </div>
         </div>
+        <div id="pokemon-fields" class="hidden p-3 rounded-xl bg-amber-950/20 border border-amber-500/20 space-y-3"><span class="block text-xs font-bold text-amber-300">📖 指定卡槽资料</span><div class="grid grid-cols-2 gap-3"><label class="space-y-1">稀有度<select id="pokemon-rank" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3"><option>SS</option><option>S</option><option>A</option><option selected>B</option><option>C</option><option>D</option></select></label><label class="space-y-1">喜爱程度<select id="pokemon-love" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3"><option value="5">★★★★★</option><option value="4">★★★★☆</option><option value="3">★★★☆☆</option></select></label><label class="space-y-1">获得日期<input id="pokemon-obtained" type="date" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3"></label><label class="space-y-1">同行次数<input id="pokemon-trips" type="number" min="0" value="0" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3"></label></div><textarea id="pokemon-memory" maxlength="240" rows="2" placeholder="和这只宝可梦的专属回忆" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3"></textarea></div>
+        <div id="gundam-fields" class="hidden p-3 rounded-xl bg-blue-950/20 border border-blue-500/20 space-y-3"><span class="block text-xs font-bold text-blue-300">🛠 机库档案</span><div class="grid grid-cols-2 gap-3"><input id="gundam-series" maxlength="60" placeholder="所属作品" class="bg-slate-950 border border-slate-800 rounded-xl p-3"><input id="gundam-pilot" maxlength="60" placeholder="驾驶员" class="bg-slate-950 border border-slate-800 rounded-xl p-3"><input id="gundam-faction" maxlength="60" placeholder="阵营" class="bg-slate-950 border border-slate-800 rounded-xl p-3"><select id="gundam-grade" class="bg-slate-950 border border-slate-800 rounded-xl p-3"><option>SD</option><option>HG</option><option>RG</option><option>MG</option><option>PG</option><option>其他</option></select><select id="gundam-build" class="col-span-2 bg-slate-950 border border-slate-800 rounded-xl p-3"><option>未开盒</option><option>素组中</option><option>已完成</option><option>水贴处理中</option><option>喷涂完成</option></select></div></div>
 
         <div>
           <label class="block text-slate-300 mb-1">图鉴图片</label>
           <label for="col-image" class="block border-2 border-dashed border-slate-700 hover:border-blue-500/60 rounded-xl p-3 text-center cursor-pointer bg-slate-950/60 transition">
-            <img id="col-image-preview" alt="图片预览" class="hidden w-full h-40 object-contain rounded-lg mb-2 bg-slate-900">
+            <img id="col-image-preview" alt="图片预览" class="collection-image-preview hidden rounded-lg bg-slate-900">
             <span id="col-image-hint" class="text-slate-400">📷 点击上传图片（JPG、PNG、WEBP）</span>
           </label>
-          <input id="col-image" type="file" accept="image/jpeg,image/png,image/webp" class="hidden">
+          <input id="col-image" type="file" accept="image/jpeg,image/png,image/webp" multiple class="hidden">
           <input id="col-image-data" type="hidden" value="">
           <input id="col-image-path" type="hidden" value="">
+          <input id="col-images-data" type="hidden" value="[]">
+          <div id="col-image-thumbnails" class="mt-2 flex gap-2 overflow-x-auto"></div>
+          <div id="col-image-size-controls" class="hidden mt-3 p-3 rounded-xl bg-slate-950 border border-slate-800">
+            <input id="col-image-scale" type="hidden" value="100"><output id="col-image-scale-value" class="hidden">100%</output><span class="text-xs text-emerald-300">✓ 图片会自动完整适应卡牌，不裁切原图</span>
+            <div class="mt-3 grid grid-cols-2 gap-2"><label class="text-[10px] text-slate-400">左右位置<input id="col-image-x" type="range" min="0" max="100" value="50" class="w-full accent-cyan-500"></label><label class="text-[10px] text-slate-400">上下位置<input id="col-image-y" type="range" min="0" max="100" value="50" class="w-full accent-cyan-500"></label></div>
+            <div class="mt-2 flex flex-wrap gap-2"><select id="col-image-ratio" class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-xs"><option value="auto">自动适应</option><option value="portrait">竖版卡牌</option><option value="square">正方形</option><option value="landscape">横版照片</option></select><button id="col-image-rotate-left" type="button" class="px-3 py-1 rounded-lg bg-slate-800">↶ 左转</button><button id="col-image-rotate-right" type="button" class="px-3 py-1 rounded-lg bg-slate-800">↷ 右转</button></div>
+            <p class="mt-1 text-[10px] text-slate-500">只改变卡牌内的显示比例，不裁切原图；点开详情仍会完整显示。</p>
+          </div>
         </div>
       </div>
 
@@ -1325,16 +1406,22 @@
           <span id="detail-card-number" class="text-[11px] font-bold font-orbitron">NO. ???</span>
         </div>
         <div id="detail-card-image" class="dex-card-image grid place-items-center text-6xl">⚡</div>
+        <div id="detail-image-nav" class="hidden flex flex-wrap items-center justify-center gap-3"><button id="detail-image-prev" type="button" class="px-3 py-1 rounded-lg bg-slate-800">‹</button><span id="detail-image-count" class="text-xs text-slate-500"></span><button id="detail-image-next" type="button" class="px-3 py-1 rounded-lg bg-slate-800">›</button><button id="detail-image-download" type="button" class="px-3 py-1 rounded-lg bg-blue-800 text-xs">保存原图</button><button id="detail-card-share" type="button" class="px-3 py-1 rounded-lg bg-purple-800 text-xs">分享卡牌</button></div>
         <div class="flex items-center justify-between gap-3 text-[11px] font-bold">
           <span id="detail-card-category">宝可梦图鉴</span>
           <span id="detail-card-type">属性：未知</span>
         </div>
         <p id="detail-card-note" class="dex-card-description text-sm leading-relaxed">暂无介绍</p>
+        <div id="detail-card-extra" class="grid grid-cols-2 gap-2 text-xs"></div>
         <button id="btn-close-card-detail" type="button" class="w-full py-2.5 rounded-xl bg-slate-900 text-white text-xs font-bold hover:bg-slate-800 transition">收起卡牌</button>
       </div>
     </div>
   </dialog>
 
+  <dialog id="modal-bulk-organize" class="bg-slate-900 text-white rounded-2xl p-6 border border-blue-500/40 max-w-md w-full backdrop:bg-black/75"><form id="form-bulk-organize" class="space-y-4"><div class="flex justify-between"><h3 class="font-bold">整理已选收藏</h3><button id="bulk-organize-close" type="button">×</button></div><select id="bulk-category" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3"><option value="">保留原分类</option><option>高达机库</option><option>宝可梦图鉴</option><option>琴谱书架</option><option>配音星球</option><option>好吃研究所</option></select><input id="bulk-tag" maxlength="40" placeholder="批量添加标签（可留空）" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3"><button class="w-full py-3 rounded-xl bg-blue-600 font-bold">完成整理</button></form></dialog>
+  <dialog id="modal-calendar-colors" class="bg-slate-900 text-white rounded-2xl p-6 border border-cyan-500/40 max-w-md w-full backdrop:bg-black/75"><form id="form-calendar-colors" class="space-y-4"><div class="flex justify-between"><h3 class="font-bold">计划类型颜色</h3><button id="calendar-colors-close" type="button">×</button></div><div id="calendar-color-list" class="space-y-2"></div><button class="w-full py-3 rounded-xl bg-cyan-700 font-bold">保存颜色</button></form></dialog>
+  <dialog id="modal-home-settings" class="bg-slate-900 text-white rounded-2xl p-6 border border-purple-500/40 max-w-md w-full backdrop:bg-black/75"><form id="form-home-settings" class="space-y-4"><div class="flex justify-between"><h3 class="font-bold">首页快捷显示</h3><button id="home-settings-close" type="button">×</button></div><p class="text-xs text-slate-400">选择首页需要显示的模块，不会删除任何资料。</p><div class="space-y-3"><label class="flex justify-between">居民档案<input type="checkbox" data-home-setting="profile" checked></label><label class="flex justify-between">近期动态<input type="checkbox" data-home-setting="activity" checked></label><label class="flex justify-between">今日同行与成就<input type="checkbox" data-home-setting="partner" checked></label><label class="flex justify-between">功能快捷卡片<input type="checkbox" data-home-setting="features" checked></label></div><button class="w-full py-3 rounded-xl bg-purple-600 font-bold">保存首页设置</button></form></dialog>
+  <dialog id="modal-gundam-compare" class="bg-slate-900 text-white rounded-2xl p-5 border border-cyan-500/40 max-w-3xl w-full backdrop:bg-black/80"><div class="flex justify-between mb-4"><h3 class="font-bold text-cyan-300">机体对比</h3><button id="gundam-compare-close" type="button">×</button></div><div id="gundam-compare-content" class="grid grid-cols-2 gap-4"></div></dialog>
   <dialog id="modal-delete-confirm" class="bg-slate-900 text-white rounded-2xl p-6 border border-red-500/40 max-w-sm w-full shadow-2xl backdrop:bg-black/75">
     <div class="space-y-5 text-center">
       <div class="w-12 h-12 mx-auto rounded-full bg-red-500/15 border border-red-500/30 grid place-items-center text-2xl">⚠</div>
@@ -1396,6 +1483,7 @@
       const $ = (s, r = document) => r.querySelector(s);
       const $$ = (s, r = document) => [...r.querySelectorAll(s)];
       const safeText = value => String(value ?? "").replace(/[<>]/g, "");
+      if ("serviceWorker" in navigator && location.protocol.startsWith("http")) window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(() => {}));
       document.addEventListener("input", event => { if ((event.target.matches("input[type=text], input:not([type]), textarea")) && /[<>]/.test(event.target.value)) event.target.value = safeText(event.target.value); });
 
       const SUPABASE_URL = "https://iihcmhgeqewacvldebuk.supabase.co";
@@ -1466,11 +1554,14 @@
         action.classList.add("hidden");
         action.onclick = null;
         $("#toast-msg").textContent = msg;
+        toast.hidden = false;
         toast.classList.remove("opacity-0", "pointer-events-none");
         toast.classList.add("opacity-100");
         clearTimeout(showToast.timer);
         showToast.timer = setTimeout(() => {
+          toast.classList.remove("opacity-100");
           toast.classList.add("opacity-0", "pointer-events-none");
+          setTimeout(() => { if (toast.classList.contains("opacity-0")) toast.hidden = true; }, 320);
         }, 1200);
       };
 
@@ -1480,6 +1571,7 @@
         const action = $("#toast-action");
         $("#toast-msg").textContent = msg;
         action.classList.remove("hidden");
+        toast.hidden = false;
         toast.classList.remove("opacity-0", "pointer-events-none");
         toast.classList.add("opacity-100");
         clearTimeout(showToast.timer);
@@ -1502,7 +1594,9 @@
             showUndoToast.pendingCommit();
           }
           action.classList.add("hidden");
+          toast.classList.remove("opacity-100");
           toast.classList.add("opacity-0", "pointer-events-none");
+          setTimeout(() => { if (toast.classList.contains("opacity-0")) toast.hidden = true; }, 320);
         }, 6000);
       };
 
@@ -2429,6 +2523,7 @@
 
           grid.appendChild(card);
         });
+        if(selectedColCategory==="宝可梦图鉴"&&collectionSubfilter==="all"&&!collectionQuery&&collectionImageFilter==="all"){const owned=collections.filter(x=>x.category==="宝可梦图鉴").length;for(let i=owned;i<30;i++){const slot=document.createElement("div");slot.className="empty-pokemon-slot aspect-[3/4] rounded-lg border border-dashed border-slate-700 bg-slate-950/45 grid place-items-center text-slate-700";slot.innerHTML=`<div class="text-center"><b class="block font-orbitron text-xs">SLOT ${String(i+1).padStart(3,"0")}</b><span class="block mt-2 text-2xl">?</span><small class="text-[9px]">尚未收集</small></div>`;grid.appendChild(slot);}}
       };
 
       $("#voice-sort-select").addEventListener("change", renderVoiceTakes);
@@ -2654,6 +2749,8 @@
 
       let selectedColCategory = "全部";
       let colSortType = "newest";
+      let collectionQuery="",collectionImageFilter="all",collectionWallMode=false,collectionBulkMode=false;const selectedCollectionIds=new Set();
+      let collectionSubfilter="all";const gundamCompareIds=new Set();
 
       const pokemonTypeClasses = [
         "type-electric", "type-fire", "type-water", "type-grass", "type-psychic",
@@ -2702,6 +2799,7 @@
         const values = category === "宝可梦图鉴" ? pokemonTypes : category === "高达机库" ? gundamTypes : category === "好吃研究所" ? foodTypes : otherTypes;
         $("#col-type-label").textContent = category === "宝可梦图鉴" ? "宝可梦属性" : category === "高达机库" ? "机体类型" : category === "好吃研究所" ? "菜品类型" : "收藏类型";
         $("#food-fields").classList.toggle("hidden", category !== "好吃研究所");
+        $("#pokemon-fields").classList.toggle("hidden",category!=="宝可梦图鉴");$("#gundam-fields").classList.toggle("hidden",category!=="高达机库");
         select.replaceChildren();
         values.forEach(value => {
           const option = document.createElement("option");
@@ -2736,21 +2834,31 @@
           const img = document.createElement("img");
           img.src = image;
           img.alt = $("#col-title").value.trim() || "卡牌图片";
-          img.style.cssText = "display:block;width:auto;height:auto;max-width:100%;max-height:100%;object-fit:contain;";
+          const scale=Number($("#col-image-scale").value)||100;
+          const x=Number($("#col-image-x").value)||50,y=Number($("#col-image-y").value)||50,rotation=Number($("#col-image-scale").dataset.rotation)||0;
+          img.style.cssText = `display:block;width:${scale}%;height:${scale}%;object-fit:contain;object-position:${x}% ${y}%;transform:rotate(${rotation}deg);`;
           box.appendChild(img);
         } else {
           box.textContent = isGundam ? "🤖" : isFood ? "🍳" : "⚡";
         }
       };
 
-      const resetCollectionImage = (image = "", path = "") => {
+      let activeCollectionImage=0;
+      const resetCollectionImage = (image = "", path = "", scale = 100, suppliedImages = null) => {
         $("#col-image").value = "";
-        $("#col-image-data").value = image;
-        $("#col-image-path").value = path;
+        const images=suppliedImages?.length?suppliedImages:[...(image?[{url:image,path,scale:Number(scale)||100,x:50,y:50,rotation:0}]:[])];
+        activeCollectionImage=0;$("#col-images-data").value=JSON.stringify(images);
+        $("#col-image-data").value = images[0]?.url||"";
+        $("#col-image-path").value = images[0]?.path||"";
+        $("#col-image-scale").value=String(scale||100);
+        $("#col-image-scale-value").textContent=`${scale||100}%`;
+        $("#col-image-x").value=images[0]?.x??50;$("#col-image-y").value=images[0]?.y??50;$("#col-image-scale").dataset.rotation=images[0]?.rotation||0;
         const preview = $("#col-image-preview");
         const hint = $("#col-image-hint");
+        $("#col-image-size-controls").classList.toggle("hidden",!image);
         if (image) {
           preview.src = image;
+          preview.style.width=`${scale||100}%`;
           preview.classList.remove("hidden");
           hint.textContent = "点击可更换图片";
         } else {
@@ -2758,6 +2866,7 @@
           preview.classList.add("hidden");
           hint.textContent = "📷 点击上传图片（JPG、PNG、WEBP）";
         }
+        const thumbs=$("#col-image-thumbnails");thumbs.replaceChildren();images.forEach((entry,index)=>{const wrap=document.createElement("div");wrap.className="relative flex-none";wrap.innerHTML=`<button type="button" class="image-thumb w-14 h-14 rounded-lg border ${index===0?"border-blue-400":"border-slate-700"} bg-slate-900 overflow-hidden"><img src="${entry.url}" class="w-full h-full object-contain"></button><button type="button" class="image-remove absolute -top-1 -right-1 w-5 h-5 rounded-full bg-red-700 text-[10px]">×</button>`;wrap.querySelector(".image-thumb").onclick=()=>{activeCollectionImage=index;const current=images[index];$("#col-image-data").value=current.url;$("#col-image-path").value=current.path||"";$("#col-image-scale").value=current.scale||100;$("#col-image-x").value=current.x??50;$("#col-image-y").value=current.y??50;updateCollectionCardPreview();resetCollectionImage(current.url,current.path,current.scale,images.slice(index).concat(images.slice(0,index)));};wrap.querySelector(".image-remove").onclick=()=>{images.splice(index,1);resetCollectionImage(images[0]?.url||"",images[0]?.path||"",images[0]?.scale||100,images);};thumbs.appendChild(wrap);});
         updateCollectionCardPreview();
       };
 
@@ -2788,6 +2897,7 @@
           btn.textContent = cat === "全部" ? "📁 全部收藏" : cat;
           btn.addEventListener("click", () => {
             selectedColCategory = cat;
+            collectionSubfilter="all";
             renderCollectionCategoryFilters();
             renderCollections();
           });
@@ -2820,9 +2930,22 @@
         renderFoodLabSummary();
 
         let filtered = [...collections];
+        const special=$("#collection-special-tools");special.classList.toggle("hidden",!["宝可梦图鉴","高达机库"].includes(selectedColCategory));
+        if(selectedColCategory==="宝可梦图鉴"){const pokemon=collections.filter(x=>x.category==="宝可梦图鉴"),types=[...new Set(pokemon.map(x=>x.type).filter(Boolean))];special.innerHTML=`<strong class="text-amber-300">指定卡槽 ${pokemon.length}/30 · ${Math.min(100,Math.round(pokemon.length/30*100))}%</strong><button class="subfilter px-2 py-1 rounded-lg ${collectionSubfilter==="all"?"bg-amber-500 text-slate-950":"bg-slate-800"}" data-value="all">全部属性</button>${types.map(type=>`<button class="subfilter px-2 py-1 rounded-lg ${collectionSubfilter===type?"bg-amber-500 text-slate-950":"bg-slate-800"}" data-value="${type}">${type}</button>`).join("")}`;special.querySelectorAll(".subfilter").forEach(button=>button.onclick=()=>{collectionSubfilter=button.dataset.value;renderCollections();});}
+        else if(selectedColCategory==="高达机库"){const builds=["全部状态","未开盒","素组中","已完成","水贴处理中","喷涂完成"];special.innerHTML=`<strong class="text-blue-300">机库档案 ${collections.filter(x=>x.category==="高达机库").length} 台</strong>${builds.map((name,index)=>`<button class="subfilter px-2 py-1 rounded-lg ${(index===0&&collectionSubfilter==="all")||collectionSubfilter===name?"bg-blue-600":"bg-slate-800"}" data-value="${index?name:"all"}">${name}</button>`).join("")}<button id="compare-gundam" class="px-3 py-1 rounded-lg bg-cyan-700">对比已选（${gundamCompareIds.size}/2）</button>`;special.querySelectorAll(".subfilter").forEach(button=>button.onclick=()=>{collectionSubfilter=button.dataset.value;renderCollections();});$("#compare-gundam").onclick=()=>{const chosen=collections.filter(x=>gundamCompareIds.has(x.id));if(chosen.length!==2){showToast("请在两张高达卡上选择对比");return;}openGundamCompare(chosen);};}
         if (selectedColCategory !== "全部") {
           filtered = filtered.filter(x => x.category === selectedColCategory);
         }
+        if(collectionSubfilter!=="all"&&selectedColCategory==="宝可梦图鉴")filtered=filtered.filter(x=>x.type===collectionSubfilter);
+        if(collectionSubfilter!=="all"&&selectedColCategory==="高达机库")filtered=filtered.filter(x=>(x.gundamBuild||"未开盒")===collectionSubfilter);
+        if(collectionQuery)filtered=filtered.filter(x=>`${x.title} ${x.type||""} ${(x.tags||[]).join(" ")} ${x.note||""}`.toLocaleLowerCase("zh-CN").includes(collectionQuery));
+        if(collectionImageFilter==="with")filtered=filtered.filter(x=>x.image||(x.images||[]).length);
+        if(collectionImageFilter==="without")filtered=filtered.filter(x=>!x.image&&!(x.images||[]).length);
+        grid.classList.toggle("collection-wall",collectionWallMode);
+        grid.classList.toggle("pokemon-book-mode",selectedColCategory==="宝可梦图鉴");
+        grid.classList.toggle("gundam-hangar-mode",selectedColCategory==="高达机库");
+        const withImages=collections.filter(x=>x.image||(x.images||[]).length).length,month=String(Date.now()).slice(0,8),recent=collections.filter(x=>String(x.id).startsWith(month)).length;
+        $("#collection-stats").innerHTML=[[collections.length,"全部收藏"],[withImages,"有图片"],[collections.filter(x=>x.category==="宝可梦图鉴").length,"宝可梦"],[collections.filter(x=>x.category==="高达机库").length,"高达"]].map(x=>`<div class="p-3 rounded-xl bg-slate-900 border border-slate-800 text-center"><b class="block text-lg text-blue-300">${x[0]}</b><span class="text-[10px] text-slate-500">${x[1]}</span></div>`).join("");
 
         if (colSortType === "newest") {
           filtered.sort((a,b) => b.id - a.id);
@@ -2833,7 +2956,7 @@
         }
         filtered.sort((a, b) => Number(Boolean(b.favorite)) - Number(Boolean(a.favorite)));
 
-        if (!filtered.length) {
+        if (!filtered.length && !(selectedColCategory==="宝可梦图鉴"&&collectionSubfilter==="all"&&!collectionQuery&&collectionImageFilter==="all")) {
           grid.innerHTML = `<div class="col-span-full p-8 text-center text-slate-500 border border-dashed border-slate-800 rounded-2xl">该分类下暂无收藏。归档你的第一台高达或宝可梦伙伴吧 ✦</div>`;
           return;
         }
@@ -2844,12 +2967,10 @@
           const isPoke = item.category === "宝可梦图鉴";
           card.className = isGundam || isPoke ? `content-card dex-card ${isGundam ? "gundam-card" : ""}` : "content-card bg-slate-900/90 border border-slate-800 rounded-2xl p-5 relative space-y-3 hover:border-slate-700 transition shadow-lg group";
           if (isPoke) applyCollectionCardTheme(card, item.category, item.type || "");
-          if (isGundam || isPoke) {
-            card.tabIndex = 0;
-            card.setAttribute("role", "button");
-            card.setAttribute("aria-label", `打开${item.title}卡牌详情`);
-            card.classList.add("cursor-pointer", "transition", "hover:-translate-y-1");
-          }
+          card.tabIndex = 0;
+          card.setAttribute("role", "button");
+          card.setAttribute("aria-label", `打开${item.title}卡牌详情`);
+          card.classList.add("cursor-pointer", "transition", "hover:-translate-y-1");
 
           const badgeClass = isGundam ? "bg-blue-900/40 text-blue-300 border-blue-500/30" :
                              isPoke ? "bg-yellow-900/40 text-yellow-300 border-yellow-500/30" :
@@ -2866,7 +2987,7 @@
             </div>
             <div class="flex items-center justify-between gap-2">
               <h3 class="text-lg font-bold ${isGundam || isPoke ? "text-slate-900" : "text-white"}">${item.title}</h3>
-              <span class="text-[10px] font-bold font-orbitron ${isGundam || isPoke ? "text-slate-700" : "text-slate-400"}">${item.number || "NO. ???"}</span>
+              <span class="text-[10px] font-bold font-orbitron ${isGundam || isPoke ? "text-slate-700" : "text-slate-400"}">${item.number || "NO. ???"}${isPoke?` · ${item.pokemonRank||"B"}`:""}</span>
             </div>
             <div class="dex-card-image text-5xl">${item.image ? `<img src="${item.image}" alt="${item.title}" loading="lazy" decoding="async">` : (isGundam ? "🤖" : isPoke ? "⚡" : item.category === "好吃研究所" ? "🍳" : "✦")}</div>
             ${item.type ? `<div class="text-[11px] font-bold ${isGundam || isPoke ? "text-slate-700" : "text-slate-300"}">${isGundam ? "机体类型" : item.category === "好吃研究所" ? "菜品类型" : "属性"}：${item.type}</div>` : ""}
@@ -2874,20 +2995,23 @@
             ${(item.tags || []).length ? `<div class="flex flex-wrap gap-1.5">${item.tags.map(tag => `<span class="px-2 py-0.5 rounded-full bg-blue-500/10 border border-blue-400/20 text-[10px] text-blue-300">#${tag}</span>`).join("")}</div>` : ""}
             <p class="text-xs leading-relaxed ${isGundam || isPoke ? "dex-card-description text-slate-700" : "text-slate-400"}">${item.note || "喜爱本身，就是收藏的理由。"}</p>
           </div>`;
+          if(collectionBulkMode){const pick=document.createElement("input");pick.type="checkbox";pick.checked=selectedCollectionIds.has(item.id);pick.className="absolute z-20 top-3 left-3 w-5 h-5 accent-blue-500";pick.setAttribute("aria-label",`选择${item.title}`);pick.onclick=e=>{e.stopPropagation();e.target.checked?selectedCollectionIds.add(item.id):selectedCollectionIds.delete(item.id);};card.appendChild(pick);}if(isGundam&&selectedColCategory==="高达机库"){const compare=document.createElement("button");compare.type="button";compare.className=`absolute z-20 left-3 bottom-3 px-2 py-1 rounded-lg text-[9px] ${gundamCompareIds.has(item.id)?"bg-cyan-400 text-slate-950":"bg-slate-900/90 text-cyan-300"}`;compare.textContent=gundamCompareIds.has(item.id)?"已选对比":"＋ 对比";compare.onclick=e=>{e.stopPropagation();if(gundamCompareIds.has(item.id))gundamCompareIds.delete(item.id);else{if(gundamCompareIds.size>=2)gundamCompareIds.delete(gundamCompareIds.values().next().value);gundamCompareIds.add(item.id);}renderCollections();};card.appendChild(compare);}
 
           card.querySelector(".btn-del-col").addEventListener("click", async () => {
             if (!(await confirmDelete(`确认删除“${item.title}”这张收藏卡吗？`))) return;
             const removedIndex = collections.findIndex(x => x.id === item.id);
             collections = collections.filter(x => x.id !== item.id);
+            const deleted=storage.get("circleK.collectionTrash",[]);deleted.unshift({...item,deletedAt:Date.now()});storage.set("circleK.collectionTrash",deleted.slice(0,50));
             storage.set("circleK.collections", collections);
             renderCollections();
             renderHomeActivity();
             showUndoToast("已移除该项收藏", () => {
               collections.splice(Math.max(0, removedIndex), 0, item);
+              storage.set("circleK.collectionTrash",storage.get("circleK.collectionTrash",[]).filter(x=>x.id!==item.id));
               storage.set("circleK.collections", collections);
               renderCollections();
               renderHomeActivity();
-            }, () => { if (item.imagePath) deleteFromSupabase(item.imagePath); });
+            });
           });
 
           card.querySelector(".btn-favorite-col").addEventListener("click", event => {
@@ -2911,24 +3035,24 @@
             $("#food-status").value = item.status || "吃过";
             $("#food-chef").value = item.chef || "";
             $("#food-date").value = item.eatenDate || "";
+            $("#pokemon-rank").value=item.pokemonRank||"B";$("#pokemon-love").value=String(item.pokemonLove||5);$("#pokemon-obtained").value=item.pokemonObtained||"";$("#pokemon-trips").value=item.pokemonTrips||0;$("#pokemon-memory").value=item.pokemonMemory||"";$("#gundam-series").value=item.gundamSeries||"";$("#gundam-pilot").value=item.gundamPilot||"";$("#gundam-faction").value=item.gundamFaction||"";$("#gundam-grade").value=item.gundamGrade||"HG";$("#gundam-build").value=item.gundamBuild||"未开盒";
+            $("#col-obtained-date").value=item.obtainedDate||"";$("#col-source").value=item.source||"";$("#col-location").value=item.location||"";$("#col-image-caption").value=item.imageCaption||"";
             updateCollectionTypeOptions(item.type || "");
-            resetCollectionImage(item.image || "", item.imagePath || "");
+            resetCollectionImage(item.image || "", item.imagePath || "", item.imageScale || 100, item.images || null);
             modalCol.showModal();
           });
 
-          if (isGundam || isPoke) {
-            const showDetail = (event) => {
-              if (event.target.closest("button")) return;
+          const showDetail = (event) => {
+            if (event.target.closest("button,input")) return;
+            openCardDetail(item);
+          };
+          card.addEventListener("click", showDetail);
+          card.addEventListener("keydown", (event) => {
+            if ((event.key === "Enter" || event.key === " ") && !event.target.closest("button")) {
+              event.preventDefault();
               openCardDetail(item);
-            };
-            card.addEventListener("click", showDetail);
-            card.addEventListener("keydown", (event) => {
-              if (event.key === "Enter" || event.key === " ") {
-                event.preventDefault();
-                openCardDetail(item);
-              }
-            });
-          }
+            }
+          });
 
           grid.appendChild(card);
         });
@@ -2938,10 +3062,31 @@
         colSortType = e.target.value;
         renderCollections();
       });
+      $("#collection-search").oninput=e=>{collectionQuery=e.target.value.trim().toLocaleLowerCase("zh-CN");renderCollections();};
+      $("#collection-image-filter").onchange=e=>{collectionImageFilter=e.target.value;renderCollections();};
+      $("#collection-view-toggle").onclick=()=>{collectionWallMode=!collectionWallMode;$("#collection-view-toggle").textContent=collectionWallMode?"▤ 卡牌视图":"▦ 图片墙";renderCollections();};
+      $("#collection-bulk-toggle").onclick=()=>{collectionBulkMode=!collectionBulkMode;if(!collectionBulkMode)selectedCollectionIds.clear();$("#collection-bulk-action").classList.toggle("hidden",!collectionBulkMode);$("#collection-bulk-toggle").textContent=collectionBulkMode?"退出多选":"☑ 多选整理";renderCollections();};
+      $("#collection-bulk-action").onclick=()=>{if(!selectedCollectionIds.size){showToast("请先选择卡牌");return;}$("#bulk-category").value="";$("#bulk-tag").value="";$("#modal-bulk-organize").showModal();};$("#bulk-organize-close").onclick=()=>$("#modal-bulk-organize").close();$("#form-bulk-organize").onsubmit=e=>{e.preventDefault();const category=$("#bulk-category").value,tag=$("#bulk-tag").value.trim();collections.forEach(item=>{if(selectedCollectionIds.has(item.id)){if(category)item.category=category;if(tag)item.tags=[...new Set([...(item.tags||[]),tag])];}});storage.set("circleK.collections",collections);selectedCollectionIds.clear();$("#modal-bulk-organize").close();renderCollectionCategoryFilters();renderCollections();showToast("已完成批量整理");};
+      const renderCollectionTrash=()=>{const box=$("#collection-trash"),trash=storage.get("circleK.collectionTrash",[]);box.innerHTML=trash.length?trash.map(item=>`<div class="flex items-center justify-between gap-3 p-2 rounded-lg bg-slate-900"><span class="text-xs">${item.title}<small class="block text-slate-500">${new Date(item.deletedAt).toLocaleDateString()}</small></span><button class="restore-collection px-3 py-1 rounded-lg bg-emerald-700 text-xs" data-id="${item.id}">恢复</button></div>`).join(""):'<p class="text-xs text-slate-500">最近没有删除的收藏</p>';box.querySelectorAll(".restore-collection").forEach(button=>button.onclick=()=>{const list=storage.get("circleK.collectionTrash",[]),index=list.findIndex(x=>x.id==button.dataset.id),item=list.splice(index,1)[0];if(item){collections.unshift(item);storage.set("circleK.collections",collections);storage.set("circleK.collectionTrash",list);renderCollections();renderCollectionTrash();showToast("收藏与原图已恢复");}});};$("#collection-trash-toggle").onclick=()=>{$("#collection-trash").classList.toggle("hidden");renderCollectionTrash();};
+      const collectionSize = $("#collection-size");
+      const applyCollectionSize = value => {
+        const size = Math.max(180, Math.min(460, Number(value) || 280));
+        document.documentElement.style.setProperty("--collection-card-width", `${size}px`);
+        document.documentElement.style.setProperty("--collection-image-height", `${Math.round(size * .86)}px`);
+        collectionSize.value = size;
+        $("#collection-size-value").textContent = `${size}px`;
+        localStorage.setItem("circleK.collectionCardSize", String(size));
+      };
+      collectionSize.addEventListener("input", event => applyCollectionSize(event.target.value));
+      applyCollectionSize(localStorage.getItem("circleK.collectionCardSize") || 280);
 
       const modalCol = $("#modal-collection");
       const modalCardDetail = $("#modal-card-detail");
+      const openGundamCompare=items=>{$("#gundam-compare-content").innerHTML=items.map(item=>`<article class="p-3 rounded-xl bg-slate-950 border border-blue-500/30 text-center">${item.image?`<img src="${item.image}" class="w-full aspect-[4/5] object-contain">`:"<div class='aspect-[4/5] grid place-items-center text-5xl'>🤖</div>"}<h4 class="font-bold text-blue-200">${item.title}</h4><div class="mt-2 text-[10px] text-left space-y-1"><p>型号：${item.number||"未填写"}</p><p>作品：${item.gundamSeries||"未填写"}</p><p>驾驶员：${item.gundamPilot||"未填写"}</p><p>比例：${item.gundamGrade||"未填写"}</p><p>进度：${item.gundamBuild||"未开盒"}</p></div></article>`).join("");$("#modal-gundam-compare").showModal();};$("#gundam-compare-close").onclick=()=>$("#modal-gundam-compare").close();
+      let detailImages=[],detailImageIndex=0,detailItem=null;
+      const renderDetailImage=()=>{const imageBox=$("#detail-card-image");imageBox.classList.remove("is-zoomed");imageBox.replaceChildren();const entry=detailImages[detailImageIndex];if(entry?.url){const img=document.createElement("img");img.src=entry.url;img.alt="收藏原图";imageBox.appendChild(img);}$("#detail-image-nav").classList.toggle("hidden",!detailImages.length);$("#detail-image-count").textContent=detailImages.length?`${detailImageIndex+1} / ${detailImages.length}`:"";};
       const openCardDetail = (item) => {
+        detailItem=item;
         const isGundam = item.category === "高达机库";
         applyCollectionCardTheme($("#detail-card-shell"), item.category, item.type || "");
         $("#detail-card-title").textContent = item.title || (isGundam ? "未命名机体" : "未命名伙伴");
@@ -2949,19 +3094,13 @@
         $("#detail-card-category").textContent = item.category;
         $("#detail-card-type").textContent = `${isGundam ? "机体类型" : "属性"}：${item.type || "未知"}`;
         $("#detail-card-note").textContent = item.note || "喜爱本身，就是收藏的理由。";
-        const imageBox = $("#detail-card-image");
-        imageBox.replaceChildren();
-        if (item.image) {
-          const img = document.createElement("img");
-          img.src = item.image;
-          img.alt = item.title || "卡牌图片";
-          img.style.cssText = "display:block;width:auto;height:auto;max-width:100%;max-height:100%;object-fit:contain;";
-          imageBox.appendChild(img);
-        } else {
-          imageBox.textContent = isGundam ? "🤖" : item.category === "好吃研究所" ? "🍳" : "⚡";
-        }
+        const extra=item.category==="宝可梦图鉴"?[["卡片等级",item.pokemonRank||"B"],["喜爱程度","★".repeat(item.pokemonLove||5)],["同行次数",`${item.pokemonTrips||0} 次`],["获得日期",item.pokemonObtained||"未填写"],["专属回忆",item.pokemonMemory||"等待记录"]]:item.category==="高达机库"?[["所属作品",item.gundamSeries||"未填写"],["驾驶员",item.gundamPilot||"未填写"],["阵营",item.gundamFaction||"未填写"],["模型比例",item.gundamGrade||"未填写"],["拼装进度",item.gundamBuild||"未开盒"]]:[];$("#detail-card-extra").innerHTML=extra.map(([label,value])=>`<div class="p-2 rounded-lg bg-slate-950/70 border border-slate-700"><span class="block text-[9px] text-slate-500">${label}</span><b class="text-slate-200">${value}</b></div>`).join("");
+        detailImages=item.images?.length?item.images:(item.image?[{url:item.image,path:item.imagePath||""}]:[]);detailImageIndex=0;renderDetailImage();if(!detailImages.length)$("#detail-card-image").textContent=isGundam?"🤖":item.category==="好吃研究所"?"🍳":"⚡";
         modalCardDetail.showModal();
       };
+      $("#detail-image-prev").onclick=()=>{if(!detailImages.length)return;detailImageIndex=(detailImageIndex-1+detailImages.length)%detailImages.length;renderDetailImage();};$("#detail-image-next").onclick=()=>{if(!detailImages.length)return;detailImageIndex=(detailImageIndex+1)%detailImages.length;renderDetailImage();};$("#detail-image-download").onclick=()=>{const url=detailImages[detailImageIndex]?.url;if(!url)return;const a=document.createElement("a");a.href=url;a.download="circle-k-collection-image";a.target="_blank";a.click();};
+      $("#detail-card-share").onclick=async()=>{if(!detailItem)return;const text=`${detailItem.title} · ${detailItem.category}${detailItem.note?`\n${detailItem.note}`:""}`;try{if(navigator.share)await navigator.share({title:detailItem.title,text});else{await navigator.clipboard.writeText(text);showToast("卡牌资料已复制");}}catch{}};
+      let detailTouchX=null;$("#detail-card-image").ontouchstart=e=>{detailTouchX=e.touches[0].clientX;};$("#detail-card-image").ontouchend=e=>{if(detailTouchX===null)return;const dx=e.changedTouches[0].clientX-detailTouchX;if(Math.abs(dx)>55)(dx>0?$("#detail-image-prev"):$("#detail-image-next")).click();detailTouchX=null;};
 
       $("#btn-close-card-detail").addEventListener("click", () => modalCardDetail.close());
       modalCardDetail.addEventListener("click", (event) => {
@@ -2999,11 +3138,17 @@
         $(selector).addEventListener("input", updateCollectionCardPreview);
         $(selector).addEventListener("change", updateCollectionCardPreview);
       });
+      $("#col-image-scale").addEventListener("input",event=>{const scale=Number(event.target.value)||100;$("#col-image-scale-value").textContent=`${scale}%`;$("#col-image-preview").style.width=`${scale}%`;updateCollectionCardPreview();});
+      const syncImageEditor=()=>{const images=JSON.parse($("#col-images-data").value||"[]");if(images[0]){images[0].scale=Number($("#col-image-scale").value)||100;images[0].x=Number($("#col-image-x").value)||50;images[0].y=Number($("#col-image-y").value)||50;images[0].rotation=Number($("#col-image-scale").dataset.rotation)||0;$("#col-images-data").value=JSON.stringify(images);}updateCollectionCardPreview();};
+      $("#col-image-x").oninput=syncImageEditor;$("#col-image-y").oninput=syncImageEditor;$("#col-image-scale").addEventListener("change",syncImageEditor);
+      $("#col-image-rotate-left").onclick=()=>{$("#col-image-scale").dataset.rotation=String((Number($("#col-image-scale").dataset.rotation)||0)-90);syncImageEditor();};$("#col-image-rotate-right").onclick=()=>{$("#col-image-scale").dataset.rotation=String((Number($("#col-image-scale").dataset.rotation)||0)+90);syncImageEditor();};
+      $("#col-image-ratio").onchange=e=>{const ratios={auto:"",portrait:"3 / 4",square:"1 / 1",landscape:"16 / 9"},ratio=ratios[e.target.value];[$("#col-live-image-box"),$("#col-image-preview")].forEach(el=>{el.style.aspectRatio=ratio;el.style.height=ratio?"auto":"";});};
 
       $("#col-image").addEventListener("change", async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-        if (file.size > 8 * 1024 * 1024) {
+        const files = [...e.target.files];
+        if (!files.length) return;
+        const known=new Set(collections.flatMap(item=>item.images||[]).map(img=>`${img.name||""}:${img.size||0}`));if(files.some(file=>known.has(`${file.name}:${file.size}`))&&!window.confirm("检测到可能重复的图片，仍然继续上传吗？")){e.target.value="";return;}
+        if (files.some(file=>file.size > 8 * 1024 * 1024)) {
           showToast("图片请控制在 8MB 以内");
           e.target.value = "";
           return;
@@ -3012,12 +3157,12 @@
         saveButton.disabled = true;
         saveButton.textContent = "正在上传图片…";
         setUploadProgress(5, "正在压缩图片");
-        const result = await uploadToSupabase(await compressImage(file), "cards/");
+        const uploaded=[];for(const file of files){const result=await uploadToSupabase(await compressImage(file), "cards/");if(result)uploaded.push({url:result.url,path:result.path,name:file.name,size:file.size,scale:100,x:50,y:50,rotation:0});}
         saveButton.disabled = false;
         saveButton.textContent = "保存并同步卡牌";
-        if (result) {
-          resetCollectionImage(result.url, result.path);
-          showToast("卡牌图片已同步到云端 📷");
+        if (uploaded.length) {
+          const existing=JSON.parse($("#col-images-data").value||"[]"),all=[...existing,...uploaded];resetCollectionImage(all[0].url,all[0].path,all[0].scale,all);
+          showToast(`${uploaded.length} 张卡牌图片已同步到云端 📷`);
         }
       });
 
@@ -3035,12 +3180,16 @@
             item.type = $("#col-type").value.trim();
             item.image = $("#col-image-data").value;
             item.imagePath = $("#col-image-path").value;
+            item.imageScale = Number($("#col-image-scale").value) || 100;
+            item.images = JSON.parse($("#col-images-data").value||"[]");
             item.rating = $("#food-rating").value;
             item.spice = $("#food-spice").value;
             item.status = $("#food-status").value;
             item.chef = $("#food-chef").value.trim();
             item.eatenDate = $("#food-date").value;
             item.tags = $("#col-tags").value.split(/[,，]/).map(tag => tag.trim()).filter(Boolean);
+            item.obtainedDate=$("#col-obtained-date").value;item.source=$("#col-source").value.trim();item.location=$("#col-location").value.trim();item.imageCaption=$("#col-image-caption").value.trim();
+            item.pokemonRank=$("#pokemon-rank").value;item.pokemonLove=Number($("#pokemon-love").value);item.pokemonObtained=$("#pokemon-obtained").value;item.pokemonTrips=Number($("#pokemon-trips").value)||0;item.pokemonMemory=$("#pokemon-memory").value.trim();item.gundamSeries=$("#gundam-series").value.trim();item.gundamPilot=$("#gundam-pilot").value.trim();item.gundamFaction=$("#gundam-faction").value.trim();item.gundamGrade=$("#gundam-grade").value;item.gundamBuild=$("#gundam-build").value;
             showToast("成功更新收藏资料 ✏️");
           }
         } else {
@@ -3059,12 +3208,15 @@
             type: $("#col-type").value.trim(),
             image: $("#col-image-data").value,
             imagePath: $("#col-image-path").value,
+            imageScale: Number($("#col-image-scale").value) || 100,
+            images: JSON.parse($("#col-images-data").value||"[]"),
             rating: $("#food-rating").value,
             spice: $("#food-spice").value,
             status: $("#food-status").value,
             chef: $("#food-chef").value.trim(),
             eatenDate: $("#food-date").value,
-            tags: $("#col-tags").value.split(/[,，]/).map(tag => tag.trim()).filter(Boolean)
+            tags: $("#col-tags").value.split(/[,，]/).map(tag => tag.trim()).filter(Boolean),
+            obtainedDate:$("#col-obtained-date").value,source:$("#col-source").value.trim(),location:$("#col-location").value.trim(),imageCaption:$("#col-image-caption").value.trim(),pokemonRank:$("#pokemon-rank").value,pokemonLove:Number($("#pokemon-love").value),pokemonObtained:$("#pokemon-obtained").value,pokemonTrips:Number($("#pokemon-trips").value)||0,pokemonMemory:$("#pokemon-memory").value.trim(),gundamSeries:$("#gundam-series").value.trim(),gundamPilot:$("#gundam-pilot").value.trim(),gundamFaction:$("#gundam-faction").value.trim(),gundamGrade:$("#gundam-grade").value,gundamBuild:$("#gundam-build").value
           });
           showToast("成功添加到收藏基地 🤖");
         }
@@ -3439,6 +3591,26 @@
       const localDateKey = date => `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,"0")}-${String(date.getDate()).padStart(2,"0")}`;
       let calendarView = new Date(); calendarView.setDate(1);
       let selectedCalendarDate = todayKey();
+      let calendarQuery="";let calendarCategoryColors=storage.get("circleK.calendarColors",{});
+      const editPlan = item => {
+        $("#form-plan").classList.remove("hidden"); $("#form-plan").classList.add("grid");
+        $("#plan-edit-id").value=item.id; $("#plan-title").value=item.title; $("#plan-date").value=item.date; $("#plan-time").value=item.time||"";
+        $("#plan-priority").value=item.priority||"medium"; $("#plan-category").value=item.category||""; $("#plan-repeat").value=item.repeat||"none"; $("#plan-reminder").value=item.reminder||"none";
+        $("#plan-subtasks").value=(item.subtasks||[]).map(x=>x.text).join("，"); $("#plan-note").value=item.note||""; $("#btn-save-plan").textContent="更新计划";
+        $("#form-plan").scrollIntoView({behavior:"smooth",block:"center"}); setTimeout(()=>$("#plan-title").focus(),250);
+      };
+      const editMood = item => {
+        $("#mood-edit-id").value=item.id; $("#mood-date").value=item.date; $("#mood-note").value=item.note||"";
+        const option=document.querySelector(`input[name="mood"][value="${item.mood}"]`); if(option) option.checked=true;
+        $("#mood-save-button").textContent="更新这天的心情"; $("#mood-cancel-edit").classList.remove("hidden");
+        $("#form-mood").scrollIntoView({behavior:"smooth",block:"center"});
+      };
+      const editAnniversary = item => {
+        $("#anniversary-edit-id").value=item.id; $("#anniversary-name").value=item.name; $("#anniversary-date").value=item.date;
+        $("#anniversary-repeat").value=item.repeat||"yearly"; $("#anniversary-category").value=item.category||"纪念日"; $("#anniversary-reminder").value=String(item.reminder||0); $("#anniversary-message").value=item.message||"";
+        $("#anniversary-save-button").textContent="更新纪念日"; $("#anniversary-cancel-edit").classList.remove("hidden");
+        $("#form-anniversary").scrollIntoView({behavior:"smooth",block:"center"}); setTimeout(()=>$("#anniversary-name").focus(),250);
+      };
 
       const renderCalendar = () => {
         const grid = $("#calendar-grid"); if (!grid) return; grid.replaceChildren();
@@ -3447,14 +3619,14 @@
         let start,total;if(view==="month"){start=new Date(year,month,1-new Date(year,month,1).getDay());total=42;$("#calendar-title").textContent=`${year} 年 ${month+1} 月`;}else{const base=new Date(calendarView),day=base.getDay();start=new Date(base);start.setDate(base.getDate()-day);total=view==="week"?7:30;const end=new Date(start);end.setDate(start.getDate()+total-1);$("#calendar-title").textContent=view==="week"?`${start.getMonth()+1}/${start.getDate()} — ${end.getMonth()+1}/${end.getDate()}`:"未来 30 天日程";}
         for (let i = 0; i < total; i++) {
           const date = new Date(start); date.setDate(start.getDate() + i); const key = localDateKey(date);
-          const dayPlans = plans.filter(x => x.date === key), dayAnniversaries = anniversaries.filter(x => x.date === key || (x.repeat === "yearly" && x.date.slice(5) === key.slice(5))), dayMood=moods.find(x=>x.date===key);
+          const dayPlans = plans.filter(x => x.date === key && (!calendarQuery||`${x.title} ${x.category||""} ${x.note||""}`.toLocaleLowerCase("zh-CN").includes(calendarQuery))), dayAnniversaries = anniversaries.filter(x => x.date === key || (x.repeat === "yearly" && x.date.slice(5) === key.slice(5))), dayMood=moods.find(x=>x.date===key);
           if(view==="agenda"&&!dayPlans.length&&!dayAnniversaries.length&&!dayMood)continue;
           const button = document.createElement("button"); button.type = "button";
           button.className = view==="agenda"?`w-full p-4 rounded-xl bg-slate-950 border border-slate-800 text-left${key===todayKey()?" ring-2 ring-yellow-400":""}`:`calendar-day${view==="month"&&date.getMonth() !== month ? " is-other" : ""}${key === todayKey() ? " is-today" : ""}`;
           button.setAttribute("aria-label", `${key}，${dayPlans.length + dayAnniversaries.length} 项安排`);
           const number = document.createElement("strong"); number.className = "text-xs text-white flex justify-between"; number.innerHTML=`<span>${view==="agenda"?`${key} · 周${"日一二三四五六"[date.getDay()]}`:date.getDate()}</span><span>${dayMood?.mood||""}</span>`; button.appendChild(number);
-          dayPlans.slice(0,2).forEach(item => { const event = document.createElement("span"); event.className = "calendar-event todo"; event.draggable=true;event.dataset.planId=item.id;event.textContent = `${item.done ? "✓ " : ""}${item.time || "待办"} ${item.title}`;event.ondragstart=e=>{e.dataTransfer.setData("text/plan-id",item.id);e.stopPropagation();};button.appendChild(event); });
-          dayAnniversaries.slice(0,1).forEach(item => { const event = document.createElement("span"); event.className = "calendar-event anniversary"; event.textContent = `🎁 ${item.name}`; button.appendChild(event); });
+          dayPlans.slice(0,2).forEach(item => { const event = document.createElement("span"); event.className = "calendar-event todo";if(calendarCategoryColors[item.category]){event.style.background=calendarCategoryColors[item.category];event.style.color="#fff";} event.draggable=true;event.tabIndex=0;event.setAttribute("role","button");event.dataset.planId=item.id;event.textContent = `${item.done ? "✓ " : ""}${item.time || "待办"} ${item.title}`;event.ondragstart=e=>{e.dataTransfer.setData("text/plan-id",item.id);e.stopPropagation();};event.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();e.stopPropagation();editPlan(item);}};button.appendChild(event); });
+          dayAnniversaries.slice(0,1).forEach(item => { const event = document.createElement("span"); event.className = "calendar-event anniversary"; event.tabIndex=0;event.setAttribute("role","button");event.dataset.anniversaryId=item.id;event.textContent = `🎁 ${item.name}`;event.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();e.stopPropagation();editAnniversary(item);}}; button.appendChild(event); });
           if (dayPlans.length + dayAnniversaries.length > 3) { const more = document.createElement("span"); more.className = "block text-[9px] text-slate-500 mt-1"; more.textContent = `还有 ${dayPlans.length + dayAnniversaries.length - 3} 项`; button.appendChild(more); }
           button.onclick = () => { selectedCalendarDate = key; $("#plan-date").value = key; const items = [...dayPlans.map(x => `☑ ${x.time || "全天"} ${x.title}`), ...dayAnniversaries.map(x => `🎁 ${x.name}`)]; $("#calendar-selected").textContent = `${key}：${items.length ? items.join(" · ") : "暂无安排，已为你选好日期，可以在下方添加 To Do"}`; $("#plan-title").focus(); };
           button.ondragover=e=>e.preventDefault();button.ondrop=e=>{e.preventDefault();const item=plans.find(x=>x.id==e.dataTransfer.getData("text/plan-id"));if(item){item.date=key;storage.set("circleK.plans",plans);renderCalendar();renderPlans();showToast(`已移动到 ${key}`);}};
@@ -3467,15 +3639,17 @@
       $("#calendar-next").onclick = () => moveCalendar(1);
       $("#calendar-today").onclick = () => { calendarView = new Date(); selectedCalendarDate = todayKey(); renderCalendar(); $("#plan-date").value = selectedCalendarDate; };
       $("#calendar-view").onchange=()=>{calendarView=new Date();$("#week-plan-view").classList.add("hidden");renderCalendar();};
+      $("#calendar-search").oninput=e=>{calendarQuery=e.target.value.trim().toLocaleLowerCase("zh-CN");renderCalendar();};$("#calendar-colors").onclick=()=>{const categories=[...new Set(plans.map(x=>x.category||"日常"))];$("#calendar-color-list").innerHTML=(categories.length?categories:["日常"]).map((name,index)=>`<label class="flex items-center justify-between gap-3 text-sm"><span>${name}</span><input type="color" data-calendar-category="${name}" value="${calendarCategoryColors[name]||["#2563eb","#7c3aed","#059669","#ea580c","#db2777"][index%5]}"></label>`).join("");$("#modal-calendar-colors").showModal();};$("#calendar-colors-close").onclick=()=>$("#modal-calendar-colors").close();$("#form-calendar-colors").onsubmit=e=>{e.preventDefault();e.currentTarget.querySelectorAll("[data-calendar-category]").forEach(input=>calendarCategoryColors[input.dataset.calendarCategory]=input.value);storage.set("circleK.calendarColors",calendarCategoryColors);$("#modal-calendar-colors").close();renderCalendar();showToast("计划类型颜色已保存");};
       $("#calendar-quick-add").onclick=()=>{$("#form-plan").classList.remove("hidden");$("#form-plan").classList.add("grid");$("#plan-date").value=selectedCalendarDate;$("#plan-title").focus();};
       let calendarTouch=null;$("#calendar-grid").addEventListener("touchstart",e=>{calendarTouch=e.touches[0].clientX;},{passive:true});$("#calendar-grid").addEventListener("touchend",e=>{if(calendarTouch===null)return;const dx=e.changedTouches[0].clientX-calendarTouch;if(Math.abs(dx)>55)moveCalendar(dx>0?-1:1);calendarTouch=null;},{passive:true});
-      $("#calendar-grid").addEventListener("click",e=>{const event=e.target.closest(".calendar-event.todo");if(!event)return;e.preventDefault();e.stopPropagation();const item=plans.find(x=>x.id==event.dataset.planId);if(!item)return;const box=$("#calendar-selected");box.replaceChildren();const text=document.createElement("span");text.textContent=`${item.title} · ${item.date} ${item.time||"全天"}${item.note?` · ${item.note}`:""}`;const edit=document.createElement("button");edit.className="ml-2 text-amber-300";edit.textContent="编辑";edit.onclick=()=>{$("#form-plan").classList.remove("hidden");$("#form-plan").classList.add("grid");$("#plan-edit-id").value=item.id;$("#plan-title").value=item.title;$("#plan-date").value=item.date;$("#plan-time").value=item.time||"";$("#plan-note").value=item.note||"";$("#plan-title").focus();};const done=document.createElement("button");done.className="ml-2 text-emerald-300";done.textContent=item.done?"取消完成":"完成";done.onclick=()=>{item.done=!item.done;storage.set("circleK.plans",plans);renderCalendar();renderPlans();};box.append(text,edit,done);},true);
+      $("#calendar-grid").addEventListener("click",e=>{const planEvent=e.target.closest(".calendar-event.todo"),anniversaryEvent=e.target.closest(".calendar-event.anniversary");if(!planEvent&&!anniversaryEvent)return;e.preventDefault();e.stopPropagation();if(planEvent){const item=plans.find(x=>x.id==planEvent.dataset.planId);if(item)editPlan(item);}else{const item=anniversaries.find(x=>x.id==anniversaryEvent.dataset.anniversaryId);if(item)editAnniversary(item);}},true);
 
       const renderMoods = () => {
         const box = $("#mood-history"); box.replaceChildren();
         [...moods].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 30).forEach(item => {
           const row = document.createElement("div"); row.className = "flex items-start gap-3 p-3 rounded-xl bg-slate-950/70 border border-slate-800";
-          row.innerHTML = `<span class="text-2xl">${item.mood}</span><div class="min-w-0 flex-1"><b class="block text-xs text-white">${item.date}</b><p class="text-xs text-slate-400 break-words">${item.note || "今天又是美好的一天"}</p>${item.photoUrl?`<img src="${item.photoUrl}" class="mt-2 w-24 h-20 object-cover rounded-lg" alt="当天心情照片">`:""}</div>`;
+          row.innerHTML = `<span class="text-2xl">${item.mood}</span><div class="min-w-0 flex-1"><b class="block text-xs text-white">${item.date}</b><p class="text-xs text-slate-400 break-words">${item.note || "今天又是美好的一天"}</p>${item.photoUrl?`<img src="${item.photoUrl}" class="mt-2 w-24 h-20 object-contain bg-slate-900 rounded-lg" alt="当天心情照片">`:""}</div><button type="button" class="mood-edit px-2 py-1 text-xs text-amber-300" aria-label="编辑这天的心情">✏️ 编辑</button>`;
+          row.querySelector(".mood-edit").onclick=()=>editMood(item);
           box.appendChild(row);
         });
         if (!moods.length) box.innerHTML = `<div class="text-xs text-slate-500">记录第一天的美好心情吧 ✦</div>`;
@@ -3483,12 +3657,13 @@
       };
       $("#mood-month-review").onclick=()=>{const current=moods.filter(x=>x.date.startsWith(todayKey().slice(0,7))),counts=current.reduce((a,x)=>(a[x.mood]=(a[x.mood]||0)+1,a),{}),top=Object.entries(counts).sort((a,b)=>b[1]-a[1])[0];showToast(current.length?`本月记录${current.length}天，最常见心情是${top[0]}，每一天都值得收藏。`:"本月还没有心情记录");};
       $("#form-mood").addEventListener("submit", async event => {
-        event.preventDefault(); const date = $("#mood-date").value||todayKey(),photo=$("#mood-photo").files[0];let photoUrl="";if(photo){const uploaded=await uploadToSupabase(photo,"moods/");photoUrl=uploaded?.url||"";}
-        const item = { id: Date.now(), date, mood: document.querySelector('input[name="mood"]:checked').value, note: $("#mood-note").value.trim() || "今天又是美好的一天",photoUrl };
-        const existing = moods.findIndex(x => x.date === date);
+        event.preventDefault(); const editId=$("#mood-edit-id").value,date = $("#mood-date").value||todayKey(),photo=$("#mood-photo").files[0],previous=moods.find(x=>x.id==editId);let photoUrl=previous?.photoUrl||"";if(photo){const uploaded=await uploadToSupabase(photo,"moods/");photoUrl=uploaded?.url||photoUrl;}
+        const item = { id: editId?Number(editId):Date.now(), date, mood: document.querySelector('input[name="mood"]:checked').value, note: $("#mood-note").value.trim() || "今天又是美好的一天",photoUrl };
+        const existing = moods.findIndex(x => x.id==editId || (!editId&&x.date === date));
         if (existing >= 0) moods[existing] = item; else moods.push(item);
-        storage.set("circleK.moods", moods); $("#mood-note").value = ""; renderMoods(); renderMemoryTimeline(); renderAchievements(); renderHomeActivity(); showToast("今天的心情已保存 🌤");
+        storage.set("circleK.moods", moods); $("#form-mood").reset();$("#mood-edit-id").value="";$("#mood-date").value=todayKey();$("#mood-save-button").textContent="保存今天的心情";$("#mood-cancel-edit").classList.add("hidden"); renderMoods(); renderMemoryTimeline(); renderAchievements(); renderHomeActivity(); showToast(editId?"心情记录已更新 🌤":"今天的心情已保存 🌤");
       });
+      $("#mood-cancel-edit").onclick=()=>{$("#form-mood").reset();$("#mood-edit-id").value="";$("#mood-date").value=todayKey();$("#mood-save-button").textContent="保存今天的心情";$("#mood-cancel-edit").classList.add("hidden");};
 
       const renderPlans = () => {
         const box = $("#plan-list"); box.replaceChildren(); const today = todayKey();
@@ -3503,7 +3678,7 @@
           card.innerHTML = `<div class="flex items-start gap-3"><span class="cursor-grab text-slate-600" title="拖动排序">⋮⋮</span><input class="plan-done mt-1 w-5 h-5" type="checkbox" ${item.done ? "checked" : ""} aria-label="标记计划完成"><div class="flex-1 min-w-0"><div class="flex flex-wrap gap-2 items-center"><strong class="text-sm ${item.done ? "line-through text-slate-500" : "text-white"}">${item.title}</strong><span class="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-300">${item.category || "日常"}</span>${item.repeat&&item.repeat!=="none"?`<span class="text-[10px] text-cyan-300">↻ ${item.repeat==="daily"?"每天":item.repeat==="weekly"?"每周":"每月"}</span>`:""}</div><p class="text-[11px] text-blue-300 mt-1">${item.date}${item.time ? ` · ${item.time}` : ""} · ${item.priority === "high" ? "高" : item.priority === "low" ? "低" : "中"}优先级${item.reminder&&item.reminder!=="none"?` · 🔔 提前${item.reminder==="1440"?"1天":item.reminder+"分钟"}`:""}</p>${item.note ? `<p class="text-xs text-slate-400 mt-2">${item.note}</p>` : ""}</div><div class="flex gap-1"><button class="plan-edit px-2 py-1 text-xs text-amber-300" aria-label="编辑计划">✏️</button><button class="plan-delete px-2 py-1 text-xs text-red-300" aria-label="删除计划">×</button></div></div>`;
           card.querySelector(".plan-done").onchange = event => { item.done = event.target.checked; if(item.done&&item.repeat&&item.repeat!=="none"&&!item.repeated){const next=new Date(`${item.date}T12:00:00`);if(item.repeat==="daily")next.setDate(next.getDate()+1);if(item.repeat==="weekly")next.setDate(next.getDate()+7);if(item.repeat==="monthly")next.setMonth(next.getMonth()+1);item.repeated=true;plans.push({...item,id:Date.now(),date:localDateKey(next),done:false,repeated:false,order:plans.length});} storage.set("circleK.plans", plans); renderPlans(); renderCalendar(); renderAchievements(); renderHomeActivity(); };
           if(item.subtasks?.length){const subs=document.createElement("div");subs.className="ml-8 mt-2 space-y-1";item.subtasks.forEach((sub,i)=>{const label=document.createElement("label");label.className="block text-[10px] text-slate-400";label.innerHTML=`<input type="checkbox" ${sub.done?"checked":""}> ${sub.text}`;label.querySelector("input").onchange=e=>{sub.done=e.target.checked;storage.set("circleK.plans",plans);};subs.appendChild(label);});card.appendChild(subs);}
-          card.querySelector(".plan-edit").onclick = () => { $("#form-plan").classList.remove("hidden"); $("#form-plan").classList.add("grid"); $("#plan-edit-id").value = item.id; $("#plan-title").value = item.title; $("#plan-date").value = item.date; $("#plan-time").value = item.time || ""; $("#plan-priority").value = item.priority; $("#plan-category").value = item.category || ""; $("#plan-repeat").value=item.repeat||"none"; $("#plan-reminder").value=item.reminder||"none"; $("#plan-subtasks").value=(item.subtasks||[]).map(x=>x.text).join("，"); $("#plan-note").value = item.note || ""; $("#btn-save-plan").textContent = "更新计划"; $("#plan-title").focus(); };
+          card.querySelector(".plan-edit").onclick = () => editPlan(item);
           card.ondragstart=()=>card.classList.add("plan-dragging");card.ondragend=()=>card.classList.remove("plan-dragging");card.ondragover=e=>e.preventDefault();card.ondrop=e=>{e.preventDefault();const from=$(".plan-dragging");if(!from||from===card)return;const a=plans.findIndex(x=>x.id==from.dataset.planId),b=plans.findIndex(x=>x.id==card.dataset.planId);const [moved]=plans.splice(a,1);plans.splice(b,0,moved);plans.forEach((x,i)=>x.order=i);storage.set("circleK.plans",plans);renderPlans();};
           card.querySelector(".plan-delete").onclick = async () => { if (!(await confirmDelete(`确认删除计划“${item.title}”吗？`))) return; const index = plans.findIndex(x => x.id === item.id); const removed = plans.splice(index, 1)[0]; const trash=storage.get("circleK.trash",[]);trash.unshift({...removed,deletedAt:Date.now(),trashType:"plan"});storage.set("circleK.trash",trash);storage.set("circleK.plans", plans); renderPlans(); renderCalendar(); renderHomeActivity(); showUndoToast("计划已移入回收站", () => { plans.splice(index, 0, removed); storage.set("circleK.plans", plans); renderPlans(); renderCalendar(); renderHomeActivity(); }); };
           box.appendChild(card);
@@ -3533,13 +3708,15 @@
         [...anniversaries].sort((a,b)=>a.date.slice(5).localeCompare(b.date.slice(5))).slice(0,3).forEach(item => {
           let target = new Date(`${item.date}T00:00:00`); if (item.repeat === "yearly") { target.setFullYear(now.getFullYear()); if (target < now) target.setFullYear(now.getFullYear() + 1); }
           const days = Math.ceil((target - now) / 86400000); const row = document.createElement("div"); row.className = "flex items-center justify-between gap-3 p-3 rounded-xl bg-slate-950 border border-slate-800";
-          const years=item.repeat==="yearly"?Math.max(0,now.getFullYear()-new Date(item.date).getFullYear()):0;row.innerHTML = `<div><b class="text-sm text-white">${item.name}</b><span class="block text-[10px] text-slate-500">${item.category||"纪念日"} · ${item.date}${item.repeat === "yearly" ? ` · ${years?`第 ${years} 周年`:"每年"}` : ""}${item.reminder?` · 提前${item.reminder}天提醒`:""}</span>${days === 0 && item.message ? `<p class="mt-2 text-xs text-amber-200">🎉 今日解锁：${item.message}</p>` : ""}</div><div class="flex items-center gap-3"><strong class="text-amber-300">${days === 0 ? "就是今天 ✦" : days > 0 ? `还有 ${days} 天` : "已到期"}</strong><button class="anniversary-delete text-red-300" aria-label="删除纪念日">×</button></div>`;
+          const years=item.repeat==="yearly"?Math.max(0,now.getFullYear()-new Date(item.date).getFullYear()):0;row.innerHTML = `<div><b class="text-sm text-white">${item.name}</b><span class="block text-[10px] text-slate-500">${item.category||"纪念日"} · ${item.date}${item.repeat === "yearly" ? ` · ${years?`第 ${years} 周年`:"每年"}` : ""}${item.reminder?` · 提前${item.reminder}天提醒`:""}</span>${days === 0 && item.message ? `<p class="mt-2 text-xs text-amber-200">🎉 今日解锁：${item.message}</p>` : ""}</div><div class="flex items-center gap-2"><strong class="text-amber-300">${days === 0 ? "就是今天 ✦" : days > 0 ? `还有 ${days} 天` : "已到期"}</strong><button class="anniversary-edit text-amber-300 text-xs" aria-label="编辑纪念日">✏️</button><button class="anniversary-delete text-red-300" aria-label="删除纪念日">×</button></div>`;
+          row.querySelector(".anniversary-edit").onclick=()=>editAnniversary(item);
           row.querySelector(".anniversary-delete").onclick = async () => { if (!(await confirmDelete(`确认删除“${item.name}”吗？`))) return; anniversaries = anniversaries.filter(x => x.id !== item.id); storage.set("circleK.anniversaries", anniversaries); renderAnniversaries(); renderCalendar(); };
           box.appendChild(row);
         });
         if (!anniversaries.length) box.innerHTML = `<div class="text-xs text-slate-500">添加一个值得期待的日子吧</div>`;
       };
-      $("#form-anniversary").addEventListener("submit", event => { event.preventDefault(); anniversaries.push({ id: Date.now(), name: $("#anniversary-name").value.trim(), date: $("#anniversary-date").value, repeat: $("#anniversary-repeat").value, category:$("#anniversary-category").value,reminder:Number($("#anniversary-reminder").value),message: $("#anniversary-message").value.trim() }); storage.set("circleK.anniversaries", anniversaries); event.target.reset();$("#anniversary-date").value=todayKey(); renderAnniversaries(); renderCalendar(); renderMemoryTimeline(); showToast("纪念日已加入日历与倒计时 🎁"); });
+      $("#form-anniversary").addEventListener("submit", event => { event.preventDefault();const editId=$("#anniversary-edit-id").value,item={ id:editId?Number(editId):Date.now(), name: $("#anniversary-name").value.trim(), date: $("#anniversary-date").value, repeat: $("#anniversary-repeat").value, category:$("#anniversary-category").value,reminder:Number($("#anniversary-reminder").value),message: $("#anniversary-message").value.trim() };const index=anniversaries.findIndex(x=>x.id==editId);if(index>=0)anniversaries[index]=item;else anniversaries.push(item);storage.set("circleK.anniversaries", anniversaries); event.target.reset();$("#anniversary-edit-id").value="";$("#anniversary-date").value=todayKey();$("#anniversary-save-button").textContent="添加纪念日";$("#anniversary-cancel-edit").classList.add("hidden"); renderAnniversaries(); renderCalendar(); renderMemoryTimeline(); showToast(editId?"纪念日已更新 🎁":"纪念日已加入日历与倒计时 🎁"); });
+      $("#anniversary-cancel-edit").onclick=()=>{$("#form-anniversary").reset();$("#anniversary-edit-id").value="";$("#anniversary-date").value=todayKey();$("#anniversary-save-button").textContent="添加纪念日";$("#anniversary-cancel-edit").classList.add("hidden");};
 
       let timelineThisYear=false;
       const renderMemoryTimeline = () => {
@@ -3560,11 +3737,16 @@
       const renderDailyPokemon = (force = false) => {
         const today = todayKey(); let daily = storage.get("circleK.dailyPokemon", {});
         const pokemon = collections.filter(item => item.category === "宝可梦图鉴");
-        const fallback = [{ title: "皮卡丘", type: "电" }, { title: "胖丁", type: "妖精" }, { title: "耿鬼", type: "幽灵" }]; const pool = pokemon.length ? pokemon : fallback;
-        if (force || daily.date !== today || !daily.title) { const pick = pool[Math.floor(Math.random() * pool.length)]; daily = { date: today, title: pick.title, type: pick.type || "神秘", note: pick.note || "今天一起出发吧！" }; storage.set("circleK.dailyPokemon", daily); }
-        $("#daily-pokemon").innerHTML = `<strong class="text-xl text-yellow-300">⚡ ${daily.title}</strong><span class="block text-xs text-slate-400 mt-1">${daily.type}属性 · ${daily.note}</span>`;
+        const fallback = [{ title: "皮卡丘", type: "电" }, { title: "胖丁", type: "妖精" }, { title: "耿鬼", type: "幽灵" }],history=storage.get("circleK.dailyPokemonHistory",[]),recentNames=history.slice(0,7).map(x=>x.title),available=pokemon.filter(x=>!recentNames.includes(x.title)); const pool = (available.length?available:pokemon).length?(available.length?available:pokemon):fallback;
+        if ((force&&!daily.locked) || daily.date !== today || !daily.title) { const pick = pool[Math.floor(Math.random() * pool.length)]; daily = { date: today, title: pick.title, type: pick.type || "神秘", note: pick.note || "今天一起出发吧！", image:pick.image||"",locked:false };if(history[0]?.date!==today){history.unshift({date:today,title:pick.title});storage.set("circleK.dailyPokemonHistory",history.slice(0,30));const owned=pokemon.find(x=>x.title===pick.title);if(owned){owned.pokemonTrips=(owned.pokemonTrips||0)+1;storage.set("circleK.collections",collections);}} storage.set("circleK.dailyPokemon", daily); }
+        const matched=pokemon.find(item=>item.title===daily.title);if(matched?.image&&!daily.image){daily.image=matched.image;storage.set("circleK.dailyPokemon",daily);}
+        $("#daily-pokemon").innerHTML = `<strong class="text-xl text-yellow-300">⚡ ${daily.title}</strong><span class="block text-xs text-slate-400 mt-1">${daily.type}属性 · ${daily.note}</span><span class="block text-[10px] text-amber-300 mt-1">第 ${matched?.pokemonTrips||history.filter(x=>x.title===daily.title).length||1} 次与你同行</span>`;
+        const picture=$("#daily-pokemon-image");picture.replaceChildren();if(daily.image){const img=document.createElement("img");img.src=daily.image;img.alt=`${daily.title}图片`;picture.appendChild(img);}else{picture.textContent="⚡";}
+        $("#btn-lock-daily-pokemon").textContent=daily.locked?"🔒 今日已锁定":"🔓 锁定今日伙伴";$("#daily-pokemon-history").textContent=`最近同行：${history.slice(0,7).map(x=>`${x.date.slice(5)} ${x.title}`).join(" · ")||"今天开始记录"}`;
+        let party=$("#daily-pokemon-party");if(!party){party=document.createElement("div");party.id="daily-pokemon-party";party.className="daily-party-grid";$("#daily-pokemon-history").after(party);}const partyNames=[...new Set(history.map(x=>x.title))].slice(0,6);party.innerHTML=Array.from({length:6},(_,index)=>{const name=partyNames[index],owned=pokemon.find(x=>x.title===name);return `<div class="daily-party-slot" title="${name||`同行槽位 ${index+1}`}">${owned?.image?`<img src="${owned.image}" alt="${name}">`:name?name.slice(0,1):String(index+1).padStart(2,"0")}</div>`;}).join("");
       };
-      $("#btn-new-daily-pokemon").onclick = () => { renderDailyPokemon(true); showToast("今日同行伙伴已更新 ⚡"); };
+      $("#btn-new-daily-pokemon").onclick = () => { if(storage.get("circleK.dailyPokemon",{}).locked){showToast("今日伙伴已锁定，先解除锁定才能更换");return;}renderDailyPokemon(true); showToast("今日同行伙伴已更新 ⚡"); };
+      $("#btn-lock-daily-pokemon").onclick=()=>{const daily=storage.get("circleK.dailyPokemon",{});daily.locked=!daily.locked;storage.set("circleK.dailyPokemon",daily);renderDailyPokemon();showToast(daily.locked?"今天就和这位伙伴同行":"已解除今日锁定");};$("#btn-greet-daily-pokemon").onclick=()=>{const daily=storage.get("circleK.dailyPokemon",{}),messages=["今天也一起闪闪发光吧！","慢慢来，我们会完成想做的事。","准备好了，一起出发！","记得照顾好自己，伙伴一直在。"] ;showToast(`${daily.title||"伙伴"}：${messages[Math.floor(Math.random()*messages.length)]}`);};
 
       const renderAchievements = () => {
         const achievements = [
@@ -3585,7 +3767,8 @@
         $("#btn-save-challenge").onclick = () => { const history = storage.get("circleK.voiceChallenges", []); history.unshift({ id: Date.now(), scriptId:id, title:script.title, emotion, score:Number($("#challenge-score").value) }); storage.set("circleK.voiceChallenges", history); renderAchievements(); showToast("挑战成绩已保存 🎭"); };
       };
 
-      $("#plan-date").value = todayKey(); $("#anniversary-date").value = todayKey();$("#mood-date").value=todayKey();if(innerWidth<=640)$("#calendar-view").value="agenda"; renderMoods(); renderPlans(); renderAnniversaries(); renderCalendar(); renderMemoryTimeline(); renderDailyPokemon(); renderAchievements();
+      const applyHomeSettings=()=>{const settings=storage.get("circleK.homeSettings",{profile:true,activity:true,partner:true,features:true}),targets={profile:$("#profile-avatar")?.closest(".citizen-card"),activity:$("#home-activity"),partner:$("#daily-pokemon")?.parentElement?.parentElement?.parentElement,features:document.querySelector("[data-switch]")?.closest(".grid")};Object.entries(targets).forEach(([key,element])=>element?.classList.toggle("hidden",settings[key]===false));$$('[data-home-setting]').forEach(input=>input.checked=settings[input.dataset.homeSetting]!==false);};$("#home-quick-settings").onclick=()=>{$("#modal-home-settings").showModal();};$("#home-settings-close").onclick=()=>$("#modal-home-settings").close();$("#form-home-settings").onsubmit=e=>{e.preventDefault();const settings={};$$('[data-home-setting]').forEach(input=>settings[input.dataset.homeSetting]=input.checked);storage.set("circleK.homeSettings",settings);applyHomeSettings();$("#modal-home-settings").close();showToast("首页显示已更新");};
+      $("#plan-date").value = todayKey(); $("#anniversary-date").value = todayKey();$("#mood-date").value=todayKey();if(innerWidth<=640)$("#calendar-view").value="week"; renderMoods(); renderPlans(); renderAnniversaries(); renderCalendar(); renderMemoryTimeline(); renderDailyPokemon(); renderAchievements();applyHomeSettings();
 
       const renderHomeActivity = () => {
         const grid = $("#home-activity-grid");
